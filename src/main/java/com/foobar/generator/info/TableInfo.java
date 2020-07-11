@@ -1,0 +1,129 @@
+package com.foobar.generator.info;
+
+import java.util.List;
+import java.util.SortedSet;
+
+/**
+ * 数据表信息
+ *
+ * @author yin
+ */
+public class TableInfo {
+
+    /**
+     * 数据库类型(oracle/mysql)
+     */
+    private String dbType;
+
+    /**
+     * 数据表原始名称
+     */
+    private String name;
+
+    /**
+     * 数据表注释
+     */
+    private String comments;
+
+    /**
+     * Java类名称(首字母大写)
+     */
+    private String javaClassName;
+
+    /**
+     * Java类名称(首字母小写)
+     */
+    private String javaClassNameLower;
+
+    /**
+     * 子包名
+     */
+    private String pkgName;
+
+    /**
+     * Java类注释中的作者
+     */
+    private String author;
+
+    /**
+     * Java类中需要import的类名集合
+     */
+    private SortedSet<String> imports;
+
+    /**
+     * 数据表中的所有字段信息列表
+     */
+    private List<ColumnInfo> columns;
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public String getJavaClassName() {
+        return javaClassName;
+    }
+
+    public void setJavaClassName(String javaClassName) {
+        this.javaClassName = javaClassName;
+    }
+
+    public String getJavaClassNameLower() {
+        return javaClassNameLower;
+    }
+
+    public void setJavaClassNameLower(String javaClassNameLower) {
+        this.javaClassNameLower = javaClassNameLower;
+    }
+
+    public String getPkgName() {
+        return pkgName;
+    }
+
+    public void setPkgName(String pkgName) {
+        this.pkgName = pkgName;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public SortedSet<String> getImports() {
+        return imports;
+    }
+
+    public void setImports(SortedSet<String> imports) {
+        this.imports = imports;
+    }
+
+    public List<ColumnInfo> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<ColumnInfo> columns) {
+        this.columns = columns;
+    }
+}

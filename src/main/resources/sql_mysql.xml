@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql>
+    <!--查询表名-->
+    <select id="QUERY_TABLE_NAMES">
+        select table_name from information_schema.tables
+        where table_schema='%s' and table_type='BASE TABLE'
+        order by table_name
+    </select>
+
+    <!--查询表字段-->
+    <select id="QUERY_TABLE_COLUMNS">
+        select c.TABLE_NAME
+            , t.TABLE_COMMENT
+            , c.COLUMN_NAME
+            , c.COLUMN_COMMENT
+            , c.DATA_TYPE
+            , c.NUMERIC_PRECISION
+            , c.NUMERIC_SCALE
+            , c.CHARACTER_MAXIMUM_LENGTH
+            , c.CHARACTER_OCTET_LENGTH
+            , c.COLUMN_DEFAULT
+            , c.IS_NULLABLE
+            , c.COLUMN_KEY
+        from information_schema.columns c
+        inner join information_schema.tables t on c.TABLE_NAME=t.TABLE_NAME and c.TABLE_SCHEMA=t.TABLE_SCHEMA
+        where c.table_schema='%s'
+        and c.table_name='%s'
+        order by c.ORDINAL_POSITION
+    </select>
+</sql>

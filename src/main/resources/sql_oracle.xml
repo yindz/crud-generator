@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql>
+    <!--查询表名-->
+    <select id="QUERY_TABLE_NAMES">
+        select x.TABLE_NAME from all_tables x
+        where x.OWNER='%s'
+        order by x.TABLE_NAME
+    </select>
+
+    <!--查询表字段-->
+    <select id="QUERY_TABLE_COLUMNS">
+        select c.TABLE_NAME
+            ,a.COMMENTS as TABLE_COMMENT
+            ,c.COLUMN_NAME
+            ,c.DATA_TYPE
+            ,c.DATA_LENGTH
+            ,c.DATA_PRECISION
+            ,c.DATA_SCALE
+            ,c.NULLABLE
+            ,c.CHAR_LENGTH
+            ,c.DATA_DEFAULT
+            ,d.comments as column_comment
+        from all_tab_columns c
+        left join all_tab_comments a on c.TABLE_NAME=a.table_name
+        left join all_col_comments d on c.TABLE_NAME=d.table_name and c.COLUMN_NAME=d.column_name
+        where c.TABLE_NAME='%s'
+        order by c.COLUMN_ID
+    </select>
+
+    <!--查询主键字段-->
+    <select id="QUERY_PRIMARY_KEY">
+        select x.COLUMN_NAME from all_constraints c inner join all_cons_columns x on c.CONSTRAINT_NAME=x.CONSTRAINT_NAME where c.TABLE_NAME='%s' and c.CONSTRAINT_TYPE='P'
+    </select>
+
+    <!--查询唯一索引字段-->
+    <select id="QUERY_UNIQUE_COLUMN">
+        select b.COLUMN_NAME
+        from (
+            select i.*
+            from all_indexes i where 1=1
+            and i.TABLE_OWNER='%s'
+            and i.TABLE_NAME='%s'
+            and i.UNIQUENESS='UNIQUE'
+        )a
+        inner join all_ind_columns b on a.INDEX_NAME = b.INDEX_NAME and a.TABLE_OWNER=b.TABLE_OWNER and a.TABLE_NAME=b.TABLE_NAME
+    </select>
+</sql>
