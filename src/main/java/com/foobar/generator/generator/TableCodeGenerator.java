@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,11 +79,6 @@ public class TableCodeGenerator {
      * java包名
      */
     private String pkgName;
-
-    /**
-     * 输出路径
-     */
-    private String finalOutputPath;
 
     /**
      * 数据库操作工具
@@ -242,8 +240,32 @@ public class TableCodeGenerator {
                 throw new RuntimeException("创建目录" + outputPath + "失败");
             }
         }
-        //finalOutputPath = outputPath;
         this.baseOutputPath = outputPath;
+        //初始化各个目录
+        GeneratorConfig.coreTemplateList.forEach(t -> checkSubDir(t.getTargetPkgName()));
+        if (this.generateAll) {
+            GeneratorConfig.otherTemplateList.forEach(t -> checkSubDir(t.getTargetPkgName()));
+        }
+    }
+
+    /**
+     * 检查子目录
+     *
+     * @param subDir 子目录名称
+     */
+    private void checkSubDir(String subDir) {
+        if (StringUtils.isEmpty(subDir)) {
+            return;
+        }
+        String realPath = this.baseOutputPath + File.separator + subDir;
+        Path path = Paths.get(realPath);
+        if (!path.toFile().exists()) {
+            try {
+                Files.createDirectory(path);
+            } catch (IOException e) {
+                logger.error("无法创建目录{}", realPath, e);
+            }
+        }
     }
 
     /**
@@ -322,7 +344,6 @@ public class TableCodeGenerator {
         //java类名(首字母小写)
         tableInfo.setJavaClassNameLower(WordUtils.uncapitalize(javaClassName));
 
-
         //others
         tableInfo.setImports(generateImports(columnInfoList));
         tableInfo.setAuthor(currentUser);
@@ -331,7 +352,6 @@ public class TableCodeGenerator {
         data.setBasePkgName(StringUtils.isEmpty(pkgName) ? javaClassName.toLowerCase() : StringUtils.trim(pkgName));
         data.setTable(tableInfo);
         data.setUuid((list) -> UUID.randomUUID());
-        //data.put("table", tableInfo);
 
         //输出
         render(GeneratorConfig.coreTemplateList, data, javaClassName);
@@ -353,19 +373,13 @@ public class TableCodeGenerator {
             return;
         }
 
-        for (TemplateInfo ti : templateInfoList){
-            if(ti == null){
+        for (TemplateInfo ti : templateInfoList) {
+            if (ti == null) {
                 continue;
             }
             File dir = new File(baseOutputPath + File.separator + ti.getTargetPkgName());
-            if (!dir.exists()) {
-                if (!dir.mkdirs()) {
-                    throw new RuntimeException("目录" + dir.getAbsolutePath() + "创建失败");
-                }
-            } else {
-                if (!dir.isDirectory()) {
-                    throw new RuntimeException("路径" + dir.getAbsolutePath() + "不是目录");
-                }
+            if (!dir.isDirectory()) {
+                throw new RuntimeException("路径" + dir.getAbsolutePath() + "不是目录");
             }
             String out = dir.getAbsolutePath() + File.separator + ti.getTargetFileName().replace(GeneratorConst.PLACEHOLDER, javaClassName);
             data.getTable().setPkgName(data.getBasePkgName() + "." + ti.getTargetPkgName());
@@ -394,17 +408,6 @@ public class TableCodeGenerator {
             e.printStackTrace();
         }
     }
-
-    /**
-     * 构建输出文件的路径
-     *
-     * @param basePath 基础路径
-     * @param fileName 文件名
-     * @return
-     */
-//    private String generateOutFilePath(String basePath, String fileName) {
-//        return basePath + (basePath.endsWith(File.separator) ? "" : File.separator) + fileName;
-//    }
 
     /**
      * 生成Java类中import内容

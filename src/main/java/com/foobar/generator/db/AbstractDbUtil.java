@@ -23,8 +23,8 @@ public abstract class AbstractDbUtil {
 
     /**
      * 初始化
-     *
-     * @return
+     * @param jdbcInfo JDBC参数
+     * @throws Exception
      */
     public abstract void init(JdbcInfo jdbcInfo) throws Exception;
 

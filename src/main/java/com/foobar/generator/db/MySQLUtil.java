@@ -21,7 +21,7 @@ import java.util.List;
 public class MySQLUtil extends AbstractDbUtil {
     private static final Logger logger = LoggerFactory.getLogger(MySQLUtil.class);
 
-    private static final String MYSQL_URL = "jdbc:mysql://%s:%s/%s?useUnicode=true&autoReconnect=true&characterEncoding=utf8";
+    private static final String MYSQL_URL = "jdbc:mysql://%s:%s/%s?useUnicode=true&autoReconnect=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai";
 
     /**
      * 创建连接URL
@@ -30,7 +30,7 @@ public class MySQLUtil extends AbstractDbUtil {
      */
     @Override
     public void init(JdbcInfo jdbcInfo) throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         String url = String.format(MYSQL_URL, jdbcInfo.getHost(), jdbcInfo.getPort(), jdbcInfo.getSchema());
         logger.info("JDBC URL: {}", url);
         connection = DriverManager.getConnection(url, jdbcInfo.getUsername(), jdbcInfo.getPassword());

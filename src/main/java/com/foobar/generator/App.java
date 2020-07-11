@@ -11,25 +11,25 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         //指定数据库类型
-        String dbType = GeneratorConst.ORACLE;
+        String dbType = GeneratorConst.MYSQL;
 
         //数据库主机名或IP
-        String host = "192.168.2.101";
+        String host = "localhost";
 
         //数据库端口号
-        String port = "1521";
+        String port = "3306";
 
         //schema名称(oracle填写Schema名称，mysql则填写数据库名称)
-        String schema = "BIZ_ORDER";
+        String schema = "bizdb";
 
         //数据库用户名
-        String username = "BIZ_ORDER_USER";
+        String username = "root";
 
         //数据库用户密码
         String password = "123456";
 
         //数据库实例名(oracle填写实例名，mysql留空)
-        String serviceName = "bizorderdb";
+        String serviceName = "";
 
         //输出目录的绝对路径(留空则生成到当前用户主目录)
         String outPath = "E:\\tmp\\generated";
@@ -38,10 +38,10 @@ public class App {
         String pkgName = "com.foobar.myapp";
 
         //表名(多个以逗号隔开,留空为全部)
-        String tables = "T_ORDER_INFO,T_ORDER_DETAIL,T_ORDER_REPORT";
+        String tables = "sys_log,sys_file,sys_user,sys_user_plus";
 
         //需去掉的表名前缀(留空不去掉任何前缀)
-        String prefixToRemove = "T_";
+        String prefixToRemove = "sys_";
 
         JdbcInfo param = new JdbcInfo();
         param.setDbType(dbType);
