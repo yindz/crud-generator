@@ -242,28 +242,29 @@ public class TableCodeGenerator {
         }
         this.baseOutputPath = outputPath;
         //初始化各个目录
-        GeneratorConfig.coreTemplateList.forEach(t -> checkSubDir(t.getTargetPkgName()));
+        GeneratorConfig.coreTemplateList.forEach(this::checkSubDir);
         if (this.generateAll) {
-            GeneratorConfig.otherTemplateList.forEach(t -> checkSubDir(t.getTargetPkgName()));
+            GeneratorConfig.otherTemplateList.forEach(this::checkSubDir);
         }
     }
 
     /**
      * 检查子目录
      *
-     * @param subDir 子目录名称
+     * @param ti 模板
      */
-    private void checkSubDir(String subDir) {
-        if (StringUtils.isEmpty(subDir)) {
+    private void checkSubDir(TemplateInfo ti) {
+        if (ti == null || StringUtils.isEmpty(ti.getTargetBaseDirName())) {
             return;
         }
-        String realPath = this.baseOutputPath + File.separator + subDir;
+        String realPath = ti.toRealPath(this.baseOutputPath);
         Path path = Paths.get(realPath);
         if (!path.toFile().exists()) {
             try {
-                Files.createDirectory(path);
+                Files.createDirectories(path);
             } catch (IOException e) {
                 logger.error("无法创建目录{}", realPath, e);
+                throw new RuntimeException("创建目录" + realPath + "失败");
             }
         }
     }
@@ -377,7 +378,7 @@ public class TableCodeGenerator {
             if (ti == null) {
                 continue;
             }
-            File dir = new File(baseOutputPath + File.separator + ti.getTargetPkgName());
+            File dir = new File(ti.toRealPath(baseOutputPath));
             if (!dir.isDirectory()) {
                 throw new RuntimeException("路径" + dir.getAbsolutePath() + "不是目录");
             }
@@ -443,8 +444,8 @@ public class TableCodeGenerator {
             try {
                 return conf.getTemplate(k);
             } catch (IOException e) {
-                e.printStackTrace();
-                return null;
+                logger.error("无法读取模板{}", name, e);
+                throw new RuntimeException("无法读取模板");
             }
         });
     }
