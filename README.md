@@ -11,40 +11,40 @@
 ## 文件说明
 | 文件名 | 含义 | 路径 | 备注 | 
 |  ----  | ---- |---- |---- |
-| XXXVO.java | VO类| vo |   | 
-| XXXApi.java | 控制器代码 | controller |   | 
-| XXX.java | 实体类 | entity |  适用于原版mybatis | 
-| XXXMapper.java | Mapper接口 | dao | 适用于原版mybatis  | 
-| XXXMapper.xml | Mapper XML | dao | 适用于原版mybatis  | 
-| XXXDO.java | Domain实体类定义 | domain| 适用于mybatis通用Mapper  | 
-| XXXCommonMapper.java | Mapper接口 | dao |  适用于mybatis通用Mapper | 
-| XXXCommonMapper.xml | Mapper XML | dao | 适用于mybatis通用Mapper  | 
-| XXXDTO.java | DTO类 | dto |   | 
-| IXXXService.java | 服务接口定义 | service |   | 
-| XXXServiceImpl.java | 服务接口实现 | service |  适用于原版mybatis | 
-| TkXXXServiceImpl.java | 服务接口实现 | service |  适用于mybatis通用Mapper | 
-| XXX.postman_collection.json | Postman接口JSON定义文件 | service | 使用方法：Postman>Import | 
-| XXX.postman_environment.json | Postman环境变量定义文件 | service | 使用方法：Postman>Manage Environment>Import | 
+| XXXVO.java | VO类| java/vo/ |   | 
+| XXXApi.java | 控制器代码 | java/controller/ |   | 
+| XXX.java | 实体类 | java/entity/ |  适用于原版mybatis | 
+| XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis  | 
+| XXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 
+| XXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 
+| XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 
+| XXXCommonMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper  | 
+| XXXDTO.java | DTO类 | java/dto/ |   | 
+| IXXXService.java | 服务接口定义 | java/service/ |   | 
+| XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 
+| TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 
+| XXX.postman_collection.json | Postman接口JSON定义文件 | json/ | 使用方法：Postman>Import | 
+| XXX.postman_environment.json | Postman环境变量定义文件 | json/ | 使用方法：Postman>Manage Environment>Import | 
 
 ## 最佳实践
 ### 当数据表字段发生变化时
 - 如果您采用原版 mybatis，则需要重新生成以下文件: 
 ```
-vo/XXXVO.java
-dto/XXXDTO.java
-entity/XXX.java
-dao/XXXMapper.xml
+java/vo/XXXVO.java
+java/dto/XXXDTO.java
+java/entity/XXX.java
+resources/XXXMapper.xml
 ```
 - 如果您采用 mybatis 通用Mapper，则需要重新生成以下文件: 
 ```
-vo/XXXVO.java
-dto/XXXDTO.java
-entity/XXX.java
+java/vo/XXXVO.java
+java/dto/XXXDTO.java
+java/entity/XXX.java
 ```
 
 ### 使用建议
-- 如果您采用原版 mybatis，则不应在 XXXMapper.xml 中编写自己的业务逻辑，因为该文件可能会被重新生成；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
-- 如果您采用 mybatis通用Mapper，可以在 XXXCommonMapper.xml 中编写自己的业务逻辑，因为该文件不会被重新生成
+- 如果您采用原版 mybatis，则不应在 resources/XXXMapper.xml 中编写自己的业务逻辑，因为该文件可能会被重新生成；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
+- 如果您采用 mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑，因为该文件不会被重新生成
 - 如果数据表字段变化比较频繁，建议采用 mybatis通用Mapper
 
 ## 使用范例
