@@ -198,6 +198,9 @@ public class TableCodeGenerator {
                 if (StringUtils.isEmpty(c.getColumnJavaType())) {
                     throw new RuntimeException("数据库字段类型 " + c.getColumnType() + " 无法映射到Java类型");
                 }
+                if ("Date".equalsIgnoreCase(c.getColumnJavaType())) {
+                    c.setIsDateTime(1);
+                }
                 c.setColumnMyBatisType(GeneratorConst.mybatisTypeMap.get(c.getColumnType().toLowerCase()));
                 if (StringUtils.isEmpty(c.getColumnMyBatisType())) {
                     throw new RuntimeException("数据库字段类型 " + c.getColumnType() + " 无法映射到MyBatis JdbcType");

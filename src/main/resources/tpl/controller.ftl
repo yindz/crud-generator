@@ -1,6 +1,8 @@
 package ${table.pkgName};
 
-import com.foobar.pagehelper.PageInfo;
+import javax.validation.Valid;
+
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +23,41 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = {"${table.comments}服务API"})
 @RequestMapping("/${table.javaClassNameLower}")
 @RestController
-public class ${table.javaClassName}Api {
-    private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}Api.class);
+public class ${table.javaClassName}Controller {
+    private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}Controller.class);
 
     @Autowired
     private I${table.javaClassName}Service ${table.javaClassNameLower}Service;
 
     /**
-     * 分页查询${table.comments}数据
-     *
-     * @param query    查询条件
-     * @param pageNo   页码
-     * @param pageSize 分页大小
-     * @return 分页查询结果
-     */
+    * 分页查询${table.comments}数据
+    *
+    * @param query           查询条件
+    * @param pageNo          页码
+    * @param pageSize        分页大小
+    * @param orderBy         排序字段名(驼峰形式)
+    * @param orderDirection  排序方向(ASC/DESC)
+    * @return 分页查询结果
+    */
     @ApiOperation(value = "分页查询${table.comments}数据", httpMethod = "GET",tags = {"分页查询${table.comments}数据"})
     @GetMapping(value = "/get${table.javaClassName}List")
-    public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}VO query, int pageNo, int pageSize) {
-        return ${table.javaClassNameLower}Service.get${table.javaClassName}List(convertTo${table.javaClassName}DTO(query), pageNo, pageSize, null, null);
+    public PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}VO query, int pageNo, int pageSize, String orderBy, String orderDirection) {
+        PageInfo<${table.javaClassName}DTO> pageInfo = ${table.javaClassNameLower}Service.get${table.javaClassName}List(convertTo${table.javaClassName}DTO(query), pageNo, pageSize, orderBy, orderDirection);
+        PageInfo<${table.javaClassName}VO> result = new PageInfo<>();
+        List<${table.javaClassName}VO> rowList = new ArrayList<>();
+        if (pageInfo.getList() != null && !pageInfo.getList().isEmpty()) {
+            pageInfo.getList().forEach(e->{
+                if (e == null) {
+                   return;
+                }
+                ${table.javaClassName}VO row = new ${table.javaClassName}VO();
+                BeanUtils.copyProperties(e, row);
+                rowList.add(row);
+            });
+        }
+        BeanUtils.copyProperties(pageInfo, result);
+        result.setList(rowList);
+        return result;
     }
 
     /**
@@ -49,7 +68,7 @@ public class ${table.javaClassName}Api {
      */
     @ApiOperation(value = "插入${table.comments}记录", httpMethod = "POST",tags = {"插入${table.comments}记录"})
     @PostMapping(value = "/insert")
-    public boolean insert(${table.javaClassName}VO vo) {
+    public boolean insert(@Valid ${table.javaClassName}VO vo) {
         return ${table.javaClassNameLower}Service.insert(convertTo${table.javaClassName}DTO(vo));
     }
 

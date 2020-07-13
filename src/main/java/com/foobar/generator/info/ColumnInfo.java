@@ -93,6 +93,11 @@ public class ColumnInfo {
     private int isChar = 0;
 
     /**
+     * 是否为时间
+     */
+    private int isDateTime = 0;
+
+    /**
      * 是否为主键
      */
     private int isPrimaryKey = 0;
@@ -231,6 +236,14 @@ public class ColumnInfo {
 
     public void setIsChar(int isChar) {
         this.isChar = isChar;
+    }
+
+    public int getIsDateTime() {
+        return isDateTime;
+    }
+
+    public void setIsDateTime(int isDateTime) {
+        this.isDateTime = isDateTime;
     }
 
     public int getIsPrimaryKey() {

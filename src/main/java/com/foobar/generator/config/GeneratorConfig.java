@@ -60,6 +60,7 @@ public class GeneratorConfig {
         TemplateInfo mapperXml = new TemplateInfo();
         mapperXml.setTemplateName("mapperXml.ftl");
         mapperXml.setTargetBaseDirName("resources");
+        mapperXml.setTargetPkgName("dao");
         mapperXml.setTargetFileName(GeneratorConst.PLACEHOLDER + "Mapper.xml");
         coreTemplateList.add(mapperXml);
 
@@ -83,6 +84,7 @@ public class GeneratorConfig {
         TemplateInfo tkMapperXml = new TemplateInfo();
         tkMapperXml.setTemplateName("tkMapperXml.ftl");
         tkMapperXml.setTargetBaseDirName("resources");
+        tkMapperXml.setTargetPkgName("dao");
         tkMapperXml.setTargetFileName(GeneratorConst.PLACEHOLDER + "CommonMapper.xml");
         otherTemplateList.add(tkMapperXml);
 

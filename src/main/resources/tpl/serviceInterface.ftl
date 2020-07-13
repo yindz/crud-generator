@@ -1,6 +1,6 @@
 package ${table.pkgName};
 
-import com.foobar.pagehelper.PageInfo;
+import com.github.pagehelper.PageInfo;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 
 /**

@@ -3,6 +3,7 @@ package ${table.pkgName};
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 <#list table.imports as imp>
 import ${imp};
 </#list>
