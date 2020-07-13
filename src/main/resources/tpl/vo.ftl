@@ -29,7 +29,7 @@ public class ${table.javaClassName}VO implements Serializable {
     @NotBlank(message = "${column.columnComment!''} ${column.columnCamelNameLower} 为空")<#else>
     @NotNull(message = "${column.columnComment!''} ${column.columnCamelNameLower} 为空")</#if></#if><#if column.isChar == 1>
     @Length(max = ${column.columnLength}, message = "${column.columnComment!''} ${column.columnCamelNameLower} 长度不能超过${column.columnLength}")</#if><#if column.isDateTime == 1>
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "${timeZone}")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")</#if>
     private ${column.columnJavaType} ${column.columnCamelNameLower};
 

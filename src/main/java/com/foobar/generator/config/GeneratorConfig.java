@@ -14,6 +14,11 @@ import java.util.List;
 public class GeneratorConfig {
 
     /**
+     * 默认时区
+     */
+    public static final String DEFAULT_TIME_ZONE = "GMT+8";
+
+    /**
      * 核心模板
      */
     public final static List<TemplateInfo> coreTemplateList = new ArrayList<>();

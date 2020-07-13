@@ -1,5 +1,6 @@
 package com.foobar.generator.info;
 
+import com.foobar.generator.config.GeneratorConfig;
 import freemarker.template.TemplateMethodModelEx;
 
 /**
@@ -24,6 +25,11 @@ public class RenderData {
      */
     private TemplateMethodModelEx uuid;
 
+    /**
+     * 时区
+     */
+    private String timeZone = GeneratorConfig.DEFAULT_TIME_ZONE;
+
     public String getBasePkgName() {
         return basePkgName;
     }
@@ -46,5 +52,13 @@ public class RenderData {
 
     public void setUuid(TemplateMethodModelEx uuid) {
         this.uuid = uuid;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
 }
