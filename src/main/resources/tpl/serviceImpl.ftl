@@ -131,6 +131,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean update(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待更新的数据为空");
+        <#list table.columns as column><#if column.isPrimaryKey == 1>Preconditions.checkArgument(record.get${column.columnCamelNameUpper}() != null, "待更新的数据${column.columnCamelNameLower}为空");</#if></#list>
         return ${table.javaClassNameLower}Mapper.update(convertTo${table.javaClassName}(record)) > 0;
     }
 
@@ -144,6 +145,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean delete(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待删除的数据为空");
+        <#list table.columns as column><#if column.isPrimaryKey == 1>Preconditions.checkArgument(record.get${column.columnCamelNameUpper}() != null, "待删除的数据${column.columnCamelNameLower}为空");</#if></#list>
         return ${table.javaClassNameLower}Mapper.delete(convertTo${table.javaClassName}(record)) > 0;
     }
 
