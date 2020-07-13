@@ -1,6 +1,7 @@
 package ${table.pkgName};
 
 import ${basePkgName}.entity.${table.javaClassName};
+import java.util.Map;
 
 /**
  * ${table.comments}Mapper
@@ -18,7 +19,7 @@ public interface ${table.javaClassName}Mapper {
      * @param query 查询条件
      * @return 查询结果
      */
-    List<${table.javaClassName}> get${table.javaClassName}List(${table.javaClassName} query);
+    List<${table.javaClassName}> get${table.javaClassName}List(Map<String, Object> query);
 
     /**
      * 查询数量
@@ -26,7 +27,7 @@ public interface ${table.javaClassName}Mapper {
      * @param query 查询条件
      * @return 查询结果
      */
-    int get${table.javaClassName}Count(${table.javaClassName} query);
+    int get${table.javaClassName}Count(Map<String, Object> query);
 
     /**
      * 插入

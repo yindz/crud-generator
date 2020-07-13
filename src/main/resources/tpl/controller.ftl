@@ -38,7 +38,7 @@ public class ${table.javaClassName}Api {
     @ApiOperation(value = "分页查询${table.comments}数据", httpMethod = "GET",tags = {"分页查询${table.comments}数据"})
     @GetMapping(value = "/get${table.javaClassName}List")
     public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}VO query, int pageNo, int pageSize) {
-        return ${table.javaClassNameLower}Service.get${table.javaClassName}List(convertTo${table.javaClassName}DTO(query), pageNo, pageSize);
+        return ${table.javaClassNameLower}Service.get${table.javaClassName}List(convertTo${table.javaClassName}DTO(query), pageNo, pageSize, null, null);
     }
 
     /**

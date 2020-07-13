@@ -9,23 +9,24 @@
 
     <sql id="${table.name}_where">
         <#list table.columns as column>
-            <if test="${column.columnCamelNameLower} != null<#if column.isChar == 1> and ${column.columnCamelNameLower} != ''</#if>">
-                and a.${column.columnName} = ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}
-            </if>
+        <if test="${column.columnCamelNameLower} != null<#if column.isChar == 1> and ${column.columnCamelNameLower} != ''</#if>">
+            and a.${column.columnName} = ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}
+        </if>
         </#list>
     </sql>
 
-    <select id="get${table.javaClassName}List" parameterType="${basePkgName}.entity.${table.javaClassName}" resultMap="queryResultMap">
+    <select id="get${table.javaClassName}List" parameterType="map" resultMap="queryResultMap">
         select a.*
         from ${table.name} a
         where 1=1
         <where>
             <include refid="${table.name}_where"/>
         </where>
-        <#list table.columns as column><#if column.isPrimaryKey == 1>order by a.${column.columnName} desc</#if></#list>
+        <if test="orderBy != null and orderBy != null">order by a.${r"${"}orderBy}</if>
+        <if test="orderDirection != null and orderDirection != null"> ${r"${"}orderDirection}</if>
     </select>
 
-    <select id="get${table.javaClassName}Count" parameterType="${basePkgName}.entity.${table.javaClassName}" resultType="java.lang.Integer">
+    <select id="get${table.javaClassName}Count" parameterType="map" resultType="java.lang.Integer">
         select count(a.*) from ${table.name} a
         <where>
             <include refid="${table.name}_where"/>
