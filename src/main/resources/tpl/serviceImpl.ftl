@@ -71,6 +71,30 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     }
 
     /**
+     * 批量插入记录
+     *
+     * @param recordList    待插入的数据列表
+     * @return 是否成功
+     */
+     @Override
+     @Transactional(rollbackFor = Exception.class)
+     public boolean insertAll(List<${table.javaClassName}DTO> recordList) {
+         Preconditions.checkArgument(recordList != null && !recordList.isEmpty(), "待插入的数据为空");
+         int success = 0;
+         for (${table.javaClassName}DTO record : recordList) {
+             if (record == null) {
+                 continue;
+             }
+             if (${table.javaClassNameLower}Mapper.insert(convertTo${table.javaClassName}(record)) == 0) {
+                 throw new RuntimeException("插入${table.comments}数据失败!");
+             }
+             success++;
+         }
+         logger.info("本次总共提交{}条${table.comments}数据，已成功插入{}条", recordList.size(), success);
+         return true;
+     }
+
+    /**
      * 更新记录
      *
      * @param record    待更新的数据

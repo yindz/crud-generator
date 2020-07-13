@@ -29,6 +29,14 @@ public interface I${table.javaClassName}Service {
     boolean insert(${table.javaClassName}DTO record);
 
     /**
+     * 批量插入记录
+     *
+     * @param recordList    待插入的数据列表
+     * @return 是否成功
+     */
+    boolean insertAll(List<${table.javaClassName}DTO> recordList);
+
+    /**
      * 更新记录
      *
      * @param record    待更新的数据
