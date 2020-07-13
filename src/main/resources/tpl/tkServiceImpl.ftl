@@ -36,7 +36,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      * @return 分页查询结果
      */
     @Override
-    public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName} query, int pageNo, int pageSize) {
+    public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}DTO query, int pageNo, int pageSize) {
         Preconditions.checkArgument(query != null, "查询条件为空");
         Preconditions.checkArgument(pageNo > 0, "页码必须大于0");
         Preconditions.checkArgument(pageSize > 0, "分页大小必须大于0");
@@ -68,7 +68,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean insert(${table.javaClassName} record) {
+    public boolean insert(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待插入的数据为空");
         ${table.javaClassName}DO cond = convertTo${table.javaClassName}DO(record);
         return ${table.javaClassNameLower}Mapper.insertSelective(cond) > 0;
@@ -106,7 +106,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean update(${table.javaClassName} record) {
+    public boolean update(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待更新的数据为空");
         ${table.javaClassName}DO cond = convertTo${table.javaClassName}DO(record);
         return ${table.javaClassNameLower}Mapper.updateByPrimaryKeySelective(cond) > 0;
@@ -120,7 +120,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delete(${table.javaClassName} record) {
+    public boolean delete(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待删除的数据为空");
         ${table.javaClassName}DO cond = convertTo${table.javaClassName}DO(record);
         return ${table.javaClassNameLower}Mapper.deleteByPrimaryKey(cond) > 0;
@@ -132,7 +132,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      * @param record   待转换数据
      * @return 转换结果
     */
-    private ${table.javaClassName}DO convertTo${table.javaClassName}DO(${table.javaClassName} record) {
+    private ${table.javaClassName}DO convertTo${table.javaClassName}DO(${table.javaClassName}DTO record) {
         if (record == null) {
             return null;
         }
