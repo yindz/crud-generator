@@ -33,6 +33,7 @@
 java/vo/XXXVO.java
 java/dto/XXXDTO.java
 java/entity/XXX.java
+java/service/XXXServiceImpl.java
 resources/XXXMapper.xml
 ```
 - 如果您采用 mybatis 通用Mapper，则需要重新生成以下文件: 
@@ -40,6 +41,7 @@ resources/XXXMapper.xml
 java/vo/XXXVO.java
 java/dto/XXXDTO.java
 java/entity/XXX.java
+java/service/TkXXXServiceImpl.java
 ```
 
 ### 使用建议
