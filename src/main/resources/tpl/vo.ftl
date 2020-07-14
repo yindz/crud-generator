@@ -3,6 +3,8 @@ package ${table.pkgName};
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -34,6 +36,12 @@ public class ${table.javaClassName}VO implements Serializable {
     private ${column.columnJavaType} ${column.columnCamelNameLower};
 
 </#list>
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
 <#list table.columns as column>
 
     public ${column.columnJavaType} get${column.columnCamelNameUpper}() {
