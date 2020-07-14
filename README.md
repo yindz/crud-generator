@@ -154,3 +154,55 @@ java/domain/JpaXXXDO.java
 | ${column.isPrimaryKey} | 是否为主键(0否/1是) |int |
 
 编写完模板文件之后，在 GeneratorConfig.java 类中配置该模板的相关信息即可。
+
+### 额外说明
+自动生成的代码中用到了一些第三方开源组件，它们的maven坐标如下(版本号请自行匹配)：
+```
+<dependency>
+    <groupId>org.springframework.data</groupId>
+    <artifactId>spring-data-jpa</artifactId>
+    <version>X.X.X</version>
+</dependency>
+
+<dependency>
+   <groupId>org.apache.commons</groupId>
+   <artifactId>commons-lang3</artifactId>
+   <version>X.X.X</version>
+</dependency>
+
+<dependency>
+   <groupId>io.springfox</groupId>
+   <artifactId>springfox-swagger2</artifactId>
+   <version>X.X.X</version>
+</dependency>
+
+<dependency>
+   <groupId>io.springfox</groupId>
+   <artifactId>springfox-swagger-ui</artifactId>
+   <version>X.X.X</version>
+</dependency>
+
+<dependency>
+   <groupId>com.google.guava</groupId>
+   <artifactId>guava</artifactId>
+   <version>X.X.X</version>
+</dependency>
+
+<dependency>
+   <groupId>org.mybatis.spring.boot</groupId>
+   <artifactId>mybatis-spring-boot-starter</artifactId>
+   <version>X.X.X</version>
+</dependency>
+
+<dependency>
+    <groupId>tk.mybatis</groupId>
+    <artifactId>mapper-spring-boot-starter</artifactId>
+    <version>X.X.X</version>
+</dependency>
+
+<dependency>
+    <groupId>com.github.pagehelper</groupId>
+    <artifactId>pagehelper-spring-boot-starter</artifactId>
+    <version>X.X.X</version>
+</dependency>
+```
