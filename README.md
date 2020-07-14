@@ -4,6 +4,7 @@
 - 支持 Oracle 和 MySQL(Percona/MariaDB) 数据库
 - 支持生成原版 mybatis 以及 [mybatis通用Mapper](https://github.com/abel533/Mapper) 相关代码
 - 支持生成 mybatis 分页代码(基于 [Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper))
+- 支持生成基于 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) 的实体类和DAO层接口代码
 - 支持生成基于 [Hibernate Validator](https://hibernate.org/validator/documentation/) 的参数校验注解
 - 支持生成基于 [Swagger](https://swagger.io/docs/) 的API接口及参数注解
 - 支持生成 [Postman](https://www.postman.com/) 可导入的API接口JSON定义文件
@@ -17,6 +18,8 @@
 | XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis  | 
 | XXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 
 | XXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 
+| JpaXXXDO.java | Domain实体类定义 | java/domain/| 适用于JPA  | 
+| XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 
 | XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 
 | XXXCommonMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper  | 
 | XXXDTO.java | DTO类 | java/dto/ |   | 
@@ -40,8 +43,15 @@ resources/XXXMapper.xml
 ```
 java/vo/XXXVO.java
 java/dto/XXXDTO.java
-java/entity/XXX.java
+java/domain/XXXDO.java
 java/service/TkXXXServiceImpl.java
+```
+
+- 如果您采用JPA，则需要重新生成以下文件: 
+```
+java/vo/XXXVO.java
+java/dto/XXXDTO.java
+java/domain/JpaXXXDO.java
 ```
 
 ### 使用建议

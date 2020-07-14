@@ -61,6 +61,14 @@ public class GeneratorConfig {
         tkDomain.setTargetFileName(GeneratorConst.PLACEHOLDER + "DO.java");
         coreTemplateList.add(tkDomain);
 
+        //适用于JPA的实体类定义
+        TemplateInfo jpaDomain = new TemplateInfo();
+        jpaDomain.setTemplateName("jpaDomain.ftl");
+        jpaDomain.setTargetBaseDirName("java");
+        jpaDomain.setTargetPkgName("domain");
+        jpaDomain.setTargetFileName("Jpa" + GeneratorConst.PLACEHOLDER + "DO.java");
+        coreTemplateList.add(jpaDomain);
+
         //适用于原版mybatis的Mapper XML
         TemplateInfo mapperXml = new TemplateInfo();
         mapperXml.setTemplateName("mapperXml.ftl");
@@ -84,6 +92,14 @@ public class GeneratorConfig {
         tkMapperClass.setTargetPkgName("dao");
         tkMapperClass.setTargetFileName(GeneratorConst.PLACEHOLDER + "CommonMapper.java");
         otherTemplateList.add(tkMapperClass);
+
+        //适用于JPA的DAO接口
+        TemplateInfo jpaDaoClass = new TemplateInfo();
+        jpaDaoClass.setTemplateName("jpaDaoClass.ftl");
+        jpaDaoClass.setTargetBaseDirName("java");
+        jpaDaoClass.setTargetPkgName("dao");
+        jpaDaoClass.setTargetFileName(GeneratorConst.PLACEHOLDER + "Dao.java");
+        otherTemplateList.add(jpaDaoClass);
 
         //适用于mybatis通用Mapper的Mapper XML
         TemplateInfo tkMapperXml = new TemplateInfo();
