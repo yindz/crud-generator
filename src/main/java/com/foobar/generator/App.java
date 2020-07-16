@@ -3,6 +3,8 @@ package com.foobar.generator;
 import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.generator.TableCodeGenerator;
 import com.foobar.generator.info.JdbcInfo;
+import com.foobar.generator.info.RunParam;
+import com.foobar.generator.info.TableContext;
 
 /**
  * 入口类
@@ -31,18 +33,6 @@ public class App {
         //数据库实例名(oracle填写实例名，mysql留空)
         String serviceName = "";
 
-        //输出目录的绝对路径(留空则生成到当前用户主目录)
-        String outPath = "E:\\tmp\\generated";
-
-        //java包名
-        String pkgName = "com.foobar.myapp";
-
-        //表名(多个以逗号隔开,留空为全部)
-        String tables = "sys_log,sys_file,sys_user,sys_user_plus";
-
-        //需去掉的表名前缀(留空不去掉任何前缀)
-        String prefixToRemove = "sys_";
-
         JdbcInfo param = new JdbcInfo();
         param.setDbType(dbType);
         param.setHost(host);
@@ -56,7 +46,20 @@ public class App {
         //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
         //generator.setGenerateAll(false);
 
+        RunParam rp = new RunParam();
+        //java基础包名
+        rp.setBasePkgName("com.foobar.bizapp");
+        //输出目录的绝对路径(留空则生成到当前用户主目录)
+        rp.setOutputPath("E:\\tmp\\generated");
+
+        //表名
+        TableContext table = TableContext.withName("t_attachment");
+        //需去掉的表名前缀(留空不去掉任何前缀)
+        table.setTableNamePrefixToRemove("t_");
+        //table.setPrimaryKeyColumn("id");
+        rp.addTable(table);
+
         //生成
-        generator.run(outPath, tables, pkgName, prefixToRemove);
+        generator.run(rp);
     }
 }

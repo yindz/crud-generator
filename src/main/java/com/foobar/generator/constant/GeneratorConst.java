@@ -13,6 +13,7 @@ public final class GeneratorConst {
     public static final String MYSQL = "mysql";
     public static final String ORACLE = "oracle";
     public static final String PLACEHOLDER = "#";
+    public static final String DEFAULT_PKG_NAME = "com.example.myapp";
 
     public final static Map<String, String> javaBoxTypeMap = new HashMap<>();
     public final static Map<String, String> mybatisTypeMap = new HashMap<>();

@@ -71,11 +71,6 @@ public class TableCodeGenerator {
     private final String currentUser;
 
     /**
-     * 需去除的表前缀
-     */
-    private String prefixToRemove;
-
-    /**
      * java包名
      */
     private String pkgName;
@@ -95,8 +90,22 @@ public class TableCodeGenerator {
      */
     private String baseOutputPath;
 
+    /**
+     * 待删除的表名前缀(全局)
+     */
+    private String globalTableNamePrefixToRemove;
+
     public void setGenerateAll(boolean generateAll) {
         this.generateAll = generateAll;
+    }
+
+    /**
+     * 设置全局的待删除表名前缀
+     *
+     * @param prefixToRemove
+     */
+    public void setGlobalTableNamePrefixToRemove(String prefixToRemove) {
+        this.globalTableNamePrefixToRemove = StringUtils.trim(prefixToRemove);
     }
 
     /**
@@ -146,27 +155,28 @@ public class TableCodeGenerator {
     /**
      * 生成文件
      *
-     * @param outputPath     输出路径
-     * @param tableNames     表名(多个以逗号隔开,留空为全部)
-     * @param pkgName        java包名
-     * @param prefixToRemove 需去掉的表名前缀
+     * @param runParam 运行参数
      */
-    public void run(String outputPath, String tableNames, String pkgName, String prefixToRemove) throws Exception {
+    public void run(RunParam runParam) throws Exception {
+        if (runParam == null) {
+            throw new IllegalArgumentException("运行参数为空");
+        }
         long begin = System.currentTimeMillis();
-        checkDir(outputPath);
-        this.pkgName = pkgName;
-        this.prefixToRemove = prefixToRemove;
-        List<String> tableNamesToSubmit = findTableNamesToSubmit(tableNames);
-        logger.info("本次将生成 {} 张表的代码", tableNamesToSubmit.size());
-        prepareColumnsCache(tableNamesToSubmit);
+        checkDir(runParam.getOutputPath());
+        this.pkgName = StringUtils.trim(runParam.getBasePkgName());
+        if (StringUtils.isEmpty(this.pkgName)) {
+            this.pkgName = GeneratorConst.DEFAULT_PKG_NAME;
+        }
+        List<TableContext> tablesToSubmit = findTablesToSubmit(runParam.getTableContexts());
+        logger.info("本次将生成 {} 张表的代码", tablesToSubmit.size());
+        prepareColumnsCache(tablesToSubmit);
         dbUtil.clean();
-
-        tableNamesToSubmit.forEach(t -> threadPool.execute(() -> generateTableCodeFiles(t)));
+        tablesToSubmit.forEach(t -> threadPool.execute(() -> generateTableCodeFiles(t)));
         threadPool.shutdown();
         while (!threadPool.awaitTermination(500, TimeUnit.MILLISECONDS)) {
             logger.debug("等待线程池关闭");
         }
-        logger.info("{}下面表相应代码已生成到 {}, 耗时 {} 毫秒, 总计 {} 张表", this.schemaName, outputPath, System.currentTimeMillis() - begin, tableNamesToSubmit.size());
+        logger.info("{}下面表相应代码已生成到 {}, 耗时 {} 毫秒, 总计 {} 张表", this.schemaName, runParam.getOutputPath(), System.currentTimeMillis() - begin, tablesToSubmit.size());
     }
 
     /**
@@ -182,12 +192,16 @@ public class TableCodeGenerator {
     /**
      * 获取字段信息
      *
-     * @param tableName 表名
+     * @param table 表
      * @return 表所有字段
      */
-    private List<ColumnInfo> getColumnInfo(String tableName) {
-        List<ColumnInfo> resultList = dbUtil.getColumnInfo(tableName);
+    private List<ColumnInfo> getColumnInfo(TableContext table) {
+        List<ColumnInfo> resultList = dbUtil.getColumnInfo(table.getTableName());
         if (resultList != null && !resultList.isEmpty()) {
+            boolean hasPrimaryKey = resultList.stream().anyMatch(r -> 1 == r.getIsPrimaryKey());
+            if (!hasPrimaryKey && StringUtils.isEmpty(table.getPrimaryKeyColumn())) {
+                throw new IllegalArgumentException("数据表 " + table.getTableName() + " 无主键及唯一索引字段，请手动指定primaryKeyColumn参数值");
+            }
             resultList.forEach(c -> {
                 if (c == null) {
                     return;
@@ -215,8 +229,14 @@ public class TableCodeGenerator {
                 if (StringUtils.isEmpty(c.getColumnComment())) {
                     c.setColumnComment(c.getColumnName());
                 }
+                if (!hasPrimaryKey) {
+                    //如果无法自动检测到任何主键字段，则使用上下文指定的主键字段
+                    if (c.getColumnName().equalsIgnoreCase(table.getPrimaryKeyColumn())) {
+                        c.setIsPrimaryKey(1);
+                    }
+                }
             });
-            logger.info("数据表 {} 包含 {} 个字段", tableName, resultList.size());
+            logger.info("数据表 {} 包含 {} 个字段", table.getTableName(), resultList.size());
         }
         return resultList;
     }
@@ -273,64 +293,82 @@ public class TableCodeGenerator {
     }
 
     /**
-     * 返回需要处理的表名
+     * 返回需要处理的表
      *
-     * @param tableNames 操作者传入的表名
-     * @return 需要处理的表名
+     * @param tableContextList 操作者传入的表
+     * @return 需要处理的表
      */
-    private List<String> findTableNamesToSubmit(String tableNames) {
-        if (StringUtils.isEmpty(tableNames)) {
-            return allTableNamesList;
-        }
-        tableNames = dbUtil.setTableNameCase(tableNames);
-        List<String> tableNamesToSubmit = new ArrayList<>();
-        String[] tmp = tableNames.split(",");
-        if (tmp.length > 0) {
-            for (String t : tmp) {
-                if (StringUtils.isNotEmpty(t) && allTableNamesList.contains(t)) {
-                    tableNamesToSubmit.add(t);
+    private List<TableContext> findTablesToSubmit(Set<TableContext> tableContextList) {
+        if (tableContextList == null || tableContextList.isEmpty()) {
+            //空则返回全部
+            List<TableContext> allTableContextList = new ArrayList<>();
+            allTableNamesList.forEach(a -> {
+                if (StringUtils.isEmpty(a)) {
+                    return;
                 }
-            }
+                TableContext tc = new TableContext();
+                tc.setTableName(a);
+                allTableContextList.add(tc);
+            });
+            return allTableContextList;
         }
-        return tableNamesToSubmit;
+        List<TableContext> currentTableContextList = new ArrayList<>();
+        tableContextList.forEach(t -> {
+            if (t == null) {
+                return;
+            }
+            if (allTableNamesList.contains(t.getTableName())) {
+                currentTableContextList.add(t);
+            }
+        });
+        return currentTableContextList;
     }
 
     /**
      * 准备好字段信息缓存
      *
-     * @param tableNamesToSubmit 待处理的表名
+     * @param tablesToSubmit 待处理的表
      */
-    private void prepareColumnsCache(List<String> tableNamesToSubmit) {
-        if (tableNamesToSubmit == null || tableNamesToSubmit.isEmpty()) {
+    private void prepareColumnsCache(List<TableContext> tablesToSubmit) {
+        if (tablesToSubmit == null || tablesToSubmit.isEmpty()) {
             return;
         }
-        tableNamesToSubmit.forEach(t -> {
+        tablesToSubmit.forEach(t -> {
+            if (t == null) {
+                return;
+            }
             List<ColumnInfo> columnInfoList = getColumnInfo(t);
             if (columnInfoList == null || columnInfoList.isEmpty()) {
                 return;
             }
-            columnsMap.put(t, columnInfoList);
+            columnsMap.put(t.getTableName(), columnInfoList);
         });
     }
 
     /**
      * 生成数据表的所有代码文件
      *
-     * @param tableName 表名
+     * @param table 表
      */
-    private void generateTableCodeFiles(String tableName) {
-        if (StringUtils.isEmpty(tableName)) {
+    private void generateTableCodeFiles(TableContext table) {
+        if (table == null || StringUtils.isEmpty(table.getTableName())) {
             return;
         }
-        List<ColumnInfo> columnInfoList = columnsMap.get(tableName);
+        List<ColumnInfo> columnInfoList = columnsMap.get(table.getTableName());
         if (columnInfoList == null || columnInfoList.isEmpty()) {
-            logger.warn("数据表 {} 无字段, 跳过!", tableName);
+            logger.warn("数据表 {} 无字段, 跳过!", table.getTableName());
             return;
         }
-        String simpleTableName = tableName;
-        if (StringUtils.isNotEmpty(prefixToRemove) && tableName.startsWith(prefixToRemove)) {
+        String simpleTableName = table.getTableName();
+        //优先使用该表的前缀
+        String prefixToRemove = StringUtils.trim(table.getTableNamePrefixToRemove());
+        if (StringUtils.isNotEmpty(globalTableNamePrefixToRemove)) {
+            //再使用全局的表前缀
+            prefixToRemove = globalTableNamePrefixToRemove;
+        }
+        if (StringUtils.isNotEmpty(prefixToRemove) && table.getTableName().startsWith(prefixToRemove)) {
             //去掉前缀后的表名
-            simpleTableName = StringUtils.removeStart(tableName, prefixToRemove);
+            simpleTableName = StringUtils.removeStart(table.getTableName(), prefixToRemove);
         }
         String javaClassName = StringUtils.underlineToCamel(simpleTableName, true);
 
@@ -338,7 +376,7 @@ public class TableCodeGenerator {
         TableInfo tableInfo = new TableInfo();
         tableInfo.setDbType(dbType);
         //表名
-        tableInfo.setName(tableName);
+        tableInfo.setName(table.getTableName());
         //表注释
         tableInfo.setComments(columnInfoList.get(0).getTableComment());
         //所有字段
@@ -353,7 +391,7 @@ public class TableCodeGenerator {
         tableInfo.setAuthor(currentUser);
 
         RenderData data = new RenderData();
-        data.setBasePkgName(StringUtils.isEmpty(pkgName) ? javaClassName.toLowerCase() : StringUtils.trim(pkgName));
+        data.setBasePkgName(pkgName);
         data.setTable(tableInfo);
         data.setUuid((list) -> UUID.randomUUID());
 
@@ -362,7 +400,7 @@ public class TableCodeGenerator {
         if (this.generateAll) {
             render(GeneratorConfig.otherTemplateList, data, javaClassName);
         }
-        logger.info("数据表 {} 的代码已生成完毕", tableName);
+        logger.info("数据表 {} 的代码已生成完毕", table.getTableName());
     }
 
     /**

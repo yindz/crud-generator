@@ -29,6 +29,11 @@
 | XXX.postman_collection.json | Postman接口JSON定义文件 | json/ | 使用方法：Postman>Import | 
 | XXX.postman_environment.json | Postman环境变量定义文件 | json/ | 使用方法：Postman>Manage Environment>Import | 
 
+## 主键字段检测规则
+1. 数据表有主键字段时，程序将直接使用该字段
+2. 数据表无主键字段时，程序将使用最后一个具有唯一索引的字段
+3. 数据表既无主键字段也无唯一索引字段时，程序将使用 TableContext 对象中 primaryKeyColumn 参数所指定的字段
+
 ## 最佳实践
 ### 当数据表字段发生变化时
 - 如果您采用原版 mybatis，则需要重新生成以下文件: 
@@ -55,8 +60,8 @@ java/domain/JpaXXXDO.java
 ```
 
 ### 使用建议
-- 如果您采用原版 mybatis，则不应在 resources/XXXMapper.xml 中编写自己的业务逻辑，因为该文件可能会被重新生成；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
-- 如果您采用 mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑，因为该文件不会被重新生成
+- 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 和 XXXServiceImpl.java 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
+- 如果您采用 mybatis通用Mapper，不应在 TkXXXServiceImpl.java 中编写自己的业务逻辑；但可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 mybatis通用Mapper
 
 ## 使用范例
@@ -80,19 +85,7 @@ java/domain/JpaXXXDO.java
     String password = "123456";
 
     //数据库实例名(oracle填写实例名，mysql留空)
-    String serviceName = "bizorderdb";
-
-    //输出目录的绝对路径(留空则生成到当前用户主目录)
-    String outPath = "E:\\tmp\\generated";
-
-    //java包名
-    String pkgName = "com.foobar.myapp";
-
-    //表名(多个以逗号隔开,留空为全部)
-    String tables = "T_ORDER_INFO,T_ORDER_DETAIL,T_ORDER_REPORT";
-
-    //需去掉的表名前缀(留空不去掉任何前缀)
-    String prefixToRemove = "T_";
+    String serviceName = "bizorderdb";    
 
     JdbcInfo param = new JdbcInfo();
     param.setDbType(dbType);
@@ -107,8 +100,27 @@ java/domain/JpaXXXDO.java
     //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
     //generator.setGenerateAll(false);
 
+    RunParam rp = new RunParam();
+
+    //java基础包名
+    rp.setBasePkgName("com.foobar.biz");
+
+    //输出目录的绝对路径(留空则生成到当前用户主目录)
+    rp.setOutputPath("E:\\tmp\\generated");
+    
+    //表名
+    TableContext table = TableContext.withName("t_attachment");
+
+    //需去掉的表名前缀(留空不去掉任何前缀)
+    table.setTableNamePrefixToRemove("t_");
+
+    //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
+    //table.setPrimaryKeyColumn("id");
+
+    rp.addTable(table);
+    
     //生成
-    generator.run(outPath, tables, pkgName, prefixToRemove);
+    generator.run(rp);
 ```
 
 ### 扩展
