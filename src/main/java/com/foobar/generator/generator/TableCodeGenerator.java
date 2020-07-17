@@ -411,6 +411,7 @@ public class TableCodeGenerator {
         //others
         tableInfo.setImports(generateImports(columnInfoList));
         tableInfo.setAuthor(currentUser);
+        tableInfo.setVersionColumn(dbUtil.setTableNameCase(table.getVersionColumn()));
 
         RenderData data = new RenderData();
         data.setBasePkgName(pkgName);

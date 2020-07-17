@@ -22,6 +22,11 @@ public class TableContext {
      */
     private String primaryKeyColumn;
 
+    /**
+     * 版本号字段名(用于乐观锁，默认version)
+     */
+    private String versionColumn = "version";
+
     public static TableContext withName(String name) {
         TableContext tc = new TableContext();
         tc.setTableName(name);
@@ -58,5 +63,13 @@ public class TableContext {
 
     public void setPrimaryKeyColumn(String primaryKeyColumn) {
         this.primaryKeyColumn = primaryKeyColumn;
+    }
+
+    public String getVersionColumn() {
+        return versionColumn;
+    }
+
+    public void setVersionColumn(String versionColumn) {
+        this.versionColumn = versionColumn;
     }
 }

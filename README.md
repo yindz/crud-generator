@@ -119,6 +119,9 @@ java/domain/JpaXXXDO.java
     //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
     //table.setPrimaryKeyColumn("id");
 
+    //如果该表有乐观锁，可在此设置其字段名，默认值为 version (不区分大小写)
+    //table.setVersionColumn("total");
+
     rp.addTable(table);
 
     //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀

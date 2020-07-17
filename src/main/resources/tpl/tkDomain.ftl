@@ -2,6 +2,7 @@ package ${table.pkgName};
 
 import java.io.Serializable;
 import javax.persistence.*;
+import tk.mybatis.mapper.annotation.Version;
 <#list table.imports as imp>
 import ${imp};
 </#list>
@@ -20,7 +21,8 @@ public class ${table.javaClassName}DO implements Serializable {
      * ${column.columnComment!''}
      */<#if column.isPrimaryKey == 1>
     @Id
-    <#if table.dbType == 'oracle'>@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "select SEQ_${table.name}.nextval from dual")</#if><#if table.dbType == 'mysql'>@KeySql(useGeneratedKeys = true)</#if></#if>
+    <#if table.dbType == 'oracle'>@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "select SEQ_${table.name}.nextval from dual")</#if><#if table.dbType == 'mysql'>@KeySql(useGeneratedKeys = true)</#if></#if><#if table.versionColumn??><#if table.versionColumn == column.columnName>
+    @Version</#if></#if>
     private ${column.columnJavaType} ${column.columnCamelNameLower};
 
 </#list>

@@ -60,6 +60,11 @@ public class TableInfo {
      */
     private List<ColumnInfo> columns;
 
+    /**
+     * 版本号字段名(用于乐观锁)
+     */
+    private String versionColumn;
+
     public String getDbType() {
         return dbType;
     }
@@ -138,5 +143,13 @@ public class TableInfo {
 
     public void setColumns(List<ColumnInfo> columns) {
         this.columns = columns;
+    }
+
+    public String getVersionColumn() {
+        return versionColumn;
+    }
+
+    public void setVersionColumn(String versionColumn) {
+        this.versionColumn = versionColumn;
     }
 }

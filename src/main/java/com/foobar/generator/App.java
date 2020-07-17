@@ -56,7 +56,6 @@ public class App {
         TableContext table = TableContext.withName("t_article_attachment");
         //需去掉的表名前缀(留空不去掉任何前缀)
         table.setTableNamePrefixToRemove("t_");
-        //table.setPrimaryKeyColumn("id");
         rp.addTable(table);
 
         //generator.setGlobalTableNamePrefixToRemove("t_");
