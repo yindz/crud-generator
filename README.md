@@ -118,6 +118,9 @@ java/domain/JpaXXXDO.java
     //table.setPrimaryKeyColumn("id");
 
     rp.addTable(table);
+
+    //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀
+    //generator.setGlobalTableNamePrefixToRemove("t_");
     
     //生成
     generator.run(rp);

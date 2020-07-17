@@ -59,6 +59,8 @@ public class App {
         //table.setPrimaryKeyColumn("id");
         rp.addTable(table);
 
+        generator.setGlobalTableNamePrefixToRemove("t_");
+
         //生成
         generator.run(rp);
     }

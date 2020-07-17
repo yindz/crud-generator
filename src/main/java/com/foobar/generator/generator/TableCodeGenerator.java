@@ -362,7 +362,7 @@ public class TableCodeGenerator {
         String simpleTableName = table.getTableName();
         //优先使用该表的前缀
         String prefixToRemove = StringUtils.trim(table.getTableNamePrefixToRemove());
-        if (StringUtils.isNotEmpty(globalTableNamePrefixToRemove)) {
+        if (StringUtils.isEmpty(prefixToRemove) && StringUtils.isNotEmpty(globalTableNamePrefixToRemove)) {
             //再使用全局的表前缀
             prefixToRemove = globalTableNamePrefixToRemove;
         }
