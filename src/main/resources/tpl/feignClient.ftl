@@ -5,6 +5,7 @@ import ${basePkgName}.vo.${table.javaClassName}VO;
 import ${basePkgName}.vo.${table.javaClassName}QueryVO;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +25,7 @@ public interface ${table.javaClassName}Client {
      * @return 分页查询结果
      */
     @RequestMapping(value = "/get${table.javaClassName}List", method = RequestMethod.GET)
-    PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}QueryVO query);
+    PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(@SpringQueryMap ${table.javaClassName}QueryVO query);
 
     /**
      * 插入${table.comments}记录
