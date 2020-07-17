@@ -14,6 +14,7 @@
 | 文件名 | 含义 | 路径 | 备注 | 
 |  ----  | ---- |---- |---- |
 | XXXVO.java | VO类| java/vo/ |   | 
+| XXXQueryVO.java | 查询条件 | java/vo/ | | 
 | XXXApi.java | 控制器代码 | java/controller/ |   | 
 | XXX.java | 实体类 | java/entity/ |  适用于原版mybatis | 
 | XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis  | 
@@ -23,7 +24,8 @@
 | XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 
 | XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 
 | XXXCommonMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper  | 
-| XXXDTO.java | DTO类 | java/dto/ |   | 
+| XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 
+| XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层  | 
 | IXXXService.java | 服务接口定义 | java/service/ |   | 
 | XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 
 | TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 

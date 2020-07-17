@@ -2,6 +2,7 @@ package ${table.pkgName};
 
 import java.io.Serializable;
 import javax.persistence.*;
+import tk.mybatis.mapper.annotation.KeySql;
 import tk.mybatis.mapper.annotation.Version;
 <#list table.imports as imp>
 import ${imp};

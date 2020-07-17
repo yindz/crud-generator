@@ -2,6 +2,7 @@ package ${table.pkgName};
 
 import com.github.pagehelper.PageInfo;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
+import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
 
 /**
  * ${table.comments}服务接口
@@ -14,13 +15,9 @@ public interface I${table.javaClassName}Service {
      * 分页查询
      *
      * @param query           查询条件
-     * @param pageNo          页码
-     * @param pageSize        分页大小
-     * @param orderBy         排序字段名(驼峰形式)
-     * @param orderDirection  排序方向(ASC/DESC)
      * @return 分页查询结果
      */
-    PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}DTO query, int pageNo, int pageSize, String orderBy, String orderDirection);
+    PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}QueryDTO query);
 
     /**
      * 插入记录

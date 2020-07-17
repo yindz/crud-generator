@@ -1,6 +1,10 @@
 package ${table.pkgName};
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Preconditions;
 import com.github.pagehelper.PageHelper;
@@ -10,13 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.BeanUtils;
-<#if useDubboServiceAnnotation = 1>import com.alibaba.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
+<#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
 import tk.mybatis.mapper.entity.Example;
 
 import ${basePkgName}.dto.${table.javaClassName}DTO;
+import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
 import ${basePkgName}.domain.${table.javaClassName}DO;
 import ${basePkgName}.service.I${table.javaClassName}Service;
+import ${basePkgName}.dao.${table.javaClassName}CommonMapper;
 
 /**
  * ${table.comments}服务接口实现
@@ -45,17 +51,13 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     * 分页查询
     *
     * @param query           查询条件
-    * @param pageNo          页码
-    * @param pageSize        分页大小
-    * @param orderBy         排序字段名(驼峰形式)
-    * @param orderDirection  排序方向(ASC/DESC)
     * @return 分页查询结果
     */
     @Override
-    public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}DTO query, int pageNo, int pageSize, String orderBy, String orderDirection) {
+    public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}QueryDTO query) {
         Preconditions.checkArgument(query != null, "查询条件为空");
-        Preconditions.checkArgument(pageNo > 0, "页码必须大于0");
-        Preconditions.checkArgument(pageSize > 0, "分页大小必须大于0");
+        Preconditions.checkArgument(query.getPageNo() != null && query.getPageNo() > 0, "页码必须大于0");
+        Preconditions.checkArgument(query.getPageSize() != null && query.getPageSize() > 0, "分页大小必须大于0");
 
         Example example = new Example(${table.javaClassName}DO.class);
         Example.Criteria criteria = example.createCriteria();
@@ -64,18 +66,18 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             criteria.andEqualTo("${column.columnCamelNameLower}", query.get${column.columnCamelNameUpper}());
         }
     </#list>
-        Field orderField = findField(orderBy);
+        Field orderField = findField(query.getOrderBy());
         if (orderField == null) {
             //默认使用主键(唯一索引字段)排序
-        <#list table.columns as column><#if column.isPrimaryKey == 1>    orderBy = "${column.columnCamelNameLower}";</#if></#list>
+        <#list table.columns as column><#if column.isPrimaryKey == 1>    query.setOrderBy("${column.columnCamelNameLower}");</#if></#list>
         }
-        if ("asc".equalsIgnoreCase(orderDirection)) {
-            example.orderBy(orderBy).asc();
+        if ("asc".equalsIgnoreCase(query.getOrderDirection())) {
+            example.orderBy(query.getOrderBy()).asc();
         } else {
-            example.orderBy(orderBy).desc();
+            example.orderBy(query.getOrderBy()).desc();
         }
 
-        PageHelper.startPage(pageNo, pageSize);
+        PageHelper.startPage(query.getPageNo(), query.getPageSize());
         PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.selectByExample(example));
         PageInfo<${table.javaClassName}DTO> result = new PageInfo<>();
         List<${table.javaClassName}DTO> rowList = new ArrayList<>();

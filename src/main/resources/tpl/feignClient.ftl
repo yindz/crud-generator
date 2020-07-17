@@ -2,8 +2,9 @@ package ${table.pkgName};
 
 import com.github.pagehelper.PageInfo;
 import ${basePkgName}.vo.${table.javaClassName}VO;
+import ${basePkgName}.vo.${table.javaClassName}QueryVO;
 
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,15 +21,10 @@ public interface ${table.javaClassName}Client {
      * 分页查询${table.comments}数据
      *
      * @param query           查询条件
-     * @param pageNo          页码
-     * @param pageSize        分页大小
-     * @param orderBy         排序字段名(驼峰形式)
-     * @param orderDirection  排序方向(ASC/DESC)
      * @return 分页查询结果
      */
     @RequestMapping(value = "/get${table.javaClassName}List", method = RequestMethod.GET)
-    PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}VO query, @RequestParam("pageNo") int pageNo
-        , @RequestParam("pageSize") int pageSize, @RequestParam("orderBy") String orderBy, @RequestParam("orderDirection") String orderDirection);
+    PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}QueryVO query);
 
     /**
      * 插入${table.comments}记录

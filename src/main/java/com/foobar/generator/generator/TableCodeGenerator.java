@@ -316,11 +316,11 @@ public class TableCodeGenerator {
     /**
      * 返回需要处理的表
      *
-     * @param tableContextList 操作者传入的表
+     * @param tableContexts 操作者传入的表
      * @return 需要处理的表
      */
-    private List<TableContext> findTablesToSubmit(Set<TableContext> tableContextList) {
-        if (tableContextList == null || tableContextList.isEmpty()) {
+    private List<TableContext> findTablesToSubmit(Set<TableContext> tableContexts) {
+        if (tableContexts == null || tableContexts.isEmpty()) {
             //空则返回全部
             List<TableContext> allTableContextList = new ArrayList<>();
             allTableNamesList.forEach(a -> {
@@ -334,7 +334,7 @@ public class TableCodeGenerator {
             return allTableContextList;
         }
         List<TableContext> currentTableContextList = new ArrayList<>();
-        tableContextList.forEach(t -> {
+        tableContexts.forEach(t -> {
             if (t == null) {
                 return;
             }

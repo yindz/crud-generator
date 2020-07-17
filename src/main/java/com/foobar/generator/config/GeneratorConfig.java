@@ -149,6 +149,22 @@ public class GeneratorConfig {
         feignClient.setTargetFileName(GeneratorConst.PLACEHOLDER + "Client.java");
         otherTemplateList.add(feignClient);
 
+        //queryDTO
+        TemplateInfo queryDto = new TemplateInfo();
+        queryDto.setTemplateName("queryDto.ftl");
+        queryDto.setTargetBaseDirName("java");
+        queryDto.setTargetPkgName("dto");
+        queryDto.setTargetFileName(GeneratorConst.PLACEHOLDER + "QueryDTO.java");
+        otherTemplateList.add(queryDto);
+
+        //queryVO
+        TemplateInfo queryVo = new TemplateInfo();
+        queryVo.setTemplateName("queryVo.ftl");
+        queryVo.setTargetBaseDirName("java");
+        queryVo.setTargetPkgName("vo");
+        queryVo.setTargetFileName(GeneratorConst.PLACEHOLDER + "QueryVO.java");
+        otherTemplateList.add(queryVo);
+
         //Postman Collection 定义文件
         TemplateInfo postman = new TemplateInfo();
         postman.setTemplateName("postmanCollection.ftl");
