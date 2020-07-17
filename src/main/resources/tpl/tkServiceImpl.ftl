@@ -8,9 +8,9 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.BeanUtils;
+<#if useDubboServiceAnnotation = 1>import com.alibaba.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
 import tk.mybatis.mapper.entity.Example;
 
@@ -24,7 +24,15 @@ import ${basePkgName}.service.I${table.javaClassName}Service;
  *
  * @author ${table.author!''}
  */
-@Service
+<#if useDubboServiceAnnotation = 1>@Service(
+    version = "${r"${"}dubbo.service.version}",
+    application = "${r"${"}dubbo.application.id}",
+    protocol = "${r"${"}dubbo.protocol.id}",
+    registry = "${r"${"}dubbo.registry.id}",
+    provider = "${r"${"}dubbo.provider.id}"
+)
+<#else>@Service
+</#if>
 public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName}Service {
     private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}ServiceImpl.class);
 

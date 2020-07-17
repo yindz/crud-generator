@@ -30,6 +30,11 @@ public class RenderData {
      */
     private String timeZone = GeneratorConfig.DEFAULT_TIME_ZONE;
 
+    /**
+     * 是否启用Dubbo服务
+     */
+    private int useDubboServiceAnnotation = 0;
+
     public String getBasePkgName() {
         return basePkgName;
     }
@@ -60,5 +65,13 @@ public class RenderData {
 
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
+    }
+
+    public int getUseDubboServiceAnnotation() {
+        return useDubboServiceAnnotation;
+    }
+
+    public void setUseDubboServiceAnnotation(int useDubboServiceAnnotation) {
+        this.useDubboServiceAnnotation = useDubboServiceAnnotation;
     }
 }

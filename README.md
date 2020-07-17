@@ -123,6 +123,9 @@ java/domain/JpaXXXDO.java
 
     //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀
     //generator.setGlobalTableNamePrefixToRemove("t_");
+
+    //默认使用 Spring 的 @Service 注解。如果需要换成 Dubbo 的 @Service 注解，请设置该值为true
+    //generator.setUseDubboService(true);
     
     //生成
     generator.run(rp);

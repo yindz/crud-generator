@@ -86,6 +86,11 @@ public class TableCodeGenerator {
     private boolean generateAll = true;
 
     /**
+     * 是否生成Dubbo Service
+     */
+    private boolean useDubboService = false;
+
+    /**
      * 基础输出路径
      */
     private String baseOutputPath;
@@ -95,14 +100,30 @@ public class TableCodeGenerator {
      */
     private String globalTableNamePrefixToRemove;
 
+    /**
+     * 是否生成所有代码
+     * 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码
+     *
+     * @param generateAll 是否生成所有代码
+     */
     public void setGenerateAll(boolean generateAll) {
         this.generateAll = generateAll;
     }
 
     /**
+     * 默认使用 Spring 的 @Service 注解
+     * 如果需要换成 Dubbo 的 @Service 注解，请设置该值为true
+     *
+     * @param useDubboService 是否使用Dubbo 的 @Service 注解
+     */
+    public void setUseDubboService(boolean useDubboService) {
+        this.useDubboService = useDubboService;
+    }
+
+    /**
      * 设置全局的待删除表名前缀
      *
-     * @param prefixToRemove
+     * @param prefixToRemove 全局待删除表名前缀
      */
     public void setGlobalTableNamePrefixToRemove(String prefixToRemove) {
         this.globalTableNamePrefixToRemove = StringUtils.trim(prefixToRemove);
@@ -395,6 +416,7 @@ public class TableCodeGenerator {
         data.setBasePkgName(pkgName);
         data.setTable(tableInfo);
         data.setUuid((list) -> UUID.randomUUID());
+        data.setUseDubboServiceAnnotation(this.useDubboService ? 1 : 0);
 
         //输出
         render(GeneratorConfig.coreTemplateList, data, javaClassName);

@@ -53,13 +53,16 @@ public class App {
         rp.setOutputPath("E:\\tmp\\generated");
 
         //表名
-        TableContext table = TableContext.withName("t_attachment");
+        TableContext table = TableContext.withName("t_article_attachment");
         //需去掉的表名前缀(留空不去掉任何前缀)
         table.setTableNamePrefixToRemove("t_");
         //table.setPrimaryKeyColumn("id");
         rp.addTable(table);
 
-        generator.setGlobalTableNamePrefixToRemove("t_");
+        //generator.setGlobalTableNamePrefixToRemove("t_");
+
+        //默认使用 Spring 的 @Service 注解。如果需要使用 Dubbo 的@Service注解，请设置该值为true
+        generator.setUseDubboService(true);
 
         //生成
         generator.run(rp);
