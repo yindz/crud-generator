@@ -33,7 +33,7 @@ public interface ${table.javaClassName}Client {
      * @return 是否成功
      */
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    boolean insert(@Valid ${table.javaClassName}VO vo);
+    boolean insert(${table.javaClassName}VO vo);
 
     /**
      * 更新${table.comments}记录
