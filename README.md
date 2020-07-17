@@ -6,6 +6,7 @@
 - 支持生成 mybatis 分页代码(基于 [Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper))
 - 支持生成基于 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) 的实体类和DAO层接口代码
 - 支持生成基于 [Hibernate Validator](https://hibernate.org/validator/documentation/) 的参数校验注解
+- 支持生成基于 [Spring Cloud OpenFeign](https://cloud.spring.io/spring-cloud-openfeign/reference/html/) 的服务消费端代码
 - 支持生成基于 [Swagger](https://swagger.io/docs/) 的API接口及参数注解
 - 支持生成 [Postman](https://www.postman.com/) 可导入的API接口JSON定义文件
 
@@ -26,6 +27,7 @@
 | IXXXService.java | 服务接口定义 | java/service/ |   | 
 | XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 
 | TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 
+| XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端 | 
 | XXX.postman_collection.json | Postman接口JSON定义文件 | json/ | 使用方法：Postman>Import | 
 | XXX.postman_environment.json | Postman环境变量定义文件 | json/ | 使用方法：Postman>Manage Environment>Import | 
 
@@ -138,6 +140,7 @@ java/domain/JpaXXXDO.java
 | ${basePkgName} | 基础包名| String |
 | ${table} | 数据表根对象| Object |
 | ${table.name} | 数据表原始名称| String |
+| ${table.kebabCaseName} | kebabCase形式的表名 | String |
 | ${table.dbType} | 数据库类型(oracle/mysql)| String |
 | ${table.subPkgName} | 子包名 | String |
 | ${table.javaClassName} | Java类名称(首字母大写) |String |
