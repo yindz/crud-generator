@@ -186,6 +186,12 @@ java/domain/JpaXXXDO.java
 </dependency>
 
 <dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+    <version>X.X.X</version>
+</dependency>
+
+<dependency>
    <groupId>org.apache.commons</groupId>
    <artifactId>commons-lang3</artifactId>
    <version>X.X.X</version>
@@ -224,6 +230,12 @@ java/domain/JpaXXXDO.java
 <dependency>
     <groupId>com.github.pagehelper</groupId>
     <artifactId>pagehelper-spring-boot-starter</artifactId>
+    <version>X.X.X</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.dubbo</groupId>
+    <artifactId>dubbo-spring-boot-starter</artifactId>
     <version>X.X.X</version>
 </dependency>
 ```
