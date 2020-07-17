@@ -21,6 +21,11 @@ public class TableInfo {
     private String name;
 
     /**
+     * kebabCase形式的表名
+     */
+    private String kebabCaseName;
+
+    /**
      * 数据表注释
      */
     private String comments;
@@ -69,6 +74,14 @@ public class TableInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getKebabCaseName() {
+        return kebabCaseName;
+    }
+
+    public void setKebabCaseName(String kebabCaseName) {
+        this.kebabCaseName = kebabCaseName;
     }
 
     public String getComments() {

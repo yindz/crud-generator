@@ -377,6 +377,7 @@ public class TableCodeGenerator {
         tableInfo.setDbType(dbType);
         //表名
         tableInfo.setName(table.getTableName());
+        tableInfo.setKebabCaseName(simpleTableName.replaceAll("_", "-").toLowerCase());
         //表注释
         tableInfo.setComments(columnInfoList.get(0).getTableComment());
         //所有字段

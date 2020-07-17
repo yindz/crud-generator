@@ -31,15 +31,15 @@ public class ${table.javaClassName}Controller {
     private I${table.javaClassName}Service ${table.javaClassNameLower}Service;
 
     /**
-    * 分页查询${table.comments}数据
-    *
-    * @param query           查询条件
-    * @param pageNo          页码
-    * @param pageSize        分页大小
-    * @param orderBy         排序字段名(驼峰形式)
-    * @param orderDirection  排序方向(ASC/DESC)
-    * @return 分页查询结果
-    */
+     * 分页查询${table.comments}数据
+     *
+     * @param query           查询条件
+     * @param pageNo          页码
+     * @param pageSize        分页大小
+     * @param orderBy         排序字段名(驼峰形式)
+     * @param orderDirection  排序方向(ASC/DESC)
+     * @return 分页查询结果
+     */
     @ApiOperation(value = "分页查询${table.comments}数据", httpMethod = "GET",tags = {"分页查询${table.comments}数据"})
     @GetMapping(value = "/get${table.javaClassName}List")
     public PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}VO query, int pageNo, int pageSize, String orderBy, String orderDirection) {

@@ -141,6 +141,14 @@ public class GeneratorConfig {
         controller.setTargetFileName(GeneratorConst.PLACEHOLDER + "Controller.java");
         otherTemplateList.add(controller);
 
+        //FeignClient
+        TemplateInfo feignClient = new TemplateInfo();
+        feignClient.setTemplateName("feignClient.ftl");
+        feignClient.setTargetBaseDirName("java");
+        feignClient.setTargetPkgName("feign");
+        feignClient.setTargetFileName(GeneratorConst.PLACEHOLDER + "Client.java");
+        otherTemplateList.add(feignClient);
+
         //Postman Collection 定义文件
         TemplateInfo postman = new TemplateInfo();
         postman.setTemplateName("postmanCollection.ftl");
