@@ -397,6 +397,9 @@ public class TableCodeGenerator {
         tableInfo.setKebabCaseName(simpleTableName.replaceAll("_", "-").toLowerCase());
         //表注释
         tableInfo.setComments(columnInfoList.get(0).getTableComment());
+        if (StringUtils.isEmpty(tableInfo.getComments())) {
+            tableInfo.setComments(tableInfo.getName());
+        }
         //所有字段
         tableInfo.setColumns(columnInfoList);
         //java类名
