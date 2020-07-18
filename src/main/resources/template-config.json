@@ -1,0 +1,154 @@
+[
+  {
+    "templateName": "entity.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "entity",
+    "targetFileName": "#.java",
+    "isCore": 1,
+    "remark": "适用于原版mybatis的实体类"
+  },
+  {
+    "templateName": "vo.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "vo",
+    "targetFileName": "#VO.java",
+    "isCore": 1,
+    "remark": "VO"
+  },
+  {
+    "templateName": "dto.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "dto",
+    "targetFileName": "#DTO.java",
+    "isCore": 1,
+    "remark": "DTO"
+  },
+  {
+    "templateName": "tkDomain.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "domain",
+    "targetFileName": "#DO.java",
+    "isCore": 1,
+    "remark": "适用于mybatis通用Mapper的实体类"
+  },
+  {
+    "templateName": "jpaDomain.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "domain",
+    "targetFileName": "Jpa#DO.java",
+    "isCore": 1,
+    "remark": "适用于JPA的实体类"
+  },
+  {
+    "templateName": "mapperXml.ftl",
+    "targetBaseDirName": "resources",
+    "targetPkgName": "dao",
+    "targetFileName": "#Mapper.xml",
+    "isCore": 1,
+    "remark": "适用于原版mybatis的Mapper XML"
+  },
+  {
+    "templateName": "mapperClass.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "dao",
+    "targetFileName": "#Mapper.java",
+    "isCore": 0,
+    "remark": "适用于原版mybatis的Mapper接口"
+  },
+  {
+    "templateName": "tkMapperClass.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "dao",
+    "targetFileName": "#CommonMapper.java",
+    "isCore": 0,
+    "remark": "适用于mybatis通用Mapper的Mapper接口"
+  },
+  {
+    "templateName": "jpaDaoClass.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "dao",
+    "targetFileName": "#Dao.java",
+    "isCore": 0,
+    "remark": "适用于JPA的DAO接口"
+  },
+  {
+    "templateName": "tkMapperXml.ftl",
+    "targetBaseDirName": "resources",
+    "targetPkgName": "dao",
+    "targetFileName": "#CommonMapper.xml",
+    "isCore": 0,
+    "remark": "适用于mybatis通用Mapper的Mapper XML"
+  },
+  {
+    "templateName": "serviceInterface.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "service",
+    "targetFileName": "I#Service.java",
+    "isCore": 0,
+    "remark": "服务接口定义"
+  },
+  {
+    "templateName": "serviceImpl.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "service",
+    "targetFileName": "#ServiceImpl.java",
+    "isCore": 1,
+    "remark": "适用于原版mybatis的服务接口实现"
+  },
+  {
+    "templateName": "tkServiceImpl.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "service",
+    "targetFileName": "Tk#ServiceImpl.java",
+    "isCore": 1,
+    "remark": "适用于mybatis通用Mapper的服务接口实现"
+  },
+  {
+    "templateName": "controller.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "controller",
+    "targetFileName": "#Controller.java",
+    "isCore": 0,
+    "remark": "控制器"
+  },
+  {
+    "templateName": "feignClient.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "feign",
+    "targetFileName": "I#Client.java",
+    "isCore": 0,
+    "remark": "FeignClient接口"
+  },
+  {
+    "templateName": "queryDto.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "dto",
+    "targetFileName": "#QueryDTO.java",
+    "isCore": 0,
+    "remark": "查询条件DTO"
+  },
+  {
+    "templateName": "queryVo.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "vo",
+    "targetFileName": "#QueryVO.java",
+    "isCore": 0,
+    "remark": "查询条件VO"
+  },
+  {
+    "templateName": "postmanCollection.ftl",
+    "targetBaseDirName": "json",
+    "targetPkgName": "",
+    "targetFileName": "#.postman_collection.json",
+    "isCore": 1,
+    "remark": "Postman Collection 定义文件"
+  },
+  {
+    "templateName": "postmanEnvironment.ftl",
+    "targetBaseDirName": "json",
+    "targetPkgName": "",
+    "targetFileName": "#.postman_environment.json",
+    "isCore": 0,
+    "remark": "Postman Environment 定义文件"
+  }
+]

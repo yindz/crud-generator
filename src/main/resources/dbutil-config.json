@@ -1,0 +1,20 @@
+[
+  {
+    "type": "mysql",
+    "className": "com.foobar.generator.db.MySQLUtil",
+    "driverName": "com.mysql.cj.jdbc.Driver",
+    "jdbcUrl": "jdbc:mysql://%s:%s/%s?useUnicode=true&autoReconnect=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai"
+  },
+  {
+    "type": "oracle",
+    "className": "com.foobar.generator.db.OracleUtil",
+    "driverName": "oracle.jdbc.OracleDriver",
+    "jdbcUrl": "jdbc:oracle:thin:@%s:%s:%s"
+  },
+  {
+    "type": "sqlserver",
+    "className": "com.foobar.generator.db.SqlServerUtil",
+    "driverName": "net.sourceforge.jtds.jdbc.Driver",
+    "jdbcUrl": "jdbc:jtds:sqlserver://%s:%s/%s"
+  }
+]
