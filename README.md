@@ -1,7 +1,7 @@
 # CRUD代码生成器
 - 基于数据表结构定义，自动生成 CRUD 代码，省时省力
 - 自动检测数据表字段类型、字段长度、数值精度、主键字段、唯一索引字段
-- 支持 Oracle 和 MySQL(Percona/MariaDB) 数据库
+- 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SqlServer 三种类型数据库
 - 支持生成原版 mybatis 以及 [mybatis通用Mapper](https://github.com/abel533/Mapper) 相关代码
 - 支持生成 mybatis 分页代码(基于 [Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper))
 - 支持生成基于 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) 的实体类和DAO层接口代码
@@ -70,67 +70,60 @@ java/domain/JpaXXXDO.java
 
 ## 使用范例
 ```
-    //指定数据库类型
-    String dbType = GeneratorConst.ORACLE;
-
-    //数据库主机名或IP
-    String host = "192.168.2.101";
-
-    //数据库端口号
-    String port = "1521";
-
-    //schema名称(oracle填写Schema名称，mysql则填写数据库名称)
-    String schema = "BIZ_ORDER";
-
-    //数据库用户名
-    String username = "BIZ_ORDER_USER";
-
-    //数据库用户密码
-    String password = "123456";
-
-    //数据库实例名(oracle填写实例名，mysql留空)
-    String serviceName = "bizorderdb";    
-
     JdbcInfo param = new JdbcInfo();
-    param.setDbType(dbType);
-    param.setHost(host);
-    param.setPort(port);
-    param.setSchema(schema);
-    param.setUsername(username);
-    param.setPassword(password);
-    param.setServiceName(serviceName);
-    TableCodeGenerator generator = new TableCodeGenerator(param);
+    
+    //指定数据库类型
+    param.setDbType(GeneratorConst.SQLSERVER);
+    
+    //数据库主机名或IP
+    param.setHost("192.168.75.131");
+    
+    //数据库端口号
+    param.setPort("1646");
+    
+    //schema名称(oracle填写Schema名称，mysql或sqlserver则填写数据库名称)
+    param.setSchema("newdb");
+    
+    //数据库用户名
+    param.setUsername("sa");
+    
+    //数据库用户密码
+    param.setPassword("123456");
+    
+    //数据库实例名(oracle填写实例名，mysql或sqlserver留空)
+    param.setServiceName("");
 
-    //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
-    //generator.setGenerateAll(false);
-
+    TableCodeGenerator generator = new TableCodeGenerator(param);    
     RunParam rp = new RunParam();
 
-    //java基础包名
-    rp.setBasePkgName("com.foobar.biz");
-
+    //java基础包名(留空则默认使用com.example.myapp)
+    rp.setBasePkgName("com.foobar.bizapp");
+    
     //输出目录的绝对路径(留空则生成到当前用户主目录)
     rp.setOutputPath("E:\\tmp\\generated");
     
     //表名
-    TableContext table = TableContext.withName("t_attachment");
-
+    TableContext table = TableContext.withName("t_product");
+    
     //需去掉的表名前缀(留空不去掉任何前缀)
     table.setTableNamePrefixToRemove("t_");
-
+    
     //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
-    //table.setPrimaryKeyColumn("id");
-
+    //table.setPrimaryKeyColumn("code");
+    
     //如果该表有乐观锁，可在此设置其字段名，默认值为 version (不区分大小写)
     //table.setVersionColumn("total");
-
+    
     rp.addTable(table);
-
+    
     //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀
     //generator.setGlobalTableNamePrefixToRemove("t_");
-
-    //默认使用 Spring 的 @Service 注解。如果需要换成 Dubbo 的 @Service 注解，请设置该值为true
+    
+    //默认使用 Spring 的 @Service 注解。如果需要使用 Dubbo 的@Service注解，请设置该值为true
     //generator.setUseDubboService(true);
+    
+    //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
+    //generator.setGenerateAll(false);
     
     //生成
     generator.run(rp);
@@ -138,7 +131,10 @@ java/domain/JpaXXXDO.java
 
 ### 扩展
 #### 适配更多数据库
-自行继承 AbstractDbUtil 抽象类即可。不要忘记加入相应的 jdbc 驱动。
+1. 编写自定义的SQL语句(用于查询数据库中的表名、表注释、字段名、字段注释、字段类型、字段长度、主键、唯一索引等)，约定保存路径为 resources/sql_XXX.xml
+2. 编写您自定义的DbUtil类继承 AbstractDbUtil 抽象类，如数据库有特殊逻辑，也可在该类中编写
+3. 在 dbutils-config.json 文件中配置您自定义的DbUtil类映射及驱动名称等信息
+4. 不要忘记在 pom.xml 中加入相应的 jdbc 驱动
 
 #### 更多代码模板
 代码模板基于 [Freemarker模板引擎](https://freemarker.apache.org/docs/index.html) 编写，因此您可以遵循该模板的语法自行实现新的代码模板。提供的变量上下文包括：
@@ -179,7 +175,7 @@ java/domain/JpaXXXDO.java
 | ${column.isChar} | 是否为字符列(0否/1是) | int |
 | ${column.isPrimaryKey} | 是否为主键(0否/1是) |int |
 
-编写完模板文件之后，在 GeneratorConfig.java 类中配置该模板的相关信息即可。
+编写完模板文件之后，在 template-config.json 文件中配置该模板的相关信息即可。
 
 ### 额外说明
 自动生成的代码中用到了一些第三方开源组件，它们的maven坐标如下(版本号请自行匹配)：
