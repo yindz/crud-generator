@@ -2,8 +2,8 @@
   {
     "templateName": "entity.ftl",
     "targetBaseDirName": "java",
-    "targetPkgName": "entity",
-    "targetFileName": "#.java",
+    "targetPkgName": "domain",
+    "targetFileName": "#DO.java",
     "isCore": 1,
     "remark": "适用于原版mybatis的实体类"
   },
@@ -27,7 +27,7 @@
     "templateName": "tkDomain.ftl",
     "targetBaseDirName": "java",
     "targetPkgName": "domain",
-    "targetFileName": "#DO.java",
+    "targetFileName": "Tk#DO.java",
     "isCore": 1,
     "remark": "适用于mybatis通用Mapper的实体类"
   },
@@ -134,6 +134,14 @@
     "targetFileName": "#QueryVO.java",
     "isCore": 0,
     "remark": "查询条件VO"
+  },
+  {
+    "templateName": "converter.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "util",
+    "targetFileName": "#Converter.java",
+    "isCore": 0,
+    "remark": "转换工具类"
   },
   {
     "templateName": "postmanCollection.ftl",

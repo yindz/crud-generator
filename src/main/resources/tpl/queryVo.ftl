@@ -1,6 +1,5 @@
 package ${table.pkgName};
 
-import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Min;
 import io.swagger.annotations.ApiModel;

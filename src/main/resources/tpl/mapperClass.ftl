@@ -1,6 +1,7 @@
 package ${table.pkgName};
 
-import ${basePkgName}.entity.${table.javaClassName};
+import ${basePkgName}.domain.${table.javaClassName}DO;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,7 +20,7 @@ public interface ${table.javaClassName}Mapper {
      * @param query 查询条件
      * @return 查询结果
      */
-    List<${table.javaClassName}> get${table.javaClassName}List(Map<String, Object> query);
+    List<${table.javaClassName}DO> get${table.javaClassName}List(Map<String, Object> query);
 
     /**
      * 查询数量
@@ -35,7 +36,7 @@ public interface ${table.javaClassName}Mapper {
      * @param record 待插入数据
      * @return 插入行数
      */
-    int insert(${table.javaClassName} record);
+    int insert(${table.javaClassName}DO record);
 
     /**
      * 更新
@@ -43,7 +44,7 @@ public interface ${table.javaClassName}Mapper {
      * @param record 待更新数据
      * @return 更新行数
      */
-    int update(${table.javaClassName} record);
+    int update(${table.javaClassName}DO record);
 
     /**
      * 删除
@@ -51,5 +52,5 @@ public interface ${table.javaClassName}Mapper {
      * @param record 待删除数据
      * @return 删除行数
      */
-    int delete(${table.javaClassName} record);
+    int delete(${table.javaClassName}DO record);
 }

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.ReflectionUtils;
 <#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
 import tk.mybatis.mapper.entity.Example;
@@ -23,6 +24,8 @@ import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
 import ${basePkgName}.domain.${table.javaClassName}DO;
 import ${basePkgName}.service.I${table.javaClassName}Service;
 import ${basePkgName}.dao.${table.javaClassName}CommonMapper;
+import ${basePkgName}.util.${table.javaClassName}Converter;
+<#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 
 /**
  * ${table.comments}服务接口实现
@@ -69,7 +72,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Field orderField = findField(query.getOrderBy());
         if (orderField == null) {
             //默认使用主键(唯一索引字段)排序
-        <#list table.columns as column><#if column.isPrimaryKey == 1>    query.setOrderBy("${column.columnCamelNameLower}");</#if></#list>
+        <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");</#if>
         }
         if ("asc".equalsIgnoreCase(query.getOrderDirection())) {
             example.orderBy(query.getOrderBy()).asc();
@@ -80,19 +83,17 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
         PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.selectByExample(example));
         PageInfo<${table.javaClassName}DTO> result = new PageInfo<>();
-        List<${table.javaClassName}DTO> rowList = new ArrayList<>();
+        List<${table.javaClassName}DTO> dtoList = new ArrayList<>();
         if (pageInfo.getList() != null && !pageInfo.getList().isEmpty()) {
-            pageInfo.getList().forEach(e->{
+            pageInfo.getList().forEach(e -> {
                 if (e == null) {
                     return;
                 }
-                ${table.javaClassName}DTO row = new ${table.javaClassName}DTO();
-                BeanUtils.copyProperties(e, row);
-                rowList.add(row);
+                dtoList.add(${table.javaClassName}Converter.domainToDTO(e));
             });
         }
         BeanUtils.copyProperties(pageInfo, result);
-        result.setList(rowList);
+        result.setList(dtoList);
         return result;
     }
 
@@ -106,7 +107,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean insert(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待插入的数据为空");
-        ${table.javaClassName}DO cond = convertTo${table.javaClassName}DO(record);
+        ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
         return ${table.javaClassNameLower}Mapper.insertSelective(cond) > 0;
     }
 
@@ -125,7 +126,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              if (record == null) {
                 continue;
              }
-             if (${table.javaClassNameLower}Mapper.insertSelective(convertTo${table.javaClassName}DO(record)) == 0) {
+             if (${table.javaClassNameLower}Mapper.insertSelective(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
              }
              success++;
@@ -144,8 +145,8 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean update(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待更新的数据为空");
-        <#list table.columns as column><#if column.isPrimaryKey == 1>Preconditions.checkArgument(record.get${column.columnCamelNameUpper}() != null, "待更新的数据${column.columnCamelNameLower}为空");</#if></#list>
-        ${table.javaClassName}DO cond = convertTo${table.javaClassName}DO(record);
+        <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待更新的数据${pk.columnCamelNameLower}为空");</#if>
+        ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
         return ${table.javaClassNameLower}Mapper.updateByPrimaryKeySelective(cond) > 0;
     }
 
@@ -159,24 +160,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean delete(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待删除的数据为空");
-        <#list table.columns as column><#if column.isPrimaryKey == 1>Preconditions.checkArgument(record.get${column.columnCamelNameUpper}() != null, "待删除的数据${column.columnCamelNameLower}为空");</#if></#list>
-        ${table.javaClassName}DO cond = convertTo${table.javaClassName}DO(record);
+        <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待删除的数据${pk.columnCamelNameLower}为空");</#if>
+        ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
         return ${table.javaClassNameLower}Mapper.deleteByPrimaryKey(cond) > 0;
-    }
-
-    /**
-     * 转换
-     *
-     * @param record   待转换数据
-     * @return 转换结果
-    */
-    private ${table.javaClassName}DO convertTo${table.javaClassName}DO(${table.javaClassName}DTO record) {
-        if (record == null) {
-            return null;
-        }
-        ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
-        BeanUtils.copyProperties(record, cond);
-        return cond;
     }
 
     private Field findField(String name){

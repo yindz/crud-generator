@@ -1,6 +1,5 @@
 package ${table.pkgName};
 
-import java.io.Serializable;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 
 /**

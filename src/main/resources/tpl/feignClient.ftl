@@ -8,6 +8,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+<#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 
 /**
  * ${table.comments}-FeignClient
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author ${table.author!''}
  */
 @FeignClient("${table.kebabCaseName}-service")
-public interface ${table.javaClassName}Client {
+public interface I${table.javaClassName}Client {
 
     /**
      * 分页查询${table.comments}数据
@@ -47,9 +49,9 @@ public interface ${table.javaClassName}Client {
     /**
      * 删除${table.comments}记录
      *
-     * @param vo    待删除的数据
+     * @param <#if pk??>${pk.columnCamelNameLower}  待删除的${table.comments}记录${pk.columnComment}</#if>
      * @return 是否成功
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    boolean delete(${table.javaClassName}VO vo);
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    boolean delete(<#if pk??>@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>);
 }

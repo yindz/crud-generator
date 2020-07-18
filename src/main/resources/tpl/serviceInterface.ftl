@@ -1,5 +1,7 @@
 package ${table.pkgName};
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 import ${basePkgName}.dto.${table.javaClassName}QueryDTO;

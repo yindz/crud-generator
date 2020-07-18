@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="${table.pkgName}.${table.javaClassName}Mapper">
-    <resultMap id="queryResultMap" type="${basePkgName}.entity.${table.javaClassName}">
+    <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
+    <resultMap id="queryResultMap" type="${basePkgName}.domain.${table.javaClassName}DO">
         <#list table.columns as column>
         <result column="${column.columnName}" property="${column.columnCamelNameLower}" jdbcType="${column.columnMyBatisType}" />
         </#list>
@@ -33,11 +34,11 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="${basePkgName}.entity.${table.javaClassName}" useGeneratedKeys="true"<#list table.columns as column><#if column.isPrimaryKey == 1> keyColumn="${column.columnName}" keyProperty="${column.columnCamelNameLower}"</#if></#list>>
-        <#if table.dbType == 'oracle'><#list table.columns as column><#if column.isPrimaryKey == 1>
-        <selectKey keyProperty="${column.columnCamelNameLower}" resultType="${column.columnJavaType}" order="BEFORE">
+    <insert id="insert" parameterType="${basePkgName}.domain.${table.javaClassName}DO" useGeneratedKeys="true"<#if pk??> keyColumn="${pk.columnName}" keyProperty="${pk.columnCamelNameLower}"</#if>>
+        <#if table.dbType == 'oracle'><#if pk??>
+        <selectKey keyProperty="${pk.columnCamelNameLower}" resultType="${pk.columnJavaType}" order="BEFORE">
             select SEQ_${table.name}.nextval from dual
-        </selectKey></#if></#list></#if>
+        </selectKey></#if></#if>
         insert into ${table.name} (
             <#list table.columns as column>
             ${column.columnName}<#if column?has_next>,</#if>
@@ -50,7 +51,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="${basePkgName}.entity.${table.javaClassName}">
+    <update id="update" parameterType="${basePkgName}.domain.${table.javaClassName}DO">
         update ${table.name}
         <set>
             <#list table.columns as column>
@@ -59,11 +60,11 @@
                 </#if>
             </#list>
         </set>
-        <#list table.columns as column><#if column.isPrimaryKey == 1>where ${column.columnName} = ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}</#if></#list>
+        <#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if>
     </update>
 
-    <delete id="delete" parameterType="${basePkgName}.entity.${table.javaClassName}">
+    <delete id="delete" parameterType="${basePkgName}.domain.${table.javaClassName}DO">
         delete from ${table.name}
-        <#list table.columns as column><#if column.isPrimaryKey == 1>where ${column.columnName} = ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}</#if></#list>
+        <#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if>
     </delete>
 </mapper>

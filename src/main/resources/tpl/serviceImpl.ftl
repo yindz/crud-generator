@@ -3,6 +3,8 @@ package ${table.pkgName};
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Preconditions;
@@ -14,12 +16,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 <#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
-import ${basePkgName}.entity.${table.javaClassName};
+import ${basePkgName}.domain.${table.javaClassName}DO;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
 import ${basePkgName}.service.I${table.javaClassName}Service;
+import ${basePkgName}.util.${table.javaClassName}Converter;
+import ${basePkgName}.dao.${table.javaClassName}Mapper;
+<#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 
 /**
  * ${table.comments}服务接口实现
@@ -64,28 +70,26 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Field orderField = findField(query.getOrderBy());
         if (orderField == null) {
             //默认使用主键(唯一索引字段)排序
-    <#list table.columns as column><#if column.isPrimaryKey == 1>        queryMap.put("orderBy", "${column.columnCamelNameLower}");</#if></#list>
+    <#if pk??>        queryMap.put("orderBy", "${pk.columnCamelNameLower}");</#if>
         } else {
             queryMap.put("orderBy", CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, query.getOrderBy()));
         }
         queryMap.put("orderDirection", "asc".equalsIgnoreCase(query.getOrderDirection()) ? "asc" : "desc");
 
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
-        PageInfo<${table.javaClassName}> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.get${table.javaClassName}List(queryMap));
+        PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.get${table.javaClassName}List(queryMap));
         PageInfo<${table.javaClassName}DTO> result = new PageInfo<>();
-        List<${table.javaClassName}DTO> rowList = new ArrayList<>();
+        List<${table.javaClassName}DTO> dtoList = new ArrayList<>();
         if (pageInfo.getList() != null && !pageInfo.getList().isEmpty()) {
-            pageInfo.getList().forEach(e->{
+            pageInfo.getList().forEach(e -> {
                 if (e == null) {
                     return;
                 }
-                ${table.javaClassName}DTO row = new ${table.javaClassName}DTO();
-                BeanUtils.copyProperties(e, row);
-                rowList.add(row);
+                dtoList.add(${table.javaClassName}Converter.domainToDTO(e));
             });
         }
         BeanUtils.copyProperties(pageInfo, result);
-        result.setList(rowList);
+        result.setList(dtoList);
         return result;
     }
 
@@ -99,7 +103,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean insert(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待插入的数据为空");
-        return ${table.javaClassNameLower}Mapper.insert(convertTo${table.javaClassName}(record)) > 0;
+        return ${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record)) > 0;
     }
 
     /**
@@ -117,7 +121,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              if (record == null) {
                  continue;
              }
-             if (${table.javaClassNameLower}Mapper.insert(convertTo${table.javaClassName}(record)) == 0) {
+             if (${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
              }
              success++;
@@ -136,8 +140,8 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean update(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待更新的数据为空");
-        <#list table.columns as column><#if column.isPrimaryKey == 1>Preconditions.checkArgument(record.get${column.columnCamelNameUpper}() != null, "待更新的数据${column.columnCamelNameLower}为空");</#if></#list>
-        return ${table.javaClassNameLower}Mapper.update(convertTo${table.javaClassName}(record)) > 0;
+        <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待更新的数据${pk.columnCamelNameLower}为空");</#if>
+        return ${table.javaClassNameLower}Mapper.update(${table.javaClassName}Converter.dtoToDomain(record)) > 0;
     }
 
     /**
@@ -150,29 +154,14 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean delete(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待删除的数据为空");
-        <#list table.columns as column><#if column.isPrimaryKey == 1>Preconditions.checkArgument(record.get${column.columnCamelNameUpper}() != null, "待删除的数据${column.columnCamelNameLower}为空");</#if></#list>
-        return ${table.javaClassNameLower}Mapper.delete(convertTo${table.javaClassName}(record)) > 0;
-    }
-
-    /**
-     * 转换
-     *
-     * @param record   待转换数据
-     * @return 转换结果
-     */
-    private ${table.javaClassName} convertTo${table.javaClassName}(${table.javaClassName}DTO record) {
-        if (record == null) {
-            return null;
-        }
-        ${table.javaClassName} cond = new ${table.javaClassName}();
-        BeanUtils.copyProperties(record, cond);
-        return cond;
+        <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待删除的数据${pk.columnCamelNameLower}为空");</#if>
+        return ${table.javaClassNameLower}Mapper.delete(${table.javaClassName}Converter.dtoToDomain(record)) > 0;
     }
 
     private Field findField(String name){
          if (name == null) {
              return null;
          }
-         return fieldMap.computeIfAbsent(name, k-> ReflectionUtils.findField(${table.javaClassName}.class, k));
+         return fieldMap.computeIfAbsent(name, k-> ReflectionUtils.findField(${table.javaClassName}DO.class, k));
     }
 }

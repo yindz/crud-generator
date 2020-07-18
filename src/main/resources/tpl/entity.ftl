@@ -10,7 +10,7 @@ import ${imp};
  *
  * @author ${table.author!''}
  */
-public class ${table.javaClassName} implements Serializable {
+public class ${table.javaClassName}DO implements Serializable {
     private static final long serialVersionUID = 1L;
 
 <#list table.columns as column>
