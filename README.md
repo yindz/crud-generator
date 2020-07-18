@@ -30,6 +30,7 @@
 | XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 
 | TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 
 | XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端 | 
+| XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 
 | XXX.postman_collection.json | Postman接口JSON定义文件 | json/ | 使用方法：Postman>Import | 
 | XXX.postman_environment.json | Postman环境变量定义文件 | json/ | 使用方法：Postman>Manage Environment>Import | 
 
