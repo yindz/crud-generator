@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,11 +23,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * ${table.comments}服务API接口
+ * ${table.comments}API接口
  *
  * @author ${table.author!''}
  */
-@Api(tags = {"${table.comments}服务API"})
+@Api(tags = {"${table.comments}API"})
 @RequestMapping("/${table.javaClassNameLower}")
 @RestController
 public class ${table.javaClassName}Controller {
@@ -70,7 +71,7 @@ public class ${table.javaClassName}Controller {
      */
     @ApiOperation(value = "插入${table.comments}记录", httpMethod = "POST",tags = {"插入${table.comments}记录"})
     @PostMapping(value = "/insert")
-    public boolean insert(@Valid ${table.javaClassName}VO vo) {
+    public boolean insert(@RequestBody @Valid ${table.javaClassName}VO vo) {
         return ${table.javaClassNameLower}Service.insert(convertTo${table.javaClassName}DTO(vo));
     }
 
@@ -82,7 +83,7 @@ public class ${table.javaClassName}Controller {
     */
     @ApiOperation(value = "更新${table.comments}记录", httpMethod = "POST", tags = {"更新${table.comments}记录"})
     @PostMapping(value = "/update")
-    public boolean update(${table.javaClassName}VO vo) {
+    public boolean update(@RequestBody ${table.javaClassName}VO vo) {
         return ${table.javaClassNameLower}Service.update(convertTo${table.javaClassName}DTO(vo));
     }
 
@@ -94,7 +95,7 @@ public class ${table.javaClassName}Controller {
      */
     @ApiOperation(value = "删除${table.comments}记录", httpMethod = "POST", tags = {"删除${table.comments}记录"})
     @PostMapping(value = "/delete")
-    public boolean delete(${table.javaClassName}VO vo) {
+    public boolean delete(@RequestBody ${table.javaClassName}VO vo) {
         return ${table.javaClassNameLower}Service.delete(convertTo${table.javaClassName}DTO(vo));
     }
 
