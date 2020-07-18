@@ -31,6 +31,16 @@ public class TemplateInfo {
      */
     private String targetBaseDirName;
 
+    /**
+     * 是否为核心模板
+     */
+    private int isCore;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
     public String getTemplateName() {
         return templateName;
     }
@@ -61,6 +71,22 @@ public class TemplateInfo {
 
     public void setTargetBaseDirName(String targetBaseDirName) {
         this.targetBaseDirName = targetBaseDirName;
+    }
+
+    public int getIsCore() {
+        return isCore;
+    }
+
+    public void setIsCore(int isCore) {
+        this.isCore = isCore;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String toRealPath(String basePath) {

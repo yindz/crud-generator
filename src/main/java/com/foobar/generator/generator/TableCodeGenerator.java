@@ -3,8 +3,6 @@ package com.foobar.generator.generator;
 import com.foobar.generator.config.GeneratorConfig;
 import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.db.AbstractDbUtil;
-import com.foobar.generator.db.MySQLUtil;
-import com.foobar.generator.db.OracleUtil;
 import com.foobar.generator.info.*;
 import com.foobar.generator.util.StringUtils;
 import freemarker.template.Configuration;
@@ -142,13 +140,11 @@ public class TableCodeGenerator {
             throw new Exception("数据库类型为空");
         }
         dbType = jdbcInfo.getDbType().toLowerCase();
-        if (GeneratorConst.MYSQL.equalsIgnoreCase(dbType)) {
-            dbUtil = new MySQLUtil();
-        } else if (GeneratorConst.ORACLE.equalsIgnoreCase(dbType)) {
-            dbUtil = new OracleUtil();
-        } else {
+        DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(dbType);
+        if(dbUtilInfo == null){
             throw new Exception("暂不支持该数据库类型");
         }
+        dbUtil = (AbstractDbUtil) Class.forName(dbUtilInfo.getClassName()).newInstance();
         try {
             dbUtil.init(jdbcInfo);
         } catch (Exception e) {

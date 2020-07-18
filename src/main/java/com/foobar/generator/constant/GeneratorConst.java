@@ -12,6 +12,7 @@ public final class GeneratorConst {
 
     public static final String MYSQL = "mysql";
     public static final String ORACLE = "oracle";
+    public static final String SQLSERVER = "sqlserver";
     public static final String PLACEHOLDER = "#";
     public static final String DEFAULT_PKG_NAME = "com.example.myapp";
 

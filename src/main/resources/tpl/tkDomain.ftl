@@ -22,7 +22,7 @@ public class ${table.javaClassName}DO implements Serializable {
      * ${column.columnComment!''}
      */<#if column.isPrimaryKey == 1>
     @Id
-    <#if table.dbType == 'oracle'>@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "select SEQ_${table.name}.nextval from dual")</#if><#if table.dbType == 'mysql'>@KeySql(useGeneratedKeys = true)</#if></#if><#if table.versionColumn??><#if table.versionColumn == column.columnName>
+    <#if table.dbType == 'oracle'>@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "select SEQ_${table.name}.nextval from dual")</#if><#if table.dbType == 'mysql'>@KeySql(useGeneratedKeys = true)</#if><#if table.dbType == 'sqlserver'>@GeneratedValue(strategy = GenerationType.IDENTITY)</#if></#if><#if table.versionColumn??><#if table.versionColumn == column.columnName>
     @Version</#if></#if>
     private ${column.columnJavaType} ${column.columnCamelNameLower};
 

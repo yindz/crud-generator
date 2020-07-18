@@ -2,12 +2,16 @@ package com.foobar.generator.db;
 
 import com.foobar.generator.info.ColumnInfo;
 import com.foobar.generator.info.JdbcInfo;
+import com.foobar.generator.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 数据库操作工具
@@ -15,18 +19,41 @@ import java.util.Map;
  * @author yin
  */
 public abstract class AbstractDbUtil {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractDbUtil.class);
+
     protected static final Map<String, String> SQL_MAP = new HashMap<>();
+
+    protected String dbType;
 
     protected Connection connection;
 
     protected String schemaName;
 
+    protected String jdbcUrl;
+
     /**
-     * 初始化
+     * 准备连接
+     *
      * @param jdbcInfo JDBC参数
      * @throws Exception
      */
-    public abstract void init(JdbcInfo jdbcInfo) throws Exception;
+    protected abstract void prepareConnection(JdbcInfo jdbcInfo) throws Exception;
+
+    /**
+     * 初始化
+     *
+     * @param jdbcInfo JDBC参数
+     * @throws Exception
+     */
+    public void init(JdbcInfo jdbcInfo) throws Exception {
+        this.prepareConnection(jdbcInfo);
+        logger.info("数据库类型:{}, JDBC URL: {}", this.dbType, this.jdbcUrl);
+        connection = DriverManager.getConnection(this.jdbcUrl, jdbcInfo.getUsername(), jdbcInfo.getPassword());
+        logger.info("已成功连接数据库! ");
+        String sqlXml = "/sql_" + this.dbType + ".xml";
+        StringUtils.loadSqlFile(sqlXml, SQL_MAP);
+        logger.info("已从 {} 加载 {} 条SQL语句", sqlXml, SQL_MAP.size());
+    }
 
     /**
      * 获取所有表名
@@ -51,6 +78,59 @@ public abstract class AbstractDbUtil {
      * @return
      */
     public abstract String setTableNameCase(String t);
+
+    /**
+     * 查询并获得最后一条数据
+     *
+     * @param sql
+     * @return
+     */
+    protected String selectLastOne(String sql) {
+        if (StringUtils.isEmpty(sql)) {
+            return null;
+        }
+        String result = "";
+        try (Statement st = this.connection.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
+            if (rs == null) {
+                return "";
+            }
+            while (rs.next()) {
+                result = rs.getString(1);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 查询并获得全部数据
+     *
+     * @param sql
+     * @return
+     */
+    protected List<String> selectList(String sql) {
+        if (StringUtils.isEmpty(sql)) {
+            return null;
+        }
+        List<String> resultList = new ArrayList<>();
+        try (Statement st = this.connection.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
+            if (rs == null) {
+                return null;
+            }
+            while (rs.next()) {
+                resultList.add(setTableNameCase(rs.getString(1)));
+            }
+            rs.close();
+            return resultList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * 清理资源

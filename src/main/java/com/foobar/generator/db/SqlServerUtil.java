@@ -9,20 +9,18 @@ import com.foobar.generator.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * MySQL数据库工具
+ * SQLServer数据库工具
  *
  * @author yin
  */
-public class MySQLUtil extends AbstractDbUtil {
-    private static final Logger logger = LoggerFactory.getLogger(MySQLUtil.class);
+public class SqlServerUtil extends AbstractDbUtil {
+    private static final Logger logger = LoggerFactory.getLogger(SqlServerUtil.class);
 
     /**
      * 准备连接
@@ -32,7 +30,7 @@ public class MySQLUtil extends AbstractDbUtil {
      */
     @Override
     public void prepareConnection(JdbcInfo jdbcInfo) throws Exception {
-        this.dbType = GeneratorConst.MYSQL;
+        this.dbType = GeneratorConst.SQLSERVER;
         this.schemaName = jdbcInfo.getSchema();
         DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(this.dbType);
         Class.forName(dbUtilInfo.getClassName());
@@ -68,10 +66,12 @@ public class MySQLUtil extends AbstractDbUtil {
     @Override
     public List<ColumnInfo> getColumnInfo(String tableName) {
         List<ColumnInfo> resultList = new ArrayList<>();
-        boolean hasPrimaryKey = false;
-        String uniqueIndexColumn = "";
-        String sql = String.format(SQL_MAP.get("QUERY_TABLE_COLUMNS"), schemaName, tableName);
-        try (Statement st = connection.prepareStatement(sql)) {
+        String uniqueColumnName = findPrimaryKeyColumnName(tableName);
+        if (StringUtils.isEmpty(uniqueColumnName)) {
+            uniqueColumnName = findUniqueIndexColumnName(tableName);
+        }
+        String sql = String.format(SQL_MAP.get("QUERY_TABLE_COLUMNS"), tableName);
+        try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(sql);
             if (rs == null) {
                 return null;
@@ -116,33 +116,16 @@ public class MySQLUtil extends AbstractDbUtil {
                     col.setColumnLength(StringUtils.parseInt(rs.getString(9)));
                 }
                 col.setNullable("YES".equalsIgnoreCase(rs.getString(11)) ? 1 : 0);
-                String columnKey = rs.getString(12);
-                if ("PRI".equalsIgnoreCase(columnKey)) {
-                    hasPrimaryKey = true;
+                if (StringUtils.isNotEmpty(uniqueColumnName) && uniqueColumnName.equalsIgnoreCase(col.getColumnName())) {
                     col.setIsPrimaryKey(1);
                 } else {
                     col.setIsPrimaryKey(0);
-                }
-                if ("UNI".equalsIgnoreCase(columnKey)) {
-                    uniqueIndexColumn = col.getColumnName();
                 }
                 resultList.add(col);
             }
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        if (!hasPrimaryKey && StringUtils.isNotEmpty(uniqueIndexColumn)) {
-            for (ColumnInfo ci : resultList) {
-                if (ci == null || StringUtils.isEmpty(ci.getColumnName())) {
-                    continue;
-                }
-                //若无主键字段，则将最后1个唯一索引字段作为主键使用
-                if (uniqueIndexColumn.equalsIgnoreCase(ci.getColumnName())) {
-                    ci.setIsPrimaryKey(1);
-                    break;
-                }
-            }
         }
         return resultList;
     }
@@ -159,5 +142,29 @@ public class MySQLUtil extends AbstractDbUtil {
             return t;
         }
         return t.toLowerCase();
+    }
+
+    /**
+     * 获取主键字段名
+     *
+     * @param tableName 表名
+     * @return
+     */
+    private String findPrimaryKeyColumnName(String tableName) {
+        return selectOne(String.format(SQL_MAP.get("QUERY_PRIMARY_KEY").replaceAll("\n", ""), tableName));
+    }
+
+    /**
+     * 获取唯一索引字段名
+     *
+     * @param tableName 表名
+     * @return
+     */
+    private String findUniqueIndexColumnName(String tableName) {
+        return selectOne(String.format(SQL_MAP.get("QUERY_UNIQUE_COLUMN"), tableName));
+    }
+
+    private String selectOne(String sql) {
+        return this.selectLastOne(sql);
     }
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql>
+    <!--查询表名-->
+    <select id="QUERY_TABLE_NAMES">
+        select distinct a.name from sys.tables a
+    </select>
+
+    <!--查询表字段-->
+    <select id="QUERY_TABLE_COLUMNS">
+        select c.TABLE_NAME
+                , tc.TABLE_COMMENT
+                , c.COLUMN_NAME
+                , tc.COLUMN_COMMENT
+                , c.DATA_TYPE
+                , c.NUMERIC_PRECISION
+                , c.NUMERIC_SCALE
+                , c.CHARACTER_MAXIMUM_LENGTH
+                , c.CHARACTER_OCTET_LENGTH
+                , c.COLUMN_DEFAULT
+                , c.IS_NULLABLE
+        from information_schema.columns c
+        inner join (
+            SELECT
+            A.name AS table_name,
+            tc.table_comment,
+            B.name AS column_name,
+            C.value AS column_comment
+            FROM sys.tables A
+            INNER JOIN sys.columns B ON B.object_id = A.object_id
+            inner join (SELECT DISTINCT
+            d.name as table_name,
+            f.value as table_comment
+            FROM syscolumns a
+            LEFT JOIN systypes b ON a.xusertype= b.xusertype
+            INNER JOIN sysobjects d ON a.id= d.id
+            AND d.xtype= 'U'
+            AND d.name!='dtproperties'
+            LEFT JOIN syscomments e ON a.cdefault= e.id
+            LEFT JOIN sys.extended_properties g ON a.id= G.major_id
+            AND a.colid= g.minor_id
+            LEFT JOIN sys.extended_properties f ON d.id= f.major_id
+            AND f.minor_id= 0)tc on a.name=tc.table_name
+            LEFT JOIN sys.extended_properties C ON C.major_id = B.object_id AND C.minor_id = B.column_id
+            WHERE A.name = '%s'
+        )tc on c.TABLE_NAME=tc.table_name and c.COLUMN_NAME=tc.column_name
+    </select>
+
+    <!--查询主键字段-->
+    <select id="QUERY_PRIMARY_KEY">
+        SELECT COL_NAME(ic.OBJECT_ID,ic.column_id)
+        FROM sys.indexes AS i INNER JOIN sys.index_columns AS ic ON i.OBJECT_ID = ic.OBJECT_ID AND i.index_id = ic.index_id
+        WHERE i.is_primary_key = 1 and OBJECT_NAME(ic.OBJECT_ID) = '%s'
+    </select>
+
+    <!--查询唯一索引字段-->
+    <select id="QUERY_UNIQUE_COLUMN">
+        SELECT COL_NAME(ic.OBJECT_ID,ic.column_id)
+        FROM sys.indexes AS i INNER JOIN sys.index_columns AS ic ON i.OBJECT_ID = ic.OBJECT_ID AND i.index_id = ic.index_id
+        WHERE OBJECT_NAME(ic.OBJECT_ID)='%s'
+        and i.is_primary_key != 1
+        and i.is_unique=1
+    </select>
+</sql>

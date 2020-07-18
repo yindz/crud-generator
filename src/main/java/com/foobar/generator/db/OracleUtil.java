@@ -1,6 +1,9 @@
 package com.foobar.generator.db;
 
+import com.foobar.generator.config.GeneratorConfig;
+import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.info.ColumnInfo;
+import com.foobar.generator.info.DbUtilInfo;
 import com.foobar.generator.info.JdbcInfo;
 import com.foobar.generator.util.StringUtils;
 import org.slf4j.Logger;
@@ -8,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Oracle数据库工具
@@ -17,23 +21,19 @@ import java.util.*;
 public class OracleUtil extends AbstractDbUtil {
     private static final Logger logger = LoggerFactory.getLogger(OracleUtil.class);
 
-    private static final String ORACLE_URL = "jdbc:oracle:thin:@%s:%s:%s";
-
     /**
-     * 初始化
+     * 准备连接
      *
-     * @return
+     * @param jdbcInfo JDBC参数
+     * @throws Exception
      */
     @Override
-    public void init(JdbcInfo jdbcInfo) throws Exception {
-        Class.forName("oracle.jdbc.OracleDriver");
-        String url = String.format(ORACLE_URL, jdbcInfo.getHost(), jdbcInfo.getPort(), jdbcInfo.getServiceName());
-        logger.info("JDBC URL: {}", url);
-        connection = DriverManager.getConnection(url, jdbcInfo.getUsername(), jdbcInfo.getPassword());
-        logger.info("已成功连接数据库!");
+    public void prepareConnection(JdbcInfo jdbcInfo) throws Exception {
+        this.dbType = GeneratorConst.ORACLE;
         this.schemaName = jdbcInfo.getSchema().toUpperCase();
-        StringUtils.loadSqlFile("/sql_oracle.xml", SQL_MAP);
-        logger.info("已加载 {} 条SQL语句", SQL_MAP.size());
+        DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(this.dbType);
+        Class.forName(dbUtilInfo.getClassName());
+        this.jdbcUrl = String.format(dbUtilInfo.getJdbcUrl(), jdbcInfo.getHost(), jdbcInfo.getPort(), jdbcInfo.getServiceName());
     }
 
     /**
@@ -47,22 +47,13 @@ public class OracleUtil extends AbstractDbUtil {
         if (schemaName == null) {
             return null;
         }
-        List<String> resultList = new ArrayList<>();
         String sql = String.format(SQL_MAP.get("QUERY_TABLE_NAMES"), schemaName.toUpperCase());
-        try (Statement st = this.connection.prepareStatement(sql)) {
-            ResultSet rs = st.executeQuery(sql);
-            if (rs == null) {
-                return null;
-            }
-            while (rs.next()) {
-                resultList.add(setTableNameCase(rs.getString(1)));
-            }
-            rs.close();
+        List<String> resultList = this.selectList(sql);
+        if (resultList != null && !resultList.isEmpty()) {
+            return resultList.stream().map(String::toUpperCase).collect(Collectors.toList());
+        } else {
             return resultList;
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return null;
     }
 
     /**
@@ -185,22 +176,6 @@ public class OracleUtil extends AbstractDbUtil {
     }
 
     private String selectOne(String sql) {
-        if (StringUtils.isEmpty(sql)) {
-            return null;
-        }
-        String result = "";
-        try (Statement st = connection.prepareStatement(sql)) {
-            ResultSet rs = st.executeQuery(sql);
-            if (rs == null) {
-                return "";
-            }
-            while (rs.next()) {
-                result = rs.getString(1);
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
+        return this.selectLastOne(sql);
     }
 }
