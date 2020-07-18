@@ -51,19 +51,7 @@ public class ${table.javaClassName}Controller {
     @GetMapping(value = "/get${table.javaClassName}List")
     public PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}QueryVO query) {
         PageInfo<${table.javaClassName}DTO> pageInfo = ${table.javaClassNameLower}Service.get${table.javaClassName}List(${table.javaClassName}Converter.voToQueryDTO(query));
-        PageInfo<${table.javaClassName}VO> result = new PageInfo<>();
-        List<${table.javaClassName}VO> voList = new ArrayList<>();
-        if (pageInfo.getList() != null && !pageInfo.getList().isEmpty()) {
-            pageInfo.getList().forEach(e -> {
-                if (e == null) {
-                   return;
-                }
-                voList.add(${table.javaClassName}Converter.dtoToVO(e));
-            });
-        }
-        BeanUtils.copyProperties(pageInfo, result);
-        result.setList(voList);
-        return result;
+        return ${table.javaClassName}Converter.convertPageInfo(pageInfo);
     }
 
     /**

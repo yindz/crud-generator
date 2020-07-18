@@ -1,8 +1,12 @@
 package ${table.pkgName};
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.cglib.beans.BeanCopier;
+
+import com.github.pagehelper.PageInfo;
 
 import ${basePkgName}.vo.${table.javaClassName}VO;
 import ${basePkgName}.vo.${table.javaClassName}QueryVO;
@@ -49,6 +53,23 @@ public class ${table.javaClassName}Converter {
         BeanCopier bc = getBeanCopier(${table.javaClassName}DTO.class, ${table.javaClassName}VO.class);
         ${table.javaClassName}VO result = new ${table.javaClassName}VO();
         bc.copy(src, result, null);
+        return result;
+    }
+
+    //PageInfo转换
+    public static PageInfo<${table.javaClassName}VO> convertPageInfo(PageInfo<${table.javaClassName}DTO> pageInfo) {
+        PageInfo<${table.javaClassName}VO> result = new PageInfo<>();
+        getBeanCopier(PageInfo.class, PageInfo.class).copy(pageInfo, result, null);
+        List<${table.javaClassName}VO> voList = new ArrayList<>();
+        if (pageInfo != null && pageInfo.getList() != null && !pageInfo.getList().isEmpty()) {
+            pageInfo.getList().forEach(e -> {
+                if (e == null) {
+                    return;
+                }
+                voList.add(dtoToVO(e));
+            });
+        }
+        result.setList(voList);
         return result;
     }
 
