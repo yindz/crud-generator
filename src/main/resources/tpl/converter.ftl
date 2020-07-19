@@ -1,12 +1,15 @@
 package ${table.pkgName};
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.util.ReflectionUtils;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.base.CaseFormat;
 
 import ${basePkgName}.vo.${table.javaClassName}VO;
 import ${basePkgName}.vo.${table.javaClassName}QueryVO;
@@ -22,77 +25,101 @@ import ${basePkgName}.domain.${table.javaClassName}DO;
 public class ${table.javaClassName}Converter {
 
     private static final Map<String, BeanCopier> beanCopierMap = new ConcurrentHashMap<>();
+    private static final Map<String, Field> fieldMap = new ConcurrentHashMap<>();
+    private static final Map<String, String> fieldToColumnMap = new ConcurrentHashMap<>();
+
+    public static <S, T> T convert(S src, Class<T> target){
+        if(src == null || target == null) {
+            return null;
+        }
+        BeanCopier bc = getBeanCopier(src.getClass(), target);
+        try {
+            T result = target.newInstance();
+            bc.copy(src, result, null);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     //VO转DTO
     public static ${table.javaClassName}QueryDTO voToQueryDTO(${table.javaClassName}QueryVO src) {
-        if(src == null) {
-            return null;
-        }
-        BeanCopier bc = getBeanCopier(${table.javaClassName}QueryVO.class, ${table.javaClassName}QueryDTO.class);
-        ${table.javaClassName}QueryDTO result = new ${table.javaClassName}QueryDTO();
-        bc.copy(src, result, null);
-        return result;
+        return convert(src, ${table.javaClassName}QueryDTO.class);
     }
 
     //VO转DTO
     public static ${table.javaClassName}DTO voToDTO(${table.javaClassName}VO src) {
-        if(src == null) {
-            return null;
-        }
-        BeanCopier bc = getBeanCopier(${table.javaClassName}VO.class, ${table.javaClassName}DTO.class);
-        ${table.javaClassName}DTO result = new ${table.javaClassName}DTO();
-        bc.copy(src, result, null);
-        return result;
+        return convert(src, ${table.javaClassName}DTO.class);
     }
 
     //DTO转VO
     public static ${table.javaClassName}VO dtoToVO(${table.javaClassName}DTO src) {
-        if(src == null) {
-            return null;
-        }
-        BeanCopier bc = getBeanCopier(${table.javaClassName}DTO.class, ${table.javaClassName}VO.class);
-        ${table.javaClassName}VO result = new ${table.javaClassName}VO();
-        bc.copy(src, result, null);
-        return result;
+        return convert(src, ${table.javaClassName}VO.class);
     }
 
     //PageInfo转换
-    public static PageInfo<${table.javaClassName}VO> convertPageInfo(PageInfo<${table.javaClassName}DTO> pageInfo) {
-        PageInfo<${table.javaClassName}VO> result = new PageInfo<>();
-        getBeanCopier(PageInfo.class, PageInfo.class).copy(pageInfo, result, null);
-        List<${table.javaClassName}VO> voList = new ArrayList<>();
-        if (pageInfo != null && pageInfo.getList() != null && !pageInfo.getList().isEmpty()) {
-            pageInfo.getList().forEach(e -> {
+    public static PageInfo<${table.javaClassName}VO> toVOPageInfo(PageInfo<${table.javaClassName}DTO> pageInfo) {
+        return convertPageInfo(pageInfo, ${table.javaClassName}VO.class);
+    }
+
+    //PageInfo转换
+    public static PageInfo<${table.javaClassName}DTO> toDTOPageInfo(PageInfo<${table.javaClassName}DO> pageInfo) {
+         return convertPageInfo(pageInfo, ${table.javaClassName}DTO.class);
+    }
+
+    public static <S, T> PageInfo<T> convertPageInfo(PageInfo<S> src, Class<T> target) {
+         if (src == null || target == null) {
+            return null;
+         }
+         PageInfo<T> result = new PageInfo<>();
+         List<T> list = new ArrayList<>();
+         if (src.getList() != null && !src.getList().isEmpty()) {
+            src.getList().forEach(e -> {
                 if (e == null) {
                     return;
                 }
-                voList.add(dtoToVO(e));
+                list.add(convert(e, target));
             });
-        }
-        result.setList(voList);
-        return result;
+         }
+         getBeanCopier(PageInfo.class, PageInfo.class).copy(src, result, null);
+         result.setList(list);
+         return result;
     }
 
     //DTO转DO
     public static ${table.javaClassName}DO dtoToDomain(${table.javaClassName}DTO src) {
-        if(src == null) {
-            return null;
-        }
-        BeanCopier bc = getBeanCopier(${table.javaClassName}DTO.class, ${table.javaClassName}DO.class);
-        ${table.javaClassName}DO result = new ${table.javaClassName}DO();
-        bc.copy(src, result, null);
-        return result;
+        return convert(src, ${table.javaClassName}DO.class);
     }
 
     //DO转DTO
     public static ${table.javaClassName}DTO domainToDTO(${table.javaClassName}DO src) {
-        if(src == null) {
+        return convert(src, ${table.javaClassName}DTO.class);
+    }
+
+    //获取排序字段名
+    public static String getOrderColumn(String fieldName) {
+         if (fieldName == null) {
+             return null;
+         }
+         Field field = findField(fieldName);
+         if (field == null) {
+            return null;
+         }
+         return fieldToColumnMap.computeIfAbsent(fieldName, k -> CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, k));
+    }
+
+    //获取属性
+    public static Field findField(String name) {
+        if (name == null) {
             return null;
         }
-        BeanCopier bc = getBeanCopier(${table.javaClassName}DO.class, ${table.javaClassName}DTO.class);
-        ${table.javaClassName}DTO result = new ${table.javaClassName}DTO();
-        bc.copy(src, result, null);
-        return result;
+        return fieldMap.computeIfAbsent(name, k-> ReflectionUtils.findField(${table.javaClassName}DO.class, k));
+    }
+
+    //判断属性是否存在
+    public static boolean isFieldExists(String name) {
+         return findField(name) != null;
     }
 
     private static BeanCopier getBeanCopier(Class source, Class target) {

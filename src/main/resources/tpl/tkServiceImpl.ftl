@@ -1,10 +1,6 @@
 package ${table.pkgName};
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Preconditions;
 import com.github.pagehelper.PageHelper;
@@ -13,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.BeanUtils;
-import org.springframework.util.ReflectionUtils;
+
 <#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
 import tk.mybatis.mapper.entity.Example;
@@ -45,8 +40,6 @@ import ${basePkgName}.util.${table.javaClassName}Converter;
 public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName}Service {
     private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}ServiceImpl.class);
 
-    private static final Map<String, Field> fieldMap = new ConcurrentHashMap<>();
-
     @Autowired
     private ${table.javaClassName}CommonMapper ${table.javaClassNameLower}Mapper;
 
@@ -69,8 +62,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             criteria.andEqualTo("${column.columnCamelNameLower}", query.get${column.columnCamelNameUpper}());
         }
     </#list>
-        Field orderField = findField(query.getOrderBy());
-        if (orderField == null) {
+        if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
         <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");</#if>
         }
@@ -82,19 +74,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
 
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
         PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.selectByExample(example));
-        PageInfo<${table.javaClassName}DTO> result = new PageInfo<>();
-        List<${table.javaClassName}DTO> dtoList = new ArrayList<>();
-        if (pageInfo.getList() != null && !pageInfo.getList().isEmpty()) {
-            pageInfo.getList().forEach(e -> {
-                if (e == null) {
-                    return;
-                }
-                dtoList.add(${table.javaClassName}Converter.domainToDTO(e));
-            });
-        }
-        BeanUtils.copyProperties(pageInfo, result);
-        result.setList(dtoList);
-        return result;
+        return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
     }
 
     /**
@@ -163,12 +143,5 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待删除的数据${pk.columnCamelNameLower}为空");</#if>
         ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
         return ${table.javaClassNameLower}Mapper.deleteByPrimaryKey(cond) > 0;
-    }
-
-    private Field findField(String name){
-        if (name == null) {
-           return null;
-        }
-        return fieldMap.computeIfAbsent(name, k-> ReflectionUtils.findField(${table.javaClassName}DO.class, k));
     }
 }

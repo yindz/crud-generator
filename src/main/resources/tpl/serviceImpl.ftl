@@ -1,11 +1,8 @@
 package ${table.pkgName};
 
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.CaseFormat;
@@ -13,10 +10,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 <#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
 import ${basePkgName}.domain.${table.javaClassName}DO;
@@ -44,8 +39,6 @@ import ${basePkgName}.dao.${table.javaClassName}Mapper;
 public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName}Service {
     private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}ServiceImpl.class);
 
-    private static final Map<String, Field> fieldMap = new ConcurrentHashMap<>();
-
     @Autowired
     private ${table.javaClassName}Mapper ${table.javaClassNameLower}Mapper;
 
@@ -67,30 +60,17 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             queryMap.put("${column.columnCamelNameLower}", query.get${column.columnCamelNameUpper}());
         }
     </#list>
-        Field orderField = findField(query.getOrderBy());
-        if (orderField == null) {
+        if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
     <#if pk??>        queryMap.put("orderBy", "${pk.columnCamelNameLower}");</#if>
         } else {
-            queryMap.put("orderBy", CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, query.getOrderBy()));
+            queryMap.put("orderBy", ${table.javaClassName}Converter.getOrderColumn(query.getOrderBy()));
         }
         queryMap.put("orderDirection", "asc".equalsIgnoreCase(query.getOrderDirection()) ? "asc" : "desc");
 
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
         PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.get${table.javaClassName}List(queryMap));
-        PageInfo<${table.javaClassName}DTO> result = new PageInfo<>();
-        List<${table.javaClassName}DTO> dtoList = new ArrayList<>();
-        if (pageInfo.getList() != null && !pageInfo.getList().isEmpty()) {
-            pageInfo.getList().forEach(e -> {
-                if (e == null) {
-                    return;
-                }
-                dtoList.add(${table.javaClassName}Converter.domainToDTO(e));
-            });
-        }
-        BeanUtils.copyProperties(pageInfo, result);
-        result.setList(dtoList);
-        return result;
+        return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
     }
 
     /**
@@ -156,12 +136,5 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(record != null, "待删除的数据为空");
         <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待删除的数据${pk.columnCamelNameLower}为空");</#if>
         return ${table.javaClassNameLower}Mapper.delete(${table.javaClassName}Converter.dtoToDomain(record)) > 0;
-    }
-
-    private Field findField(String name){
-         if (name == null) {
-             return null;
-         }
-         return fieldMap.computeIfAbsent(name, k-> ReflectionUtils.findField(${table.javaClassName}DO.class, k));
     }
 }

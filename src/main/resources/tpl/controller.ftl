@@ -51,7 +51,7 @@ public class ${table.javaClassName}Controller {
     @GetMapping(value = "/get${table.javaClassName}List")
     public PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}QueryVO query) {
         PageInfo<${table.javaClassName}DTO> pageInfo = ${table.javaClassNameLower}Service.get${table.javaClassName}List(${table.javaClassName}Converter.voToQueryDTO(query));
-        return ${table.javaClassName}Converter.convertPageInfo(pageInfo);
+        return ${table.javaClassName}Converter.toVOPageInfo(pageInfo);
     }
 
     /**
