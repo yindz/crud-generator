@@ -160,6 +160,7 @@ public class TableCodeGenerator {
         //初始化模板
         conf = new Configuration(Configuration.VERSION_2_3_28);
         conf.setClassForTemplateLoading(this.getClass(), "/");
+        conf.setNumberFormat("#");
 
         //获取当前用户名
         currentUser = System.getenv().get("USERNAME");
