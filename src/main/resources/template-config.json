@@ -136,6 +136,14 @@
     "remark": "查询条件VO"
   },
   {
+    "templateName": "commonConverter.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "util",
+    "targetFileName": "CommonConverter.java",
+    "isCore": 0,
+    "remark": "通用对象转换工具类"
+  },
+  {
     "templateName": "converter.ftl",
     "targetBaseDirName": "java",
     "targetPkgName": "util",

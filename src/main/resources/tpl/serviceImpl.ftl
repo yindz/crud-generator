@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 <#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
+import org.apache.commons.lang3.StringUtils;
+
 import ${basePkgName}.domain.${table.javaClassName}DO;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
@@ -56,15 +58,15 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
 
         Map<String, Object> queryMap = new HashMap<>();
     <#list table.columns as column>
-        if (query.get${column.columnCamelNameUpper}() != null) {
+        if (<#if column.isChar == 1>StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}())<#else >query.get${column.columnCamelNameUpper}() != null</#if>) {
             queryMap.put("${column.columnCamelNameLower}", query.get${column.columnCamelNameUpper}());
         }
     </#list>
-        if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {
+        if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
     <#if pk??>        queryMap.put("orderBy", "${pk.columnCamelNameLower}");</#if>
         } else {
-            queryMap.put("orderBy", ${table.javaClassName}Converter.getOrderColumn(query.getOrderBy()));
+            queryMap.put("orderBy", ${table.javaClassName}Converter.getOrderColumn(${table.javaClassName}DO.class, query.getOrderBy()));
         }
         queryMap.put("orderDirection", "asc".equalsIgnoreCase(query.getOrderDirection()) ? "asc" : "desc");
 

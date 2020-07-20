@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
+
 <#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
 import tk.mybatis.mapper.entity.Example;
@@ -58,11 +60,11 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Example example = new Example(${table.javaClassName}DO.class);
         Example.Criteria criteria = example.createCriteria();
     <#list table.columns as column>
-        if (query.get${column.columnCamelNameUpper}() != null) {
+        if (<#if column.isChar == 1>StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}())<#else >query.get${column.columnCamelNameUpper}() != null</#if>) {
             criteria.andEqualTo("${column.columnCamelNameLower}", query.get${column.columnCamelNameUpper}());
         }
     </#list>
-        if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {
+        if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
         <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");</#if>
         }
