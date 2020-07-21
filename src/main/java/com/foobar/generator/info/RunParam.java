@@ -21,6 +21,11 @@ public class RunParam {
     private String basePkgName;
 
     /**
+     * 作者
+     */
+    private String author;
+
+    /**
      * 需要生成的表信息
      */
     private Set<TableContext> tableContexts;
@@ -40,6 +45,14 @@ public class RunParam {
 
     public void setOutputPath(String outputPath) {
         this.outputPath = outputPath;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public Set<TableContext> getTableContexts() {

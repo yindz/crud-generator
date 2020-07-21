@@ -96,6 +96,9 @@ java/domain/JpaXXXDO.java
 
     TableCodeGenerator generator = new TableCodeGenerator(param);    
     RunParam rp = new RunParam();
+    
+    //可以自行指定生成的javadoc注释中author的名称；如留空或不设置，则程序将使用当前操作系统的用户名
+    //rp.setAuthor("张三");
 
     //java基础包名(留空则默认使用com.example.myapp)
     rp.setBasePkgName("com.foobar.bizapp");
@@ -146,13 +149,13 @@ java/domain/JpaXXXDO.java
 | ${table} | 数据表根对象| Object |
 | ${table.name} | 数据表原始名称| String |
 | ${table.kebabCaseName} | kebabCase形式的表名 | String |
-| ${table.dbType} | 数据库类型(oracle/mysql)| String |
+| ${table.dbType} | 数据库类型(oracle/mysql/sqlserver，小写形式)| String |
 | ${table.subPkgName} | 子包名 | String |
 | ${table.javaClassName} | Java类名称(首字母大写) |String |
 | ${table.javaClassNameLower} | Java类名称(首字母小写) | String |
 | ${table.comments} | 数据表注释| String |
 | ${table.imports} | Java类中需要import的类名集合| Set |
-| ${table.author} | Java类注释中的作者(操作系统的当前用户名) | String |
+| ${table.author} | 生成的javadoc注释中author的名称 | String |
 | ${table.columns} | 数据表中的所有字段信息列表| List |
 
 字段信息包括：

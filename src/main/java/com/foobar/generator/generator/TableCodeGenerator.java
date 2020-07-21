@@ -66,7 +66,7 @@ public class TableCodeGenerator {
     /**
      * 当前用户名
      */
-    private final String currentUser;
+    private String currentUser;
 
     /**
      * java包名
@@ -184,6 +184,9 @@ public class TableCodeGenerator {
         this.pkgName = StringUtils.trim(runParam.getBasePkgName());
         if (StringUtils.isEmpty(this.pkgName)) {
             this.pkgName = GeneratorConst.DEFAULT_PKG_NAME;
+        }
+        if (StringUtils.isNotEmpty(runParam.getAuthor())) {
+            this.currentUser = runParam.getAuthor();
         }
         List<TableContext> tablesToSubmit = findTablesToSubmit(runParam.getTableContexts());
         logger.info("本次将生成 {} 张表的代码", tablesToSubmit.size());
