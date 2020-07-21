@@ -10,12 +10,24 @@ import ${basePkgName}.dto.${table.javaClassName}DTO;
 public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 页码
+     */
     private Integer pageNo = 1;
 
+    /**
+     * 分页大小
+     */
     private Integer pageSize = 10;
 
+    /**
+     * 排序属性名称
+     */
     private String orderBy;
 
+    /**
+     * 排序方向: asc或desc
+     */
     private String orderDirection = "desc";
 
     public Integer getPageNo() {
