@@ -86,20 +86,17 @@
         "header": [
           {
             "key": "Content-Type",
-            "value": "application/x-www-form-urlencoded"
+            "value": "application/json; charset=utf-8"
           }
         ],
         "body": {
-          "mode": "urlencoded",
-          "urlencoded": [
-          <#list table.columns as column>
-            {
-            "key": "${column.columnCamelNameLower}",
-            "value": "",
-            "description": "${column.columnComment!''}"
-            }<#if column?has_next>,</#if>
-          </#list>
-          ]
+          "mode": "raw",
+          "raw": "{\n<#list table.columns as column><#if column.isPrimaryKey == 0>\"${column.columnCamelNameLower}\": \"\"<#if column?has_next>,\n</#if></#if></#list>\n}",
+          "options": {
+              "raw": {
+                "language": "json"
+              }
+          }
         },
         "url": {
           "raw": "{{baseURL}}/${table.javaClassNameLower}/insert",
@@ -134,20 +131,17 @@
         "header": [
           {
             "key": "Content-Type",
-            "value": "application/x-www-form-urlencoded"
+            "value": "application/json; charset=utf-8"
           }
         ],
         "body": {
-          "mode": "urlencoded",
-          "urlencoded": [
-            <#list table.columns as column>
-            {
-              "key": "${column.columnCamelNameLower}",
-              "value": "",
-              "description": "${column.columnComment!''}"
-            }<#if column?has_next>,</#if>
-            </#list>
-          ]
+            "mode": "raw",
+            "raw": "{\n<#list table.columns as column>\"${column.columnCamelNameLower}\": \"\"<#if column?has_next>,\n</#if></#list>\n}",
+            "options": {
+                "raw": {
+                "language": "json"
+                }
+            }
         },
         "url": {
           "raw": "{{baseURL}}/${table.javaClassNameLower}/update",
@@ -178,7 +172,7 @@
         }
       ],
       "request": {
-        "method": "POST",
+        "method": "DELETE",
         "header": [
           {
             "key": "Content-Type",
