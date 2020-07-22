@@ -74,6 +74,28 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
     }
 
+    <#if pk??>
+    /**
+     * 根据主键查询
+     *
+     * @param ${pk.columnCamelNameLower}    主键值
+     * @return 查询结果
+     */
+    @Override
+    public ${table.javaClassName}DTO get${table.javaClassName}(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+        if (${pk.columnCamelNameLower} == null) {
+            throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
+        }
+        ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
+        cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
+        List<${table.javaClassName}DO> list = ${table.javaClassNameLower}Mapper.selectByPrimaryKey(cond);
+        if (list != null && !list.isEmpty()) {
+            return ${table.javaClassName}Converter.domainToDTO(list.get(0));
+        } else {
+            return null;
+        }
+    }</#if>
+
     /**
      * 插入记录
      *

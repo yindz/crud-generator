@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
+<#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 
 /**
  * ${table.comments}服务接口
@@ -20,6 +21,15 @@ public interface I${table.javaClassName}Service {
      * @return 分页查询结果
      */
     PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}QueryDTO query);
+
+    <#if pk??>
+    /**
+     * 根据主键查询
+     *
+     * @param ${pk.columnCamelNameLower}    主键值
+     * @return 查询结果
+     */
+    ${table.javaClassName}DTO get${table.javaClassName}(${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
 
     /**
      * 插入记录

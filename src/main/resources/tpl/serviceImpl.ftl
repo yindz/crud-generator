@@ -69,6 +69,28 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
     }
 
+    <#if pk??>
+    /**
+     * 根据主键查询
+     *
+     * @param ${pk.columnCamelNameLower}    主键值
+     * @return 查询结果
+     */
+    @Override
+    public ${table.javaClassName}DTO get${table.javaClassName}(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+        if (${pk.columnCamelNameLower} == null) {
+            throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
+        }
+        Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put("${pk.columnCamelNameLower}", ${pk.columnCamelNameLower});
+        List<${table.javaClassName}DO> list = ${table.javaClassNameLower}Mapper.get${table.javaClassName}List(queryMap);
+        if (list != null && !list.isEmpty()) {
+            return ${table.javaClassName}Converter.domainToDTO(list.get(0));
+        } else {
+            return null;
+        }
+    }</#if>
+
     /**
      * 插入记录
      *
