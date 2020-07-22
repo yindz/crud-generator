@@ -85,7 +85,14 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean insert(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待插入的数据为空");
-        return ${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record)) > 0;
+        int inserted = ${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record));
+        if (inserted != 0) {
+            logger.info("${table.name}数据插入成功! {}", record);
+            return true;
+        } else {
+            logger.warn("${table.name}数据插入失败! {}", record);
+            return false;
+        }
     }
 
     /**
@@ -123,7 +130,14 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     public boolean update(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待更新的数据为空");
         <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待更新的数据${pk.columnCamelNameLower}为空");</#if>
-        return ${table.javaClassNameLower}Mapper.update(${table.javaClassName}Converter.dtoToDomain(record)) > 0;
+        int updated = ${table.javaClassNameLower}Mapper.update(${table.javaClassName}Converter.dtoToDomain(record));
+        if (updated != 0) {
+            logger.info("${table.name}数据更新成功! {}", record);
+            return true;
+        } else {
+            logger.warn("${table.name}数据更新失败! {}", record);
+            return false;
+        }
     }
 
     /**

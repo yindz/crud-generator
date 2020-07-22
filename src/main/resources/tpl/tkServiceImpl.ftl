@@ -92,7 +92,14 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(record != null, "待插入的数据为空"); <#if versionColumn??>
         record.set${versionColumn.columnCamelNameUpper}(1L);</#if>
         ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
-        return ${table.javaClassNameLower}Mapper.insertSelective(cond) > 0;
+        int inserted = ${table.javaClassNameLower}Mapper.insertSelective(cond);
+        if (inserted != 0) {
+            logger.info("${table.name}数据插入成功! {}", record);
+            return true;
+        } else {
+            logger.warn("${table.name}数据插入失败! {}", record);
+            return false;
+        }
     }
 
     /**
@@ -133,7 +140,14 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(record != null, "待更新的数据为空");
         <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待更新的数据${pk.columnCamelNameLower}为空");</#if>
         ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
-        return ${table.javaClassNameLower}Mapper.updateByPrimaryKeySelective(cond) > 0;
+        int updated = ${table.javaClassNameLower}Mapper.updateByPrimaryKeySelective(cond);
+        if (updated != 0) {
+            logger.info("${table.name}数据更新成功! {}", record);
+            return true;
+        } else {
+            logger.warn("${table.name}数据更新失败! {}", record);
+            return false;
+        }
     }
 
     /**
