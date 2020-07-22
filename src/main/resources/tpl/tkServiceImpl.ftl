@@ -23,6 +23,7 @@ import ${basePkgName}.service.I${table.javaClassName}Service;
 import ${basePkgName}.dao.${table.javaClassName}CommonMapper;
 import ${basePkgName}.util.${table.javaClassName}Converter;
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
+<#if table.versionColumn??><#list table.columns as column><#if table.versionColumn == column.columnName><#assign versionColumn = column></#if></#list></#if>
 
 /**
  * ${table.comments}服务接口实现
@@ -88,7 +89,8 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insert(${table.javaClassName}DTO record) {
-        Preconditions.checkArgument(record != null, "待插入的数据为空");
+        Preconditions.checkArgument(record != null, "待插入的数据为空"); <#if versionColumn??>
+        record.set${versionColumn.columnCamelNameUpper}(1L);</#if>
         ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
         return ${table.javaClassNameLower}Mapper.insertSelective(cond) > 0;
     }
@@ -108,6 +110,8 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              if (record == null) {
                 continue;
              }
+            <#if versionColumn??>
+             record.set${versionColumn.columnCamelNameUpper}(1L);</#if>
              if (${table.javaClassNameLower}Mapper.insertSelective(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
              }
