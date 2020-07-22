@@ -137,6 +137,13 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     public boolean delete(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待删除的数据为空");
         <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待删除的数据${pk.columnCamelNameLower}为空");</#if>
-        return ${table.javaClassNameLower}Mapper.delete(${table.javaClassName}Converter.dtoToDomain(record)) > 0;
+        int deleted = ${table.javaClassNameLower}Mapper.delete(${table.javaClassName}Converter.dtoToDomain(record));
+        if (deleted != 0) {
+            logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", cond.get${pk.columnCamelNameUpper}());
+            return true;
+        } else {
+            logger.warn("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", cond.get${pk.columnCamelNameUpper}());
+            return false;
+        }
     }
 }
