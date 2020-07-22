@@ -16,7 +16,7 @@ import ${imp};
  * @author ${table.author!''}
  */
 public class ${table.javaClassName}DTO implements Serializable {
-    private static final long serialVersionUID = 1L;
+<#include "./public/serialVersionUID.ftl"/>
 
 <#list table.columns as column>
     /**
@@ -29,19 +29,7 @@ public class ${table.javaClassName}DTO implements Serializable {
 
 </#list>
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
+<#include "./public/toString.ftl"/>
 
-<#list table.columns as column>
-
-    public ${column.columnJavaType} get${column.columnCamelNameUpper}() {
-        return this.${column.columnCamelNameLower};
-    }
-
-    public void set${column.columnCamelNameUpper}(${column.columnJavaType} ${column.columnCamelNameLower}) {
-        this.${column.columnCamelNameLower} = ${column.columnCamelNameLower};
-    }
-</#list>
+<#include "./public/getterAndSetter.ftl"/>
 }

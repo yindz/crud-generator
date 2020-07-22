@@ -13,7 +13,7 @@ import ${basePkgName}.vo.${table.javaClassName}VO;
  */
 @ApiModel("${table.comments}查询条件")
 public class ${table.javaClassName}QueryVO extends ${table.javaClassName}VO {
-    private static final long serialVersionUID = 1L;
+<#include "./public/serialVersionUID.ftl"/>
 
     @ApiModelProperty(value = "页码", dataType = "Integer", required = false, example = "1")
     @NotNull(message = "页码为空")

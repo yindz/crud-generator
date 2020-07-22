@@ -29,13 +29,7 @@ import ${basePkgName}.dao.${table.javaClassName}Mapper;
  *
  * @author ${table.author!''}
  */
-<#if useDubboServiceAnnotation = 1>@Service(
-    version = "${r"${"}dubbo.service.version}",
-    application = "${r"${"}dubbo.application.id}",
-    protocol = "${r"${"}dubbo.protocol.id}",
-    registry = "${r"${"}dubbo.registry.id}",
-    provider = "${r"${"}dubbo.provider.id}"
-)
+<#if useDubboServiceAnnotation = 1><#include "./public/dubboServiceAnnotation.ftl"/>
 <#else>@Service
 </#if>
 public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName}Service {

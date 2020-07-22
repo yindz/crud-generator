@@ -8,7 +8,7 @@ import ${basePkgName}.dto.${table.javaClassName}DTO;
  * @author ${table.author!''}
  */
 public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
-    private static final long serialVersionUID = 1L;
+<#include "./public/serialVersionUID.ftl"/>
 
     /**
      * 页码
