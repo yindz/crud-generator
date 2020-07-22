@@ -99,6 +99,11 @@ public class TableCodeGenerator {
     private String globalTableNamePrefixToRemove;
 
     /**
+     * 是否启用swagger
+     */
+    private boolean useSwagger = true;
+
+    /**
      * 是否生成所有代码
      * 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码
      *
@@ -125,6 +130,15 @@ public class TableCodeGenerator {
      */
     public void setGlobalTableNamePrefixToRemove(String prefixToRemove) {
         this.globalTableNamePrefixToRemove = StringUtils.trim(prefixToRemove);
+    }
+
+    /**
+     * 是否启用Swagger
+     *
+     * @param useSwagger
+     */
+    public void setUseSwagger(boolean useSwagger) {
+        this.useSwagger = useSwagger;
     }
 
     /**
@@ -421,6 +435,7 @@ public class TableCodeGenerator {
         data.setTable(tableInfo);
         data.setUuid((list) -> UUID.randomUUID());
         data.setUseDubboServiceAnnotation(this.useDubboService ? 1 : 0);
+        data.setUseSwagger(this.useSwagger ? 1 : 0);
 
         //输出
         render(GeneratorConfig.coreTemplateList, data, javaClassName);

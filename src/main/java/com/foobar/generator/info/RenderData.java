@@ -35,6 +35,11 @@ public class RenderData {
      */
     private int useDubboServiceAnnotation = 0;
 
+    /**
+     * 是否启用swagger
+     */
+    private int useSwagger = 1;
+
     public String getBasePkgName() {
         return basePkgName;
     }
@@ -73,5 +78,13 @@ public class RenderData {
 
     public void setUseDubboServiceAnnotation(int useDubboServiceAnnotation) {
         this.useDubboServiceAnnotation = useDubboServiceAnnotation;
+    }
+
+    public int getUseSwagger() {
+        return useSwagger;
+    }
+
+    public void setUseSwagger(int useSwagger) {
+        this.useSwagger = useSwagger;
     }
 }

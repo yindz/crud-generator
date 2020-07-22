@@ -129,6 +129,9 @@ java/domain/JpaXXXDO.java
     //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
     //generator.setGenerateAll(false);
     
+    //如果不希望生成swagger注解，可设置该值为false; 默认true
+    //generator.setUseSwagger(false);
+    
     //生成
     generator.run(rp);
 ```
