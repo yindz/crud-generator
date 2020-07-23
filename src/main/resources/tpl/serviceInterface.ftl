@@ -55,11 +55,20 @@ public interface I${table.javaClassName}Service {
      */
     boolean update(${table.javaClassName}DTO record);
 
+<#if pk??>
     /**
      * 删除记录
      *
-     * @param record    待删除的数据
+     * @param ${pk.columnCamelNameLower}    待删除的数据主键值
      * @return 是否成功
      */
-    boolean delete(${table.javaClassName}DTO record);
+    boolean delete(${pk.columnJavaType} ${pk.columnCamelNameLower});
+
+    /**
+     * 批量删除记录
+     *
+     * @param ${pk.columnCamelNameLower}List    待删除的数据主键值列表
+     * @return 是否成功
+     */
+    boolean deleteAll(List<${pk.columnJavaType}> ${pk.columnCamelNameLower}List);</#if>
 }

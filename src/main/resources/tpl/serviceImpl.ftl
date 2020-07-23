@@ -121,7 +121,6 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      @Transactional(rollbackFor = Exception.class)
      public boolean insertAll(List<${table.javaClassName}DTO> recordList) {
          Preconditions.checkArgument(recordList != null && !recordList.isEmpty(), "待插入的数据为空");
-         int success = 0;
          for (${table.javaClassName}DTO record : recordList) {
              if (record == null) {
                  continue;
@@ -131,7 +130,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              }
              success++;
          }
-         logger.info("本次总共提交{}条${table.comments}数据，已成功插入{}条", recordList.size(), success);
+         logger.info("本次总共插入{}条${table.name}数据", recordList.size());
          return true;
      }
 
@@ -156,24 +155,47 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         }
     }
 
+<#if pk??>
     /**
      * 删除记录
      *
-     * @param record    待删除的数据
+     * @param ${pk.columnCamelNameLower}    待删除的数据主键值
      * @return 是否成功
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delete(${table.javaClassName}DTO record) {
-        Preconditions.checkArgument(record != null, "待删除的数据为空");
-        <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待删除的数据${pk.columnCamelNameLower}为空");</#if>
-        int deleted = ${table.javaClassNameLower}Mapper.delete(${table.javaClassName}Converter.dtoToDomain(record));
-        if (deleted != 0) {
-            logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", cond.get${pk.columnCamelNameUpper}());
+    public boolean delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+        Preconditions.checkArgument(${pk.columnCamelNameLower} != null, "待删除的数据${pk.columnCamelNameLower}为空");
+        ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
+        cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
+        if (${table.javaClassNameLower}Mapper.delete(cond) != 0) {
+            logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return true;
         } else {
-            logger.warn("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", cond.get${pk.columnCamelNameUpper}());
+            logger.warn("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return false;
         }
     }
+
+    /**
+     * 批量删除记录
+     *
+     * @param ${pk.columnCamelNameLower}List    待删除的数据主键值列表
+     * @return 是否成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteAll(List<${pk.columnJavaType}> ${pk.columnCamelNameLower}List) {
+        Preconditions.checkArgument(${pk.columnCamelNameLower}List != null && !${pk.columnCamelNameLower}List.isEmpty(), "待删除的${table.comments}数据${pk.columnComment}列表为空");
+        for (${pk.columnJavaType} ${pk.columnCamelNameLower} : ${pk.columnCamelNameLower}List) {
+            ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
+            cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
+            if (${table.javaClassNameLower}Mapper.delete(cond) == 0) {
+                logger.error("删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
+                throw new RuntimeException("删除${table.comments}数据失败!");
+            }
+        }
+        logger.info("本次总共删除{}条${table.name}表数据! ${pk.columnCamelNameLower}List={}", ${pk.columnCamelNameLower}List.size(), ${pk.columnCamelNameLower}List);
+        return true;
+    }</#if>
 }

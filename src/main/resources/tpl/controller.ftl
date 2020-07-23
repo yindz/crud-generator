@@ -90,8 +90,6 @@ public class ${table.javaClassName}Controller {
     @ApiOperation(value = "删除${table.comments}记录", httpMethod = "DELETE", tags = {"删除${table.comments}记录"})</#if>
     @DeleteMapping(value = "/delete")
     public boolean delete(<#if pk??>@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>) {
-        ${table.javaClassName}DTO cond = new ${table.javaClassName}DTO();
-        <#if pk??>cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});</#if>
-        return ${table.javaClassNameLower}Service.delete(cond);
+        return ${table.javaClassNameLower}Service.delete(${pk.columnCamelNameLower});
     }
 }
