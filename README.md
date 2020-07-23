@@ -253,3 +253,63 @@ java/domain/JpaXXXDO.java
     <version>X.X.X</version>
 </dependency>
 ```
+
+## 附录
+### Hibernate Validator分组校验说明
+- 针对数据插入操作，根据 InsertGroup 分组进行校验；
+- 针对数据更新操作，根据 UpdateGroup 分组进行校验；
+- 其它的共有校验规则(如字段长度限制等)，根据 Default 分组进行校验；
+
+### Spring Boot统一处理Hibernate Validator校验异常
+通过 @ExceptionHandler 捕获 MethodArgumentNotValidException 和 BindException 异常即可。
+
+区别：
+- 如果使用表单对象(Form)形式接收参数(如查询操作)，则出现 BindException 异常
+- 如果使用 @RequestBody 形式接收参数(如插入操作)，则出现 MethodArgumentNotValidException 异常
+
+参考代码：
+```
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
+    @ResponseBody
+    public String errorHandler(Exception ex) {
+        if (ex instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException me = (MethodArgumentNotValidException) ex;
+            return getFieldErrors(me.getBindingResult().getFieldErrors());
+        } else if (ex instanceof BindException) {
+            BindException be = (BindException) ex;
+            return getFieldErrors(be.getBindingResult().getFieldErrors());
+        } else {
+            return ex.getMessage();
+        }
+    }
+
+    private String getFieldErrors(List<FieldError> fieldErrors) {
+        String msg = "error";
+        if (!fieldErrors.isEmpty()) {
+            List<String> errorMsgs = fieldErrors.stream().map(FieldError::getDefaultMessage).distinct().collect(Collectors.toList());
+            msg = String.join(";", errorMsgs);
+        }
+        return msg;
+    }
+}
+```
+默认情况下 Hibernate Validator 使用普通模式：校验器会校验完所有的属性，然后返回所有的验证错误信息。
+
+如果希望使用 Fail-fast(快速失败) 模式，则需要增加额外配置：
+```
+@Configuration
+public class HibernateValidatorConfig {
+    public HibernateValidatorConfig() {
+    }
+
+    @Bean
+    public Validator myValidatorFactory() {
+        ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory();
+        return validatorFactory.getValidator();
+    }
+}
+```
+使用该模式之后，当校验器遇到第1个不满足条件的参数时就立即结束校验工作，只返回这一个参数对应的错误信息。
