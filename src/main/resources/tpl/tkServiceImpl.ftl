@@ -128,7 +128,6 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      @Transactional(rollbackFor = Exception.class)
      public boolean insertAll(List<${table.javaClassName}DTO> recordList) {
          Preconditions.checkArgument(recordList != null && !recordList.isEmpty(), "待插入的数据为空");
-         int success = 0;
          for (${table.javaClassName}DTO record : recordList) {
              if (record == null) {
                 continue;
@@ -138,9 +137,8 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              if (${table.javaClassNameLower}Mapper.insertSelective(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
              }
-             success++;
          }
-         logger.info("本次总共提交{}条${table.comments}数据，已成功插入{}条", recordList.size(), success);
+         logger.info("本次总共插入{}条${table.name}数据", recordList.size());
          return true;
     }
 
