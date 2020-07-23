@@ -91,7 +91,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n<#list table.columns as column><#if column.isPrimaryKey == 0>\"${column.columnCamelNameLower}\": \"\"<#if column?has_next>,\n</#if></#if></#list>\n}",
+          "raw": "{\n<#list table.columns as column><#if column.isPrimaryKey == 0>    \"${column.columnCamelNameLower}\": \"\"<#if column?has_next>,\n</#if></#if></#list>\n}",
           "options": {
               "raw": {
                 "language": "json"
@@ -136,7 +136,7 @@
         ],
         "body": {
             "mode": "raw",
-            "raw": "{\n<#list table.columns as column>\"${column.columnCamelNameLower}\": \"\"<#if column?has_next>,\n</#if></#list>\n}",
+            "raw": "{\n<#list table.columns as column>    \"${column.columnCamelNameLower}\": \"\"<#if column?has_next>,\n</#if></#list>\n}",
             "options": {
                 "raw": {
                 "language": "json"
