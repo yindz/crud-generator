@@ -37,6 +37,11 @@ public class TemplateInfo {
     private int isCore;
 
     /**
+     * 是否覆盖已存在的同名文件
+     */
+    private int overwriteExistingFile = 1;
+
+    /**
      * 备注
      */
     private String remark;
@@ -79,6 +84,14 @@ public class TemplateInfo {
 
     public void setIsCore(int isCore) {
         this.isCore = isCore;
+    }
+
+    public int getOverwriteExistingFile() {
+        return overwriteExistingFile;
+    }
+
+    public void setOverwriteExistingFile(int overwriteExistingFile) {
+        this.overwriteExistingFile = overwriteExistingFile;
     }
 
     public String getRemark() {

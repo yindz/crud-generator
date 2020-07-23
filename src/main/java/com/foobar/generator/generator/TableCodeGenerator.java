@@ -155,7 +155,7 @@ public class TableCodeGenerator {
         }
         dbType = jdbcInfo.getDbType().toLowerCase();
         DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(dbType);
-        if(dbUtilInfo == null){
+        if (dbUtilInfo == null) {
             throw new Exception("暂不支持该数据库类型");
         }
         dbUtil = (AbstractDbUtil) Class.forName(dbUtilInfo.getClassName()).newInstance();
@@ -467,6 +467,13 @@ public class TableCodeGenerator {
                 throw new RuntimeException("路径" + dir.getAbsolutePath() + "不是目录");
             }
             String out = dir.getAbsolutePath() + File.separator + ti.getTargetFileName().replace(GeneratorConst.PLACEHOLDER, javaClassName);
+            if (ti.getOverwriteExistingFile() == 0) {
+                File file = new File(out);
+                if (file.exists()) {
+                    logger.info("模板 {} 对应的目标输出文件 {} 已存在，因此不再重新生成该文件", ti.getTemplateName(), out);
+                    continue;
+                }
+            }
             data.getTable().setPkgName(data.getBasePkgName() + "." + ti.getTargetPkgName());
             renderFile(getTemplate("tpl/" + ti.getTemplateName()), data, out);
         }
