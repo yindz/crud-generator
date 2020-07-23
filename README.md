@@ -16,10 +16,10 @@
 | XXXVO.java | VO类| java/vo/ |  用于接收/输出数据  | 是 |
 | XXXQueryVO.java | 查询条件 | java/vo/ | 用于接收查询条件 | 是 |
 | XXXController.java | 控制器代码 | java/controller/ | 对外暴露HTTP接口 | 该文件只需生成1次 |
-| XXX.java | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
+| XXXDO.java | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
 | XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
 | XXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
-| XXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
+| TkXXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
 | JpaXXXDO.java | Domain实体类定义 | java/domain/| 适用于JPA  | 是 |
 | XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 是 |
 | XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
