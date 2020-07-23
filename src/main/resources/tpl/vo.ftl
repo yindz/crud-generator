@@ -33,9 +33,9 @@ public class ${table.javaClassName}VO implements Serializable {
      * ${column.columnComment!''}
      */<#if useSwagger == 1>
     @ApiModelProperty(value = "${column.columnComment!''}", dataType = "${column.columnJavaType}", required = <#if column.nullable == 0>true<#else>false</#if><#if column.isNumber == 1>, example = "1"</#if>)</#if><#if column.nullable == 0><#if column.isChar == 1>
-    @NotBlank(message = "${column.columnComment!''} ${column.columnCamelNameLower} 为空", groups = {<#if column.isPrimaryKey == 1>UpdateGroup.class<#else>InsertGroup.class</#if>})<#else>
-    @NotNull(message = "${column.columnComment!''} ${column.columnCamelNameLower} 为空", groups = {<#if column.isPrimaryKey == 1>UpdateGroup.class<#else>InsertGroup.class</#if>})</#if></#if><#if column.isChar == 1>
-    @Length(max = ${column.columnLength}, message = "${column.columnComment!''} ${column.columnCamelNameLower} 长度不能超过${column.columnLength}", groups = {Default.class})</#if><#if column.isDateTime == 1>
+    @NotBlank(message = "${column.columnComment!''}(${column.columnCamelNameLower})为空", groups = {<#if column.isPrimaryKey == 1>UpdateGroup.class<#else>InsertGroup.class</#if>})<#else>
+    @NotNull(message = "${column.columnComment!''}(${column.columnCamelNameLower})为空", groups = {<#if column.isPrimaryKey == 1>UpdateGroup.class<#else>InsertGroup.class</#if>})</#if></#if><#if column.isChar == 1>
+    @Length(max = ${column.columnLength}, message = "${column.columnComment!''}(${column.columnCamelNameLower})长度不能超过{max}个字符", groups = {Default.class})</#if><#if column.isDateTime == 1>
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "${timeZone}")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")</#if>
     private ${column.columnJavaType} ${column.columnCamelNameLower};
