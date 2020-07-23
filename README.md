@@ -1,4 +1,8 @@
 # CRUD代码生成器
+
+[TOC]
+
+## 概述
 - 基于数据表结构定义，自动生成 CRUD 代码，省时省力
 - 自动检测数据表字段类型、字段长度、数值精度、主键字段、唯一索引字段
 - 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SqlServer 三种类型数据库
