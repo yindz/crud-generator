@@ -27,7 +27,7 @@ public class ${table.javaClassName}QueryVO extends ${table.javaClassName}VO {
     @ApiModelProperty(value = "分页大小", dataType = "Integer", required = false, example = "10")</#if>
     @NotNull(message = "分页大小为空")
     @Min(value = 1, message = "分页大小必须大于或等于1")
-    private Integer pageSize = 10;
+    private Integer pageSize = ${table.pageSize};
 
 <#if useSwagger == 1>
     @ApiModelProperty(value = "排序字段名", dataType = "String", required = false)</#if>

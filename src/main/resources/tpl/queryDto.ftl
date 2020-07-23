@@ -18,7 +18,7 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
     /**
      * 分页大小
      */
-    private Integer pageSize = 10;
+    private Integer pageSize = ${table.pageSize};
 
     /**
      * 排序属性名称

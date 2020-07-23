@@ -27,6 +27,11 @@ public class TableContext {
      */
     private String versionColumn = "version";
 
+    /**
+     * 默认分页大小
+     */
+    private Integer pageSize = 10;
+
     public static TableContext withName(String name) {
         TableContext tc = new TableContext();
         tc.setTableName(name);
@@ -71,5 +76,13 @@ public class TableContext {
 
     public void setVersionColumn(String versionColumn) {
         this.versionColumn = versionColumn;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

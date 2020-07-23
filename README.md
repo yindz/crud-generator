@@ -117,6 +117,9 @@ java/domain/JpaXXXDO.java
     
     //如果该表有乐观锁，可在此设置其字段名，默认值为 version (不区分大小写)
     //table.setVersionColumn("total");
+
+    //默认分页大小为10，如需修改，可在此设置一个大于0的整数
+    table.setPageSize(20);
     
     rp.addTable(table);
     

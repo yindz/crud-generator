@@ -65,6 +65,11 @@ public class TableInfo {
      */
     private String versionColumn;
 
+    /**
+     * 默认分页大小
+     */
+    private Integer pageSize;
+
     public String getDbType() {
         return dbType;
     }
@@ -151,5 +156,13 @@ public class TableInfo {
 
     public void setVersionColumn(String versionColumn) {
         this.versionColumn = versionColumn;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

@@ -41,11 +41,11 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     private ${table.javaClassName}CommonMapper ${table.javaClassNameLower}Mapper;
 
     /**
-    * 分页查询
-    *
-    * @param query           查询条件
-    * @return 分页查询结果
-    */
+     * 分页查询
+     *
+     * @param query           查询条件
+     * @return 分页查询结果
+     */
     @Override
     public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}QueryDTO query) {
         Preconditions.checkArgument(query != null, "查询条件为空");
