@@ -11,28 +11,31 @@
 - 支持生成 [Postman](https://www.postman.com/) 可导入的API接口JSON定义文件
 
 ## 文件说明
-| 文件名 | 含义 | 路径 | 备注 | 
-|  ----  | ---- |---- |---- |
-| XXXVO.java | VO类| java/vo/ |   | 
-| XXXQueryVO.java | 查询条件 | java/vo/ | | 
-| XXXApi.java | 控制器代码 | java/controller/ |   | 
-| XXX.java | 实体类 | java/entity/ |  适用于原版mybatis | 
-| XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis  | 
-| XXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 
-| XXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 
-| JpaXXXDO.java | Domain实体类定义 | java/domain/| 适用于JPA  | 
-| XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 
-| XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 
-| XXXCommonMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper  | 
-| XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 
-| XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层  | 
-| IXXXService.java | 服务接口定义 | java/service/ |   | 
-| XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 
-| TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 
-| XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端 | 
-| XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 
-| XXX.postman_collection.json | Postman接口JSON定义文件 | json/ | 使用方法：Postman>Import | 
-| XXX.postman_environment.json | Postman环境变量定义文件 | json/ | 使用方法：Postman>Manage Environment>Import | 
+| 文件名 | 含义 | 路径 | 备注 | 当数据表字段发生变化时是否需要重新生成 | 
+|  ----  | ---- |---- |---- | ---- |
+| XXXVO.java | VO类| java/vo/ |  用于接收/输出数据  | 是 |
+| XXXQueryVO.java | 查询条件 | java/vo/ | 用于接收查询条件 | 是 |
+| XXXController.java | 控制器代码 | java/controller/ | 对外暴露HTTP接口 | 该文件只需生成1次 |
+| XXX.java | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
+| XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
+| XXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
+| XXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
+| JpaXXXDO.java | Domain实体类定义 | java/domain/| 适用于JPA  | 是 |
+| XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 是 |
+| XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
+| XXXCommonMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
+| XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 是 |
+| XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层 | 该文件只需生成1次 |
+| IXXXService.java | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
+| XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 是 |
+| TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
+| XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
+| CommonConverter.java | 通用对象转换工具 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
+| XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
+| InsertGroup.java | 校验分组(插入) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
+| UpdateGroup.java | 校验分组(更新) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
+| XXX.postman_collection.json | Postman接口JSON定义文件 | json/ | 使用方法：Postman>Import | 是 |
+| XXX.postman_environment.json | Postman环境变量定义文件 | json/ | 使用方法：Postman>Manage Environment>Import | 该文件只需生成1次 |
 
 ## 主键字段检测规则
 1. 数据表有主键字段时，程序将直接使用该字段
