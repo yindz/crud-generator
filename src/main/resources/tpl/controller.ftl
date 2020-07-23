@@ -3,6 +3,9 @@ package ${table.pkgName};
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Preconditions;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -43,6 +46,8 @@ import io.swagger.annotations.ApiOperation;
 public class ${table.javaClassName}Controller {
     private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}Controller.class);
 
+    private static final Pattern fieldPattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]*$");
+
     @Autowired
     private I${table.javaClassName}Service ${table.javaClassNameLower}Service;
 
@@ -54,7 +59,17 @@ public class ${table.javaClassName}Controller {
      */<#if useSwagger == 1>
     @ApiOperation(value = "分页查询${table.comments}数据", httpMethod = "GET",tags = {"分页查询${table.comments}数据"})</#if>
     @GetMapping(value = "/get${table.javaClassName}List")
-    public PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}QueryVO query) {
+    public PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(@Validated({Default.class}) ${table.javaClassName}QueryVO query) {
+        if (StringUtils.isNotEmpty(query.getOrderBy())) {
+            if (!fieldPattern.matcher(query.getOrderBy()).matches()) {
+                throw new IllegalArgumentException("排序字段名无效!");
+            }
+        }
+        if (StringUtils.isNotEmpty(query.getOrderDirection())) {
+            if (!"asc".equalsIgnoreCase(query.getOrderDirection()) && !"desc".equalsIgnoreCase(query.getOrderDirection())) {
+                throw new IllegalArgumentException("排序方向无效!");
+            }
+        }
         PageInfo<${table.javaClassName}DTO> pageInfo = ${table.javaClassNameLower}Service.get${table.javaClassName}List(${table.javaClassName}Converter.voToQueryDTO(query));
         return ${table.javaClassName}Converter.toVOPageInfo(pageInfo);
     }
