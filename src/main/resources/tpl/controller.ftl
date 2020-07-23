@@ -1,6 +1,5 @@
 package ${table.pkgName};
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +7,7 @@ import com.google.common.base.Preconditions;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javax.validation.groups.Default;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
 import ${basePkgName}.vo.${table.javaClassName}VO;
 import ${basePkgName}.vo.${table.javaClassName}QueryVO;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
 import ${basePkgName}.service.I${table.javaClassName}Service;
 import ${basePkgName}.util.${table.javaClassName}Converter;
+import ${basePkgName}.validator.InsertGroup;
+import ${basePkgName}.validator.UpdateGroup;
 <#if useSwagger == 1>
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,7 +67,7 @@ public class ${table.javaClassName}Controller {
      */<#if useSwagger == 1>
     @ApiOperation(value = "插入${table.comments}记录", httpMethod = "POST",tags = {"插入${table.comments}记录"})</#if>
     @PostMapping(value = "/insert")
-    public boolean insert(@RequestBody @Valid ${table.javaClassName}VO vo) {
+    public boolean insert(@RequestBody @Validated({InsertGroup.class, Default.class}) ${table.javaClassName}VO vo) {
         return ${table.javaClassNameLower}Service.insert(${table.javaClassName}Converter.voToDTO(vo));
     }
 
@@ -76,7 +79,7 @@ public class ${table.javaClassName}Controller {
     */<#if useSwagger == 1>
     @ApiOperation(value = "更新${table.comments}记录", httpMethod = "POST", tags = {"更新${table.comments}记录"})</#if>
     @PostMapping(value = "/update")
-    public boolean update(@RequestBody ${table.javaClassName}VO vo) {
+    public boolean update(@RequestBody @Validated({UpdateGroup.class, Default.class}) ${table.javaClassName}VO vo) {
         Preconditions.checkArgument(<#if pk??>vo.get${pk.columnCamelNameUpper}() != null, "待更新的${table.comments}记录${pk.columnComment}为空"</#if>);
         return ${table.javaClassNameLower}Service.update(${table.javaClassName}Converter.voToDTO(vo));
     }

@@ -88,9 +88,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         }
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-        List<${table.javaClassName}DO> list = ${table.javaClassNameLower}Mapper.selectByPrimaryKey(cond);
-        if (list != null && !list.isEmpty()) {
-            return ${table.javaClassName}Converter.domainToDTO(list.get(0));
+        ${table.javaClassName}DO obj = ${table.javaClassNameLower}Mapper.selectByPrimaryKey(cond);
+        if (obj != null) {
+            return ${table.javaClassName}Converter.domainToDTO(obj);
         } else {
             return null;
         }

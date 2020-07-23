@@ -152,6 +152,22 @@
     "remark": "转换工具类"
   },
   {
+    "templateName": "validatorInsertGroup.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "validator",
+    "targetFileName": "InsertGroup.java",
+    "isCore": 0,
+    "remark": "校验分组(插入)"
+  },
+  {
+    "templateName": "validatorUpdateGroup.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "validator",
+    "targetFileName": "UpdateGroup.java",
+    "isCore": 0,
+    "remark": "校验分组(更新)"
+  },
+  {
     "templateName": "postmanCollection.ftl",
     "targetBaseDirName": "json",
     "targetPkgName": "",
