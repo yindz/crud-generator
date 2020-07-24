@@ -1,21 +1,20 @@
 # CRUD代码生成器
 
 <!-- TOC -->
-- [CRUD代码生成器](#crud代码生成器)
 - [概述](#概述)
 - [文件说明](#文件说明)
 - [主键字段检测规则](#主键字段检测规则)
+- [使用范例](#使用范例)
 - [最佳实践](#最佳实践)
   - [当数据表字段发生变化时](#当数据表字段发生变化时)
   - [使用建议](#使用建议)
-- [使用范例](#使用范例)
+  - [Hibernate Validator分组校验说明](#hibernate-validator分组校验说明)
+  - [Spring Boot统一处理Hibernate Validator校验异常](#spring-boot统一处理hibernate-validator校验异常)
 - [扩展](#扩展)
   - [适配更多数据库](#适配更多数据库)
   - [更多代码模板](#更多代码模板)
 - [额外说明](#额外说明)
-- [附录](#附录)
-  - [Hibernate Validator分组校验说明](#hibernate-validator分组校验说明)
-  - [Spring Boot统一处理Hibernate Validator校验异常](#spring-boot统一处理hibernate-validator校验异常)
+
 <!-- /TOC -->
 
 ## 概述
@@ -61,36 +60,6 @@
 1. 数据表有主键字段时，程序将直接使用该字段
 2. 数据表无主键字段时，程序将使用最后一个具有唯一索引的字段
 3. 数据表既无主键字段也无唯一索引字段时，程序将使用 TableContext 对象中 primaryKeyColumn 参数所指定的字段
-
-## 最佳实践
-### 当数据表字段发生变化时
-- 如果您采用原版 mybatis，则需要重新生成以下文件: 
-```
-java/vo/XXXVO.java
-java/dto/XXXDTO.java
-java/entity/XXX.java
-java/service/XXXServiceImpl.java
-resources/XXXMapper.xml
-```
-- 如果您采用 mybatis 通用Mapper，则需要重新生成以下文件: 
-```
-java/vo/XXXVO.java
-java/dto/XXXDTO.java
-java/domain/XXXDO.java
-java/service/TkXXXServiceImpl.java
-```
-
-- 如果您采用JPA，则需要重新生成以下文件: 
-```
-java/vo/XXXVO.java
-java/dto/XXXDTO.java
-java/domain/JpaXXXDO.java
-```
-
-### 使用建议
-- 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 和 XXXServiceImpl.java 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
-- 如果您采用 mybatis通用Mapper，不应在 TkXXXServiceImpl.java 中编写自己的业务逻辑；但可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
-- 如果数据表字段变化比较频繁，建议采用 mybatis通用Mapper
 
 ## 使用范例
 ```
@@ -161,6 +130,97 @@ java/domain/JpaXXXDO.java
     //生成
     generator.run(rp);
 ```
+
+## 最佳实践
+### 当数据表字段发生变化时
+- 如果您采用原版 mybatis，则需要重新生成以下文件: 
+```
+java/vo/XXXVO.java
+java/dto/XXXDTO.java
+java/entity/XXX.java
+java/service/XXXServiceImpl.java
+resources/XXXMapper.xml
+```
+- 如果您采用 mybatis 通用Mapper，则需要重新生成以下文件: 
+```
+java/vo/XXXVO.java
+java/dto/XXXDTO.java
+java/domain/XXXDO.java
+java/service/TkXXXServiceImpl.java
+```
+
+- 如果您采用JPA，则需要重新生成以下文件: 
+```
+java/vo/XXXVO.java
+java/dto/XXXDTO.java
+java/domain/JpaXXXDO.java
+```
+
+### 使用建议
+- 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 和 XXXServiceImpl.java 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
+- 如果您采用 mybatis通用Mapper，不应在 TkXXXServiceImpl.java 中编写自己的业务逻辑；但可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
+- 如果数据表字段变化比较频繁，建议采用 mybatis通用Mapper
+
+### Hibernate Validator分组校验说明
+- 针对数据插入操作，根据 InsertGroup 分组进行校验；
+- 针对数据更新操作，根据 UpdateGroup 分组进行校验；
+- 其它的共有校验规则(如字段长度限制等)，根据 Default 分组进行校验；
+
+### Spring Boot统一处理Hibernate Validator校验异常
+通过 @ExceptionHandler 捕获 MethodArgumentNotValidException 和 BindException 异常即可。
+
+区别：
+- 如果使用表单对象(Form)形式接收参数(如查询操作)，则出现 BindException 异常
+- 如果使用 @RequestBody 形式接收参数(如插入操作)，则出现 MethodArgumentNotValidException 异常
+
+参考代码：
+```
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
+    @ResponseBody
+    public String errorHandler(Exception ex) {
+        if (ex instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException me = (MethodArgumentNotValidException) ex;
+            return getFieldErrors(me.getBindingResult().getFieldErrors());
+        } else if (ex instanceof BindException) {
+            BindException be = (BindException) ex;
+            return getFieldErrors(be.getBindingResult().getFieldErrors());
+        } else {
+            return ex.getMessage();
+        }
+    }
+
+    private String getFieldErrors(List<FieldError> fieldErrors) {
+        String msg = "error";
+        if (!fieldErrors.isEmpty()) {
+            List<String> errorMsgs = fieldErrors.stream().map(FieldError::getDefaultMessage).distinct().collect(Collectors.toList());
+            msg = String.join(";", errorMsgs);
+        }
+        return msg;
+    }
+}
+```
+默认情况下 Hibernate Validator 使用普通模式：校验器会校验完所有的属性，然后返回所有的验证错误信息。
+
+如果希望使用 Fail-fast(快速失败) 模式，则需要增加额外配置：
+```
+@Configuration
+public class HibernateValidatorConfig {
+    public HibernateValidatorConfig() {
+    }
+
+    @Bean
+    public Validator myValidatorFactory() {
+        ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory();
+        return validatorFactory.getValidator();
+    }
+}
+```
+使用该模式之后，当校验器遇到第1个不满足条件的参数时就立即结束校验工作，只返回这一个参数对应的错误信息。
+
+
 
 ### 扩展
 #### 适配更多数据库
@@ -273,63 +333,3 @@ java/domain/JpaXXXDO.java
     <version>X.X.X</version>
 </dependency>
 ```
-
-## 附录
-### Hibernate Validator分组校验说明
-- 针对数据插入操作，根据 InsertGroup 分组进行校验；
-- 针对数据更新操作，根据 UpdateGroup 分组进行校验；
-- 其它的共有校验规则(如字段长度限制等)，根据 Default 分组进行校验；
-
-### Spring Boot统一处理Hibernate Validator校验异常
-通过 @ExceptionHandler 捕获 MethodArgumentNotValidException 和 BindException 异常即可。
-
-区别：
-- 如果使用表单对象(Form)形式接收参数(如查询操作)，则出现 BindException 异常
-- 如果使用 @RequestBody 形式接收参数(如插入操作)，则出现 MethodArgumentNotValidException 异常
-
-参考代码：
-```
-@ControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    @ResponseBody
-    public String errorHandler(Exception ex) {
-        if (ex instanceof MethodArgumentNotValidException) {
-            MethodArgumentNotValidException me = (MethodArgumentNotValidException) ex;
-            return getFieldErrors(me.getBindingResult().getFieldErrors());
-        } else if (ex instanceof BindException) {
-            BindException be = (BindException) ex;
-            return getFieldErrors(be.getBindingResult().getFieldErrors());
-        } else {
-            return ex.getMessage();
-        }
-    }
-
-    private String getFieldErrors(List<FieldError> fieldErrors) {
-        String msg = "error";
-        if (!fieldErrors.isEmpty()) {
-            List<String> errorMsgs = fieldErrors.stream().map(FieldError::getDefaultMessage).distinct().collect(Collectors.toList());
-            msg = String.join(";", errorMsgs);
-        }
-        return msg;
-    }
-}
-```
-默认情况下 Hibernate Validator 使用普通模式：校验器会校验完所有的属性，然后返回所有的验证错误信息。
-
-如果希望使用 Fail-fast(快速失败) 模式，则需要增加额外配置：
-```
-@Configuration
-public class HibernateValidatorConfig {
-    public HibernateValidatorConfig() {
-    }
-
-    @Bean
-    public Validator myValidatorFactory() {
-        ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory();
-        return validatorFactory.getValidator();
-    }
-}
-```
-使用该模式之后，当校验器遇到第1个不满足条件的参数时就立即结束校验工作，只返回这一个参数对应的错误信息。
