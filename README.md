@@ -20,9 +20,9 @@
 ## 概述
 - 基于数据表结构定义，自动生成 CRUD 代码，省时省力
 - 自动检测数据表字段类型、字段长度、数值精度、主键字段、唯一索引字段
-- 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SqlServer 三种类型数据库
-- 支持生成原版 mybatis 以及 [mybatis通用Mapper](https://github.com/abel533/Mapper) 相关代码
-- 支持生成 mybatis 分页代码(基于 [Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper))
+- 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SQLServer 三种类型数据库
+- 支持生成原版 Mybatis 以及 [Mybatis通用Mapper](https://github.com/abel533/Mapper) 相关代码
+- 支持生成 Mybatis 分页代码(基于 [Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper))
 - 支持生成基于 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) 的实体类和DAO层接口代码
 - 支持生成基于 [Hibernate Validator](https://hibernate.org/validator/documentation/) 的参数校验注解
 - 支持生成基于 [Spring Cloud OpenFeign](https://cloud.spring.io/spring-cloud-openfeign/reference/html/) 的服务消费端代码
@@ -53,8 +53,8 @@
 | XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
 | InsertGroup.java | 校验分组(插入) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
 | UpdateGroup.java | 校验分组(更新) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
-| XXX.postman_collection.json | Postman接口JSON定义文件 | json/ | 使用方法：Postman>Import | 是 |
-| XXX.postman_environment.json | Postman环境变量定义文件 | json/ | 使用方法：Postman>Manage Environment>Import | 该文件只需生成1次 |
+| XXX.postman_collection.json | Postman接口定义 | json/ | 使用方法：Postman>Import | 是 |
+| XXX.postman_environment.json | Postman环境变量定义 | json/ | 使用方法：Postman>Manage Environment>Import | 该文件只需生成1次 |
 
 ## 主键字段检测规则
 1. 数据表有主键字段时，程序将直接使用该字段
@@ -220,8 +220,6 @@ public class HibernateValidatorConfig {
 ```
 使用该模式之后，当校验器遇到第1个不满足条件的参数时就立即结束校验工作，只返回这一个参数对应的错误信息。
 
-
-
 ### 扩展
 #### 适配更多数据库
 1. 编写自定义的SQL语句(用于查询数据库中的表名、表注释、字段名、字段注释、字段类型、字段长度、主键、唯一索引等)，约定保存路径为 resources/sql_XXX.xml
@@ -230,11 +228,14 @@ public class HibernateValidatorConfig {
 4. 不要忘记在 pom.xml 中加入相应的 jdbc 驱动
 
 #### 更多代码模板
-代码模板基于 [Freemarker模板引擎](https://freemarker.apache.org/docs/index.html) 编写，因此您可以遵循该模板的语法自行实现新的代码模板。提供的变量上下文包括：
+代码模板基于 [Freemarker模板引擎](https://freemarker.apache.org/docs/index.html) 编写，因此您可以遵循该模板的语法自行实现新的代码模板。提供的上下文变量包括：
 
 | 变量 | 含义| 变量类型 |
 |  ----  | ----  |----  |
 | ${basePkgName} | 基础包名| String |
+| ${timeZone} | 时区名称| String |
+| ${useDubboServiceAnnotation} | 是否启用Dubbo服务(0否/1是) | int |
+| ${useSwagger} | 是否启用SwaggerUI(0否/1是) | int |
 | ${table} | 数据表根对象| Object |
 | ${table.name} | 数据表原始名称| String |
 | ${table.kebabCaseName} | kebabCase形式的表名 | String |
@@ -245,6 +246,8 @@ public class HibernateValidatorConfig {
 | ${table.comments} | 数据表注释| String |
 | ${table.imports} | Java类中需要import的类名集合| Set |
 | ${table.author} | 生成的javadoc注释中author的名称 | String |
+| ${table.pageSize} | 默认分页大小 | int |
+| ${table.versionColumn} | 乐观锁版本号字段名 | String |
 | ${table.columns} | 数据表中的所有字段信息列表| List |
 
 字段信息包括：
@@ -333,3 +336,10 @@ public class HibernateValidatorConfig {
     <version>X.X.X</version>
 </dependency>
 ```
+
+实际单元测试中用到的数据库版本：
+- Oracle 11g
+- MySQL 5.5/5.6/5.7/5.8
+- MariaDB 10.2.x/10.3.x/10.4.x
+- Microsoft SQL Server 2008 R2
+- Percona Server(未实际测试，理论上也兼容)
