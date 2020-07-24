@@ -34,6 +34,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 </#if>
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
+<#if pk??>import io.swagger.annotations.ApiParam;</#if>
 
 /**
  * ${table.comments}API接口
@@ -107,7 +108,7 @@ public class ${table.javaClassName}Controller {
      */<#if useSwagger == 1>
     @ApiOperation(value = "删除${table.comments}记录", httpMethod = "DELETE", tags = {"删除${table.comments}记录"})</#if>
     @DeleteMapping(value = "/delete")
-    public boolean delete(<#if pk??>@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>) {
+    public boolean delete(<#if pk??>@ApiParam(value = "待删除的${table.comments}记录${pk.columnComment}", type = "${pk.columnJavaType}", required = true, example = "1") @RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>) {
         return ${table.javaClassNameLower}Service.delete(${pk.columnCamelNameLower});
     }
 }
