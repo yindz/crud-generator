@@ -8,12 +8,15 @@
 - [最佳实践](#最佳实践)
   - [当数据表字段发生变化时](#当数据表字段发生变化时)
   - [使用建议](#使用建议)
-  - [Hibernate Validator分组校验说明](#hibernate-validator分组校验说明)
-  - [Spring Boot统一处理Hibernate Validator校验异常](#spring-boot统一处理hibernate-validator校验异常)
 - [扩展](#扩展)
   - [适配更多数据库](#适配更多数据库)
   - [更多代码模板](#更多代码模板)
-- [额外说明](#额外说明)
+- [附录](#额外说明)
+  - [Hibernate Validator分组校验说明](#hibernate-validator分组校验说明)
+  - [Spring Boot统一处理Hibernate Validator校验异常](#spring-boot统一处理hibernate-validator校验异常)
+  - [SwaggerUI配置参考](#SwaggerUI配置参考)
+  - [第三方依赖](#第三方依赖)
+  - [数据库版本](#数据库版本)
 
 <!-- /TOC -->
 
@@ -62,73 +65,77 @@
 3. 数据表既无主键字段也无唯一索引字段时，程序将使用 TableContext 对象中 primaryKeyColumn 参数所指定的字段
 
 ## 使用范例
-```
-    JdbcInfo param = new JdbcInfo();
-    
-    //指定数据库类型
-    param.setDbType(GeneratorConst.SQLSERVER);
-    
-    //数据库主机名或IP
-    param.setHost("192.168.75.131");
-    
-    //数据库端口号
-    param.setPort("1646");
-    
-    //schema名称(oracle填写Schema名称，mysql或sqlserver则填写数据库名称)
-    param.setSchema("newdb");
-    
-    //数据库用户名
-    param.setUsername("sa");
-    
-    //数据库用户密码
-    param.setPassword("123456");
-    
-    //数据库实例名(oracle填写实例名，mysql或sqlserver留空)
-    param.setServiceName("");
+```java
+public class App {
 
-    TableCodeGenerator generator = new TableCodeGenerator(param);    
-    RunParam rp = new RunParam();
+    public static void main(String[] args) throws Exception {
+        JdbcInfo param = new JdbcInfo();
+        
+        //指定数据库类型
+        param.setDbType(GeneratorConst.SQLSERVER);
+        
+        //数据库主机名或IP
+        param.setHost("192.168.75.131");
+        
+        //数据库端口号
+        param.setPort("1646");
+        
+        //schema名称(oracle填写Schema名称，mysql或sqlserver则填写数据库名称)
+        param.setSchema("newdb");
+        
+        //数据库用户名
+        param.setUsername("sa");
+        
+        //数据库用户密码
+        param.setPassword("123456");
+        
+        //数据库实例名(oracle填写实例名，mysql或sqlserver留空)
+        param.setServiceName("");
     
-    //可以自行指定生成的javadoc注释中author的名称；如留空或不设置，则程序将使用当前操作系统的用户名
-    //rp.setAuthor("张三");
-
-    //java基础包名(留空则默认使用com.example.myapp)
-    rp.setBasePkgName("com.foobar.bizapp");
+        TableCodeGenerator generator = new TableCodeGenerator(param);    
+        RunParam rp = new RunParam();
+        
+        //可以自行指定生成的javadoc注释中author的名称；如留空或不设置，则程序将使用当前操作系统的用户名
+        //rp.setAuthor("张三");
     
-    //输出目录的绝对路径(留空则生成到当前用户主目录)
-    rp.setOutputPath("E:\\tmp\\generated");
+        //java基础包名(留空则默认使用com.example.myapp)
+        rp.setBasePkgName("com.foobar.bizapp");
+        
+        //输出目录的绝对路径(留空则生成到当前用户主目录)
+        rp.setOutputPath("E:\\tmp\\generated");
+        
+        //表名
+        TableContext table = TableContext.withName("t_product");
+        
+        //需去掉的表名前缀(留空不去掉任何前缀)
+        table.setTableNamePrefixToRemove("t_");
+        
+        //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
+        //table.setPrimaryKeyColumn("code");
+        
+        //如果该表有乐观锁，可在此设置其字段名，默认值为 version (不区分大小写)
+        //table.setVersionColumn("total");
     
-    //表名
-    TableContext table = TableContext.withName("t_product");
-    
-    //需去掉的表名前缀(留空不去掉任何前缀)
-    table.setTableNamePrefixToRemove("t_");
-    
-    //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
-    //table.setPrimaryKeyColumn("code");
-    
-    //如果该表有乐观锁，可在此设置其字段名，默认值为 version (不区分大小写)
-    //table.setVersionColumn("total");
-
-    //默认分页大小为10，如需修改，可在此设置一个大于0的整数
-    table.setPageSize(20);
-    
-    rp.addTable(table);
-    
-    //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀
-    //generator.setGlobalTableNamePrefixToRemove("t_");
-    
-    //默认使用 Spring 的 @Service 注解。如果需要使用 Dubbo 的@Service注解，请设置该值为true
-    //generator.setUseDubboService(true);
-    
-    //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
-    //generator.setGenerateAll(false);
-    
-    //如果不希望生成swagger注解，可设置该值为false; 默认true
-    //generator.setUseSwagger(false);
-    
-    //生成
-    generator.run(rp);
+        //默认分页大小为10，如需修改，可在此设置一个大于0的整数
+        table.setPageSize(20);
+        
+        rp.addTable(table);
+        
+        //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀
+        //generator.setGlobalTableNamePrefixToRemove("t_");
+        
+        //默认使用 Spring 的 @Service 注解。如果需要使用 Dubbo 的@Service注解，请设置该值为true
+        //generator.setUseDubboService(true);
+        
+        //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
+        //generator.setGenerateAll(false);
+        
+        //如果不希望生成swagger注解，可设置该值为false; 默认true
+        //generator.setUseSwagger(false);
+        
+        //生成
+        generator.run(rp);
+}
 ```
 
 ## 最佳实践
@@ -160,65 +167,6 @@ java/domain/JpaXXXDO.java
 - 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 和 XXXServiceImpl.java 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
 - 如果您采用 mybatis通用Mapper，不应在 TkXXXServiceImpl.java 中编写自己的业务逻辑；但可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 mybatis通用Mapper
-
-### Hibernate Validator分组校验说明
-- 针对数据插入操作，根据 InsertGroup 分组进行校验；
-- 针对数据更新操作，根据 UpdateGroup 分组进行校验；
-- 其它的共有校验规则(如字段长度限制等)，根据 Default 分组进行校验；
-
-### Spring Boot统一处理Hibernate Validator校验异常
-通过 @ExceptionHandler 捕获 MethodArgumentNotValidException 和 BindException 异常即可。
-
-区别：
-- 如果使用表单对象(Form)形式接收参数(如查询操作)，则出现 BindException 异常
-- 如果使用 @RequestBody 形式接收参数(如插入操作)，则出现 MethodArgumentNotValidException 异常
-
-参考代码：
-```
-@ControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    @ResponseBody
-    public String errorHandler(Exception ex) {
-        if (ex instanceof MethodArgumentNotValidException) {
-            MethodArgumentNotValidException me = (MethodArgumentNotValidException) ex;
-            return getFieldErrors(me.getBindingResult().getFieldErrors());
-        } else if (ex instanceof BindException) {
-            BindException be = (BindException) ex;
-            return getFieldErrors(be.getBindingResult().getFieldErrors());
-        } else {
-            return ex.getMessage();
-        }
-    }
-
-    private String getFieldErrors(List<FieldError> fieldErrors) {
-        String msg = "error";
-        if (!fieldErrors.isEmpty()) {
-            List<String> errorMsgs = fieldErrors.stream().map(FieldError::getDefaultMessage).distinct().collect(Collectors.toList());
-            msg = String.join(";", errorMsgs);
-        }
-        return msg;
-    }
-}
-```
-默认情况下 Hibernate Validator 使用普通模式：校验器会校验完所有的属性，然后返回所有的验证错误信息。
-
-如果希望使用 Fail-fast(快速失败) 模式，则需要增加额外配置：
-```
-@Configuration
-public class HibernateValidatorConfig {
-    public HibernateValidatorConfig() {
-    }
-
-    @Bean
-    public Validator myValidatorFactory() {
-        ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory();
-        return validatorFactory.getValidator();
-    }
-}
-```
-使用该模式之后，当校验器遇到第1个不满足条件的参数时就立即结束校验工作，只返回这一个参数对应的错误信息。
 
 ### 扩展
 #### 适配更多数据库
@@ -273,9 +221,85 @@ public class HibernateValidatorConfig {
 
 编写完模板文件之后，在 template-config.json 文件中配置该模板的相关信息即可。
 
-### 额外说明
-自动生成的代码中用到了一些第三方开源组件，它们的maven坐标如下(版本号请自行匹配)：
+## 附录
+### Hibernate Validator分组校验说明
+- 针对数据插入操作，根据 InsertGroup 分组进行校验；
+- 针对数据更新操作，根据 UpdateGroup 分组进行校验；
+- 其它的共有校验规则(如字段长度限制等)，根据 Default 分组进行校验；
+
+### Spring Boot统一处理Hibernate Validator校验异常
+通过 @ExceptionHandler 捕获 MethodArgumentNotValidException 和 BindException 异常即可。
+
+区别：
+- 如果使用表单对象(Form)形式接收参数(如查询操作)，则出现 BindException 异常
+- 如果使用 @RequestBody 形式接收参数(如插入操作)，则出现 MethodArgumentNotValidException 异常
+
+参考代码：
+```java
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
+    @ResponseBody
+    public String errorHandler(Exception ex) {
+        if (ex instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException me = (MethodArgumentNotValidException) ex;
+            return getFieldErrors(me.getBindingResult().getFieldErrors());
+        } else if (ex instanceof BindException) {
+            BindException be = (BindException) ex;
+            return getFieldErrors(be.getBindingResult().getFieldErrors());
+        } else {
+            return ex.getMessage();
+        }
+    }
+
+    private String getFieldErrors(List<FieldError> fieldErrors) {
+        String msg = "error";
+        if (!fieldErrors.isEmpty()) {
+            List<String> errorMsgs = fieldErrors.stream().map(FieldError::getDefaultMessage).distinct().collect(Collectors.toList());
+            msg = String.join(";", errorMsgs);
+        }
+        return msg;
+    }
+}
 ```
+默认情况下 Hibernate Validator 使用普通模式：校验器会校验完所有的属性，然后返回所有的验证错误信息。
+
+如果希望使用 Fail-fast(快速失败) 模式，则需要增加额外配置：
+```java
+@Configuration
+public class HibernateValidatorConfig {
+    public HibernateValidatorConfig() {
+    }
+
+    @Bean
+    public Validator myValidatorFactory() {
+        ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory();
+        return validatorFactory.getValidator();
+    }
+}
+```
+使用该模式之后，当校验器遇到第1个不满足条件的参数时就立即结束校验工作，只返回这一个参数对应的错误信息。
+
+### SwaggerUI配置参考
+```java
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build();
+    }
+}
+```
+
+### 第三方依赖
+自动生成的代码中用到了一些第三方开源组件，它们的maven坐标如下(版本号请自行匹配)：
+```xml
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-jpa</artifactId>
@@ -337,6 +361,7 @@ public class HibernateValidatorConfig {
 </dependency>
 ```
 
+### 数据库版本
 实际单元测试中用到的数据库版本：
 - Oracle 11g
 - MySQL 5.5/5.6/5.7/5.8
