@@ -23,7 +23,7 @@
 ## 概述
 - 基于数据表结构定义，自动生成 CRUD 代码，省时省力
 - 自动检测数据表字段类型、字段长度、数值精度、主键字段、唯一索引字段
-- 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SQLServer 三种类型数据库
+- 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SQLServer、PostgreSQL 等四种类型数据库
 - 支持生成原版 Mybatis 以及 [Mybatis通用Mapper](https://github.com/abel533/Mapper) 相关代码
 - 支持生成 Mybatis 分页代码(基于 [Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper))
 - 支持生成基于 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) 的实体类和DAO层接口代码
@@ -72,25 +72,25 @@ public class App {
         JdbcInfo param = new JdbcInfo();
         
         //指定数据库类型
-        param.setDbType(GeneratorConst.SQLSERVER);
+        param.setDbType(GeneratorConst.POSTGRESQL);
         
         //数据库主机名或IP
-        param.setHost("192.168.75.131");
+        param.setHost("192.168.2.101");
         
         //数据库端口号
-        param.setPort("1646");
+        param.setPort("5432");
         
-        //schema名称(oracle填写Schema名称，mysql或sqlserver则填写数据库名称)
-        param.setSchema("newdb");
+        //schema名称(oracle和PostgreSQL填写Schema名称，mysql或sqlserver则填写数据库名称)
+        param.setSchema("biz");
         
         //数据库用户名
-        param.setUsername("sa");
+        param.setUsername("manager");
         
         //数据库用户密码
-        param.setPassword("123456");
+        param.setPassword("123456789");
         
-        //数据库实例名(oracle填写实例名，mysql或sqlserver留空)
-        param.setServiceName("");
+        //数据库实例名(oracle填写实例名，PostgreSQL填写数据库名称，mysql或sqlserver留空)
+        param.setServiceName("newbizdb");
     
         TableCodeGenerator generator = new TableCodeGenerator(param);    
         RunParam rp = new RunParam();
@@ -187,7 +187,7 @@ java/domain/JpaXXXDO.java
 | ${table} | 数据表根对象| Object |
 | ${table.name} | 数据表原始名称| String |
 | ${table.kebabCaseName} | kebabCase形式的表名 | String |
-| ${table.dbType} | 数据库类型(oracle/mysql/sqlserver，小写形式)| String |
+| ${table.dbType} | 数据库类型(oracle/mysql/sqlserver/postgresql，小写形式)| String |
 | ${table.subPkgName} | 子包名 | String |
 | ${table.javaClassName} | Java类名称(首字母大写) |String |
 | ${table.javaClassNameLower} | Java类名称(首字母小写) | String |
@@ -367,4 +367,5 @@ public class SwaggerConfig {
 - MySQL 5.5/5.6/5.7/5.8
 - MariaDB 10.2.x/10.3.x/10.4.x
 - Microsoft SQL Server 2008 R2
+- PostgreSQL 12.3
 - Percona Server(未实际测试，理论上也兼容)
