@@ -16,5 +16,11 @@
     "className": "com.foobar.generator.db.SqlServerUtil",
     "driverName": "net.sourceforge.jtds.jdbc.Driver",
     "jdbcUrl": "jdbc:jtds:sqlserver://%s:%s/%s"
+  },
+  {
+    "type": "postgresql",
+    "className": "com.foobar.generator.db.PostgreSQLUtil",
+    "driverName": "org.postgresql.Driver",
+    "jdbcUrl": "jdbc:postgresql://%s:%s/%s"
   }
 ]
