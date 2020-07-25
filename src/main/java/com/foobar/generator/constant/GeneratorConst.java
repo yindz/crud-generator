@@ -13,6 +13,7 @@ public final class GeneratorConst {
     public static final String MYSQL = "mysql";
     public static final String ORACLE = "oracle";
     public static final String SQLSERVER = "sqlserver";
+    public static final String POSTGRESQL = "postgresql";
     public static final String PLACEHOLDER = "#";
     public static final String DEFAULT_PKG_NAME = "com.example.myapp";
 
@@ -34,6 +35,8 @@ public final class GeneratorConst {
         javaBoxTypeMap.put("double", "Double");
         javaBoxTypeMap.put("float", "Float");
         javaBoxTypeMap.put("int", "Integer");
+        javaBoxTypeMap.put("int4", "Integer");
+        javaBoxTypeMap.put("int8", "Long");
         javaBoxTypeMap.put("image", "Byte[]");
         javaBoxTypeMap.put("money", "BigDecimal");
         javaBoxTypeMap.put("nchar", "String");
@@ -67,6 +70,8 @@ public final class GeneratorConst {
         mybatisTypeMap.put("double", "DOUBLE");
         mybatisTypeMap.put("float", "FLOAT");
         mybatisTypeMap.put("int", "INTEGER");
+        mybatisTypeMap.put("int4", "INTEGER");
+        mybatisTypeMap.put("int8", "BIGINT");
         mybatisTypeMap.put("image", "BLOB");
         mybatisTypeMap.put("money", "DECIMAL");
         mybatisTypeMap.put("nchar", "NCHAR");

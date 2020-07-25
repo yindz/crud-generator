@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sql>
+    <!--查询表名-->
+    <select id="QUERY_TABLE_NAMES">
+        select t.tablename from pg_tables t where t.schemaname='%s'
+    </select>
+
+    <!--查询表字段-->
+    <select id="QUERY_TABLE_COLUMNS">
+        select c.relname AS table_name,
+            cast(obj_description(relfilenode,'pg_class') as varchar) AS table_comment,
+            a.attname AS column_name,
+            d.description AS column_comment,
+            t.typname as typename,
+            concat_ws('',t.typname,SUBSTRING(format_type(a.atttypid,a.atttypmod) from '\(.*\)')) as culumn_type,
+            t.typlen as length1,
+            a.atttypmod-4 as length2,
+            a.attnotnull
+        from pg_class c, pg_attribute a , pg_type t, pg_description d
+        where c.relname = '%s'
+        and a.attnum>0
+        and a.attrelid = c.oid
+        and a.atttypid = t.oid
+        and  d.objoid=a.attrelid
+        and d.objsubid=a.attnum
+        order by a.attnum ASC
+    </select>
+
+    <!--查询主键字段-->
+    <select id="QUERY_PRIMARY_KEY">
+        select pg_attribute.attname AS colname
+        from pg_constraint
+        inner join pg_class on pg_constraint.conrelid = pg_class.oid
+        inner join pg_attribute on pg_attribute.attrelid = pg_class.oid
+        and pg_attribute.attnum = pg_constraint.conkey [ 1 ]
+        inner join pg_type on pg_type.oid = pg_attribute.atttypid
+        where pg_class.relname = '%s' and pg_constraint.contype = 'p'
+    </select>
+</sql>
