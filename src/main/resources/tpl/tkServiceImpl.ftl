@@ -1,10 +1,13 @@
 package ${table.pkgName};
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,14 +54,23 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(query != null, "查询条件为空");
         Preconditions.checkArgument(query.getPageNo() != null && query.getPageNo() > 0, "页码必须大于0");
         Preconditions.checkArgument(query.getPageSize() != null && query.getPageSize() > 0, "分页大小必须大于0");
+        Map<String, Object> map = new HashMap<>();
+        ${table.javaClassName}Converter.valuesToMap(query, map, Sets.newHashSet("pageNo", "pageSize", "orderBy", "orderDirection"));
 
         Example example = new Example(${table.javaClassName}DO.class);
         Example.Criteria criteria = example.createCriteria();
-    <#list table.columns as column>
-        if (<#if column.isChar == 1>StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}())<#else >query.get${column.columnCamelNameUpper}() != null</#if>) {
-            criteria.andEqualTo("${column.columnCamelNameLower}", query.get${column.columnCamelNameUpper}());
-        }
-    </#list>
+        map.forEach((k, v) -> {
+            if(k == null || v == null){
+                return;
+            }
+            if (v instanceof String) {
+                if (StringUtils.isNotEmpty(v)) {
+                    criteria.andEqualTo(k, v);
+                }
+            } else {
+                criteria.andEqualTo(k, v);
+            }
+        });
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
         <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");</#if>

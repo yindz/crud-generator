@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.CaseFormat;
+import com.google.common.collect.Sets;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -51,19 +52,14 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(query.getPageSize() != null && query.getPageSize() > 0, "分页大小必须大于0");
 
         Map<String, Object> queryMap = new HashMap<>();
-    <#list table.columns as column>
-        if (<#if column.isChar == 1>StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}())<#else >query.get${column.columnCamelNameUpper}() != null</#if>) {
-            queryMap.put("${column.columnCamelNameLower}", query.get${column.columnCamelNameUpper}());
-        }
-    </#list>
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
-    <#if pk??>        queryMap.put("orderBy", "${pk.columnCamelNameLower}");</#if>
+    <#if pk??>        query.setOrderBy("${pk.columnCamelNameLower}");</#if>
         } else {
-            queryMap.put("orderBy", ${table.javaClassName}Converter.getOrderColumn(${table.javaClassName}DO.class, query.getOrderBy()));
+            query.setOrderBy(${table.javaClassName}Converter.getOrderColumn(${table.javaClassName}DO.class, query.getOrderBy()));
         }
-        queryMap.put("orderDirection", "asc".equalsIgnoreCase(query.getOrderDirection()) ? "asc" : "desc");
-
+        query.setOrderDirection("asc".equalsIgnoreCase(query.getOrderDirection()) ? "asc" : "desc");
+        ${table.javaClassName}Converter.valuesToMap(query, queryMap, Sets.newHashSet("pageNo", "pageSize"));
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
         PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.get${table.javaClassName}List(queryMap));
         return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
