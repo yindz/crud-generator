@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 public class PostgreSQLUtil extends AbstractDbUtil {
     private static final Logger logger = LoggerFactory.getLogger(PostgreSQLUtil.class);
 
+    private static final Pattern numeric = Pattern.compile("numeric\\((\\d+),(\\d+)\\)");
+
     /**
      * 准备连接
      *
@@ -72,7 +74,6 @@ public class PostgreSQLUtil extends AbstractDbUtil {
         List<ColumnInfo> resultList = new ArrayList<>();
         String uniqueColumnName = findPrimaryKeyColumnName(tableName);
         String sql = String.format(SQL_MAP.get("QUERY_TABLE_COLUMNS"), tableName);
-        Pattern numeric = Pattern.compile("numeric\\((\\d+),(\\d+)\\)");
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(sql);
             if (rs == null) {
@@ -93,7 +94,7 @@ public class PostgreSQLUtil extends AbstractDbUtil {
                 String fixedLength = rs.getString(7);
                 //变长
                 String variableLength = rs.getString(8);
-                if(!"-1".equals(fixedLength)){
+                if (!"-1".equals(fixedLength)) {
                     col.setColumnLength(StringUtils.parseInt(fixedLength));
                 } else {
                     col.setColumnLength(StringUtils.parseInt(variableLength));
@@ -111,9 +112,9 @@ public class PostgreSQLUtil extends AbstractDbUtil {
                     //数字类型
                     col.setIsNumber(1);
                     //解析数字精度
-                    if(columnTypeStr != null && columnTypeStr.startsWith("numeric")){
+                    if (columnTypeStr != null && columnTypeStr.startsWith("numeric")) {
                         Matcher matcher = numeric.matcher(columnTypeStr);
-                        if(matcher.find()){
+                        if (matcher.find()) {
                             col.setColumnPrecision(StringUtils.parseInt(matcher.group(1)));
                             col.setColumnScale(StringUtils.parseInt(matcher.group(2)));
                         }
