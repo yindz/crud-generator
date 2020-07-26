@@ -36,21 +36,21 @@
 | 文件名 | 含义 | 路径 | 备注 | 当数据表字段发生变化时是否需要重新生成 | 
 |  ----  | ---- |---- |---- | ---- |
 | XXXVO.java | VO类| java/vo/ |  用于接收/输出数据  | 是 |
-| XXXQueryVO.java | 查询条件 | java/vo/ | 用于接收查询条件 | 是 |
+| XXXQueryVO.java | 查询条件 | java/vo/ | 用于接收查询条件 | 该文件只需生成1次 |
 | XXXController.java | 控制器代码 | java/controller/ | 对外暴露HTTP接口 | 该文件只需生成1次 |
 | XXXDO.java | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
 | XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
 | XXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
 | TkXXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
 | JpaXXXDO.java | Domain实体类定义 | java/domain/| 适用于JPA  | 是 |
-| XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 是 |
+| XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 该文件只需生成1次 |
 | XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
 | XXXCommonMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
 | XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 是 |
 | XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层 | 该文件只需生成1次 |
 | IXXXService.java | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
-| XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 是 |
-| TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
+| XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 该文件只需生成1次 |
+| TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
 | XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
 | CommonConverter.java | 通用对象转换工具 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
 | XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
@@ -144,8 +144,7 @@ public class App {
 ```
 java/vo/XXXVO.java
 java/dto/XXXDTO.java
-java/entity/XXX.java
-java/service/XXXServiceImpl.java
+java/entity/XXXDO.java
 resources/XXXMapper.xml
 ```
 - 如果您采用 mybatis 通用Mapper，则需要重新生成以下文件: 
@@ -153,7 +152,6 @@ resources/XXXMapper.xml
 java/vo/XXXVO.java
 java/dto/XXXDTO.java
 java/domain/XXXDO.java
-java/service/TkXXXServiceImpl.java
 ```
 
 - 如果您采用JPA，则需要重新生成以下文件: 
@@ -164,8 +162,8 @@ java/domain/JpaXXXDO.java
 ```
 
 ### 使用建议
-- 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 和 XXXServiceImpl.java 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
-- 如果您采用 mybatis通用Mapper，不应在 TkXXXServiceImpl.java 中编写自己的业务逻辑；但可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
+- 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
+- 如果您采用 mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 mybatis通用Mapper
 
 ### 扩展
