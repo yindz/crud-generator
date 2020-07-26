@@ -1,12 +1,17 @@
 package ${table.pkgName};
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.beans.BeanUtils;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.CaseFormat;
@@ -132,6 +137,41 @@ public class CommonConverter {
      */
     public static boolean isFieldExists(Class target, String name) {
          return findField(target, name) != null;
+    }
+
+    /**
+     * 读取JavaBean属性值填充到map
+     *
+     * @param bean             待转换的JavaBean
+     * @param map              待填充的map
+     * @param ignoreFields     需忽略的字段名
+     * @return
+    */
+    public static void valuesToMap(Object bean, Map<String, Object> map, Set<String> ignoreFields) {
+        if (bean == null || map == null) {
+            return;
+        }
+        PropertyDescriptor[] ps = BeanUtils.getPropertyDescriptors(bean.getClass());
+        Arrays.stream(ps).forEach(p -> {
+            if (p == null) {
+                return;
+            }
+            String key = p.getName();
+            if (!"class".equals(key)) {
+                Method getter = p.getReadMethod();
+                Object value;
+                try {
+                    value = getter.invoke(bean);
+                    if (ignoreFields != null && !ignoreFields.contains(key)) {
+                        if (value != null) {
+                            map.put(key, value);
+                        }
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private static BeanCopier getBeanCopier(Class source, Class target) {
