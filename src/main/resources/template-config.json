@@ -96,7 +96,8 @@
     "targetBaseDirName": "java",
     "targetPkgName": "service",
     "targetFileName": "#ServiceImpl.java",
-    "isCore": 1,
+    "isCore": 0,
+    "overwriteExistingFile": 0,
     "remark": "适用于原版mybatis的服务接口实现"
   },
   {
@@ -104,7 +105,8 @@
     "targetBaseDirName": "java",
     "targetPkgName": "service",
     "targetFileName": "Tk#ServiceImpl.java",
-    "isCore": 1,
+    "isCore": 0,
+    "overwriteExistingFile": 0,
     "remark": "适用于mybatis通用Mapper的服务接口实现"
   },
   {
