@@ -10,7 +10,8 @@ import ${imp};
 
 /**
  * ${table.comments}实体类
- * 适用于Mybatis通用Mapper
+ * (适用于Mybatis通用Mapper;该文件自动生成，请勿修改)
+ *
  * @author ${table.author!''}
  */
 @Table(name = "${table.name}")

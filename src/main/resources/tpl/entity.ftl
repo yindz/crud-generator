@@ -7,6 +7,7 @@ import ${imp};
 
 /**
  * ${table.comments}实体类
+ * (该文件自动生成，请勿修改)
  *
  * @author ${table.author!''}
  */
