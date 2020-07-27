@@ -22,9 +22,9 @@ public class ${table.javaClassName}DTO implements Serializable {
     /**
      * ${column.columnComment!''}
      */<#if column.nullable == 0><#if column.isChar == 1>
-    @NotBlank(message = "${column.columnComment!''}${column.columnCamelNameLower}为空")<#else>
-    @NotNull(message = "${column.columnComment!''}${column.columnCamelNameLower}为空")</#if></#if><#if column.isChar == 1>
-    @Length(max = ${column.columnLength}, message = "${column.columnComment!''}${column.columnCamelNameLower}长度不能超过${column.columnLength}")</#if>
+    @NotBlank(message = "${column.columnComment!''}(${column.columnCamelNameLower})为空")<#else>
+    @NotNull(message = "${column.columnComment!''}(${column.columnCamelNameLower})为空")</#if></#if><#if column.isChar == 1>
+    @Length(max = ${column.columnLength}, message = "${column.columnComment!''}(${column.columnCamelNameLower})长度不能超过{max}个字符")</#if>
     private ${column.columnJavaType} ${column.columnCamelNameLower};
 
 </#list>
