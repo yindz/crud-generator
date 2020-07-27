@@ -60,6 +60,19 @@ public class ${table.javaClassName}Controller {
         return ${table.javaClassName}Converter.toVOPageInfo(pageInfo);
     }
 
+    <#if pk??>
+    /**
+     * 根据主键查询${table.comments}数据
+     *
+     * @param ${pk.columnCamelNameLower}  待查询的${table.comments}记录${pk.columnComment}
+     * @return ${table.comments}数据
+     */
+    @ApiOperation(value = "根据主键查询${table.comments}数据", httpMethod = "GET",tags = {"根据主键查询${table.comments}数据"})
+    @GetMapping(value = "/get${table.javaClassName}By${pk.columnCamelNameUpper}")
+    public ${table.javaClassName}VO get${table.javaClassName}By${pk.columnCamelNameUpper}(@ApiParam(value = "待查询的${table.comments}记录${pk.columnComment}", type = "${pk.columnJavaType}", required = true, example = "1") @RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+        return ${table.javaClassName}Converter.dtoToVO(${table.javaClassNameLower}Service.get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnCamelNameLower}));
+    }</#if>
+
     /**
      * 插入${table.comments}记录
      *

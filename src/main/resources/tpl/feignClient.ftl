@@ -28,6 +28,16 @@ public interface I${table.javaClassName}Client {
     @RequestMapping(value = "/get${table.javaClassName}List", method = RequestMethod.GET)
     PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(@SpringQueryMap ${table.javaClassName}QueryVO query);
 
+    <#if pk??>
+    /**
+     * 根据主键查询${table.comments}数据
+     *
+     * @param ${pk.columnCamelNameLower}  待查询的${table.comments}记录${pk.columnComment}
+     * @return ${table.comments}数据
+     */
+    @RequestMapping(value = "/get${table.javaClassName}By${pk.columnCamelNameUpper}", method = RequestMethod.GET)
+    ${table.javaClassName}VO get${table.javaClassName}By${pk.columnCamelNameUpper}(@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
+
     /**
      * 插入${table.comments}记录
      *

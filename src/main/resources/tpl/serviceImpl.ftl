@@ -72,7 +72,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      * @return 查询结果
      */
     @Override
-    public ${table.javaClassName}DTO get${table.javaClassName}(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+    public ${table.javaClassName}DTO get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
         if (${pk.columnCamelNameLower} == null) {
             throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
         }

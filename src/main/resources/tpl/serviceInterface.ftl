@@ -29,7 +29,7 @@ public interface I${table.javaClassName}Service {
      * @param ${pk.columnCamelNameLower}    主键值
      * @return 查询结果
      */
-    ${table.javaClassName}DTO get${table.javaClassName}(${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
+    ${table.javaClassName}DTO get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
 
     /**
      * 插入记录
