@@ -37,7 +37,7 @@
     <insert id="insert" parameterType="${basePkgName}.domain.${table.javaClassName}DO" useGeneratedKeys="true"<#if pk??> keyColumn="${pk.columnName}" keyProperty="${pk.columnCamelNameLower}"</#if>>
         <#if table.dbType == 'oracle'><#if pk??>
         <selectKey keyProperty="${pk.columnCamelNameLower}" resultType="${pk.columnJavaType}" order="BEFORE">
-            select SEQ_${table.name}.nextval from dual
+            select <#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>.nextval from dual
         </selectKey></#if></#if>
         insert into ${table.name} (
             <#list table.columns as column>

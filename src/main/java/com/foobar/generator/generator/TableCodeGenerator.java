@@ -430,6 +430,7 @@ public class TableCodeGenerator {
         tableInfo.setAuthor(currentUser);
         tableInfo.setVersionColumn(dbUtil.setTableNameCase(table.getVersionColumn()));
         tableInfo.setPageSize(table.getPageSize());
+        tableInfo.setSequenceName(table.getSequenceName());
 
         RenderData data = new RenderData();
         data.setBasePkgName(pkgName);

@@ -3,6 +3,9 @@ package ${table.pkgName};
 import java.io.Serializable;
 import javax.persistence.*;
 import tk.mybatis.mapper.annotation.KeySql;
+<#if table.dbType == 'oracle'>
+import tk.mybatis.mapper.code.ORDER;
+</#if>
 import tk.mybatis.mapper.annotation.Version;
 <#list table.imports as imp>
 import ${imp};
@@ -22,8 +25,9 @@ public class ${table.javaClassName}DO implements Serializable {
     /**
      * ${column.columnComment!''}
      */<#if column.isPrimaryKey == 1>
-    @Id<#if table.dbType == 'oracle'>@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "select SEQ_${table.name}.nextval from dual")</#if>
-    <#if table.dbType == 'mysql'>@KeySql(useGeneratedKeys = true)</#if><#if table.dbType == 'sqlserver'>@GeneratedValue(strategy = GenerationType.IDENTITY)</#if><#if table.dbType == 'postgresql'>@KeySql(useGeneratedKeys = true)
+    @Id<#if table.dbType == 'oracle'>
+    @KeySql(sql = "select <#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>.nextval from dual", order = ORDER.BEFORE)</#if><#if table.dbType == 'mysql'>
+    @KeySql(useGeneratedKeys = true)</#if><#if table.dbType == 'sqlserver'>@GeneratedValue(strategy = GenerationType.IDENTITY)</#if><#if table.dbType == 'postgresql'>@KeySql(useGeneratedKeys = true)
     @Column(name = "${column.columnCamelNameLower}", insertable = false)</#if></#if><#if table.versionColumn??><#if table.versionColumn == column.columnName>
     @Version</#if></#if>
     private ${column.columnJavaType} ${column.columnCamelNameLower};

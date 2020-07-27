@@ -66,6 +66,11 @@ public class TableInfo {
     private String versionColumn;
 
     /**
+     * 序列名称
+     */
+    private String sequenceName;
+
+    /**
      * 默认分页大小
      */
     private Integer pageSize;
@@ -156,6 +161,14 @@ public class TableInfo {
 
     public void setVersionColumn(String versionColumn) {
         this.versionColumn = versionColumn;
+    }
+
+    public String getSequenceName() {
+        return sequenceName;
+    }
+
+    public void setSequenceName(String sequenceName) {
+        this.sequenceName = sequenceName;
     }
 
     public Integer getPageSize() {
