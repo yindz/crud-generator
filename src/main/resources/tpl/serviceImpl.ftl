@@ -9,8 +9,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.Sets;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+<#include "./public/logger.ftl"/>
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 <#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
@@ -58,7 +57,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         } else {
             query.setOrderBy(${table.javaClassName}Converter.getOrderColumn(${table.javaClassName}DO.class, query.getOrderBy()));
         }
-        query.setOrderDirection("asc".equalsIgnoreCase(query.getOrderDirection()) ? "asc" : "desc");
+        query.setOrderDirection(${table.javaClassName}Converter.getOrderDirection(query.getOrderDirection()));
         ${table.javaClassName}Converter.valuesToMap(query, queryMap, Sets.newHashSet("pageNo", "pageSize"));
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
         PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.get${table.javaClassName}List(queryMap));
@@ -124,7 +123,6 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              if (${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
              }
-             success++;
          }
          logger.info("本次总共插入{}条${table.name}数据", recordList.size());
          return true;

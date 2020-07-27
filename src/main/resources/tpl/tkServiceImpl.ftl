@@ -8,8 +8,7 @@ import com.google.common.base.Preconditions;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Sets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+<#include "./public/logger.ftl"/>
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,8 +63,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
                 return;
             }
             if (v instanceof String) {
-                if (StringUtils.isNotEmpty(v)) {
-                    criteria.andEqualTo(k, v);
+                String str = (String) v;
+                if (StringUtils.isNotEmpty(str)) {
+                    criteria.andEqualTo(k, str);
                 }
             } else {
                 criteria.andEqualTo(k, v);
@@ -75,7 +75,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             //默认使用主键(唯一索引字段)排序
         <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");</#if>
         }
-        if ("asc".equalsIgnoreCase(query.getOrderDirection())) {
+        if (${table.javaClassName}Converter.ASC.equalsIgnoreCase(query.getOrderDirection())) {
             example.orderBy(query.getOrderBy()).asc();
         } else {
             example.orderBy(query.getOrderBy()).desc();

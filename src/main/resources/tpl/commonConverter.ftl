@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.cglib.beans.BeanCopier;
@@ -26,6 +27,11 @@ public class CommonConverter {
     private static final Map<String, BeanCopier> beanCopierMap = new ConcurrentHashMap<>();
     private static final Map<String, Field> fieldMap = new ConcurrentHashMap<>();
     private static final Map<String, String> fieldToColumnMap = new ConcurrentHashMap<>();
+
+    public static final String ASC = "ASC";
+    public static final String DESC = "DESC";
+
+    public static final Pattern fieldPattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]*$");
 
     /**
      * 对象转换
@@ -115,6 +121,16 @@ public class CommonConverter {
     }
 
     /**
+     * 获取排序方向
+     *
+     * @param orderDirection 调用者传入的排序方向
+     * @return 排序方向(ASC/DESC)
+     */
+    public static String getOrderDirection(String orderDirection) {
+        return ASC.equalsIgnoreCase(orderDirection) ? ASC : DESC;
+    }
+
+    /**
      * 获取类属性
      *
      * @param target  类
@@ -124,6 +140,9 @@ public class CommonConverter {
     public static Field findField(Class target, String name) {
         if (target == null || name == null) {
             return null;
+        }
+        if (!fieldPattern.matcher(name).matches()) {
+            throw new IllegalArgumentException("字段名无效!");
         }
         return fieldMap.computeIfAbsent(target.getName() + "/" + name, k-> ReflectionUtils.findField(target, k));
     }
