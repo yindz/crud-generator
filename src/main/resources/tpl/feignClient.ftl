@@ -3,6 +3,7 @@ package ${table.pkgName};
 import com.github.pagehelper.PageInfo;
 import ${basePkgName}.vo.${table.javaClassName}VO;
 import ${basePkgName}.vo.${table.javaClassName}QueryVO;
+import ${basePkgName}.feign.${table.javaClassName}ClientFallback;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author ${table.author!''}
  */
-@FeignClient("${table.kebabCaseName}-service")
+@FeignClient(value = "${table.kebabCaseName}-service", fallback = ${table.javaClassName}ClientFallback.class)
 public interface I${table.javaClassName}Client {
 
     /**

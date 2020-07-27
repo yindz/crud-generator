@@ -128,6 +128,15 @@
     "remark": "FeignClient接口"
   },
   {
+    "templateName": "feignClientFallback.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "feign",
+    "targetFileName": "#ClientFallback.java",
+    "isCore": 0,
+    "overwriteExistingFile": 0,
+    "remark": "FeignClient接口Fallback"
+  },
+  {
     "templateName": "queryDto.ftl",
     "targetBaseDirName": "java",
     "targetPkgName": "dto",
