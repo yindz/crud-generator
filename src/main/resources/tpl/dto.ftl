@@ -15,7 +15,7 @@ import ${imp};
  *
  * @author ${table.author!''}
  */
-public class ${table.javaClassName}DTO implements Serializable {
+public class ${table.javaClassName}DTO <#if baseEntityClass??>extends ${baseEntityClass}<#else>implements Serializable</#if> {
 <#include "./public/serialVersionUID.ftl"/>
 
 <#list table.columns as column>

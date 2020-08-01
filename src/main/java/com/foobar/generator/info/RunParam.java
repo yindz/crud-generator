@@ -21,6 +21,11 @@ public class RunParam {
     private String basePkgName;
 
     /**
+     * 基础实体类名
+     */
+    private String baseEntityClass;
+
+    /**
      * 作者
      */
     private String author;
@@ -69,5 +74,13 @@ public class RunParam {
 
     public void setBasePkgName(String basePkgName) {
         this.basePkgName = basePkgName;
+    }
+
+    public String getBaseEntityClass() {
+        return baseEntityClass;
+    }
+
+    public void setBaseEntityClass(String baseEntityClass) {
+        this.baseEntityClass = baseEntityClass;
     }
 }

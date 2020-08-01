@@ -16,6 +16,11 @@ public class RenderData {
     private String basePkgName;
 
     /**
+     * 基础实体类名
+     */
+    private String baseEntityClass;
+
+    /**
      * 表信息
      */
     private TableInfo table;
@@ -46,6 +51,14 @@ public class RenderData {
 
     public void setBasePkgName(String basePkgName) {
         this.basePkgName = basePkgName;
+    }
+
+    public String getBaseEntityClass() {
+        return baseEntityClass;
+    }
+
+    public void setBaseEntityClass(String baseEntityClass) {
+        this.baseEntityClass = baseEntityClass;
     }
 
     public TableInfo getTable() {

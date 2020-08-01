@@ -25,7 +25,7 @@ import ${basePkgName}.validator.UpdateGroup;
  * @author ${table.author!''}
  */<#if useSwagger == 1>
 @ApiModel("${table.comments}VO对象")</#if>
-public class ${table.javaClassName}VO implements Serializable {
+public class ${table.javaClassName}VO <#if baseEntityClass??>extends ${baseEntityClass}<#else>implements Serializable</#if> {
     <#include "./public/serialVersionUID.ftl"/>
 
 <#list table.columns as column>
