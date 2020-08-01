@@ -123,6 +123,9 @@ public class App {
         table.setSequenceName("SEQ_ORDER");
         
         rp.addTable(table);
+    
+        //如果VO/DO/DTO等类需要继承某个基础类，可以在此指定基础类的完整路径
+        //rp.setBaseEntityClass("com.foobar.common.BaseEntity");
         
         //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀
         //generator.setGlobalTableNamePrefixToRemove("t_");
@@ -182,6 +185,7 @@ java/domain/JpaXXXDO.java
 | 变量 | 含义| 变量类型 |
 |  ----  | ----  |----  |
 | ${basePkgName} | 基础包名| String |
+| ${baseEntityClass} | 基础实体类的完整路径| String |
 | ${timeZone} | 时区名称| String |
 | ${useDubboServiceAnnotation} | 是否启用Dubbo服务(0否/1是) | int |
 | ${useSwagger} | 是否启用SwaggerUI(0否/1是) | int |
