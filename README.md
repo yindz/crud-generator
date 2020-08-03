@@ -13,7 +13,7 @@
   - [更多代码模板](#更多代码模板)
 - [附录](#附录)
   - [Hibernate Validator分组校验说明](#hibernate-validator分组校验说明)
-  - [处理Hibernate Validator校验异常](#Spring Boot统一处理Hibernate Validator校验异常)
+  - [处理Hibernate Validator校验异常](#spring Boot统一处理Hibernate Validator校验异常)
   - [SwaggerUI配置参考](#SwaggerUI配置参考)
   - [第三方依赖](#第三方依赖)
   - [数据库版本](#数据库版本)
