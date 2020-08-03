@@ -40,6 +40,14 @@
     "remark": "适用于JPA的实体类"
   },
   {
+    "templateName": "mpDomain.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "domain",
+    "targetFileName": "Mp#DO.java",
+    "isCore": 1,
+    "remark": "适用于MybatisPlus的实体类"
+  },
+  {
     "templateName": "mapperXml.ftl",
     "targetBaseDirName": "resources",
     "targetPkgName": "dao",
@@ -64,6 +72,15 @@
     "isCore": 0,
     "overwriteExistingFile": 0,
     "remark": "适用于mybatis通用Mapper的Mapper接口"
+  },
+  {
+    "templateName": "mpMapperClass.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "dao",
+    "targetFileName": "Mp#Mapper.java",
+    "isCore": 0,
+    "overwriteExistingFile": 0,
+    "remark": "适用于MybatisPlus的Mapper接口"
   },
   {
     "templateName": "jpaDaoClass.ftl",
