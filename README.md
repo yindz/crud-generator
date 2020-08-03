@@ -13,7 +13,7 @@
   - [更多代码模板](#更多代码模板)
 - [附录](#附录)
   - [Hibernate Validator分组校验说明](#hibernate-validator分组校验说明)
-  - [处理Hibernate Validator校验异常](#spring Boot统一处理Hibernate Validator校验异常)
+  - [处理Hibernate Validator校验异常](#处理Hibernate Validator校验异常)
   - [SwaggerUI配置参考](#SwaggerUI配置参考)
   - [第三方依赖](#第三方依赖)
   - [数据库版本](#数据库版本)
@@ -232,7 +232,7 @@ java/domain/JpaXXXDO.java
 - 针对数据更新操作，根据 UpdateGroup 分组进行校验；
 - 其它的共有校验规则(如字段长度限制等)，根据 Default 分组进行校验；
 
-### Spring Boot统一处理Hibernate Validator校验异常
+### 处理Hibernate Validator校验异常
 通过 @ExceptionHandler 捕获 MethodArgumentNotValidException 和 BindException 异常即可。
 
 区别：
