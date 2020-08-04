@@ -3,13 +3,14 @@ package ${table.pkgName};
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 import java.io.Serializable;
 
+<#if pk??>
 import com.baomidou.mybatisplus.annotation.TableId;
+</#if>
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableField;
 <#if table.versionColumn??>
 import com.baomidou.mybatisplus.annotation.Version;
 </#if>
-
 <#if table.dbType == 'oracle'>
 import com.baomidou.mybatisplus.annotation.KeySequence;
 </#if>

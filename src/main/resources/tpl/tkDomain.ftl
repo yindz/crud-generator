@@ -1,12 +1,17 @@
 package ${table.pkgName};
 
+<#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 import java.io.Serializable;
 import javax.persistence.*;
+<#if pk??>
 import tk.mybatis.mapper.annotation.KeySql;
+</#if>
 <#if table.dbType == 'oracle'>
 import tk.mybatis.mapper.code.ORDER;
 </#if>
+<#if table.versionColumn??>
 import tk.mybatis.mapper.annotation.Version;
+</#if>
 <#list table.imports as imp>
 import ${imp};
 </#list>
