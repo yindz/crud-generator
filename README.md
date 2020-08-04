@@ -24,7 +24,7 @@
 - 基于数据表结构定义，自动生成 CRUD 代码，省时省力
 - 自动检测数据表字段类型、字段长度、数值精度、主键字段、唯一索引字段
 - 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SQLServer、PostgreSQL 等四种类型数据库
-- 支持生成原版 Mybatis 以及 [Mybatis通用Mapper](https://github.com/abel533/Mapper) 相关代码
+- 支持生成原版 Mybatis 以及 [Mybatis通用Mapper](https://github.com/abel533/Mapper) 、[MybatisPlus](https://mybatis.plus)相关代码
 - 支持生成 Mybatis 分页代码(基于 [Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper))
 - 支持生成基于 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) 的实体类和DAO层接口代码
 - 支持生成基于 [Hibernate Validator](https://hibernate.org/validator/documentation/) 的参数校验注解
@@ -43,6 +43,8 @@
 | XXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
 | TkXXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
 | JpaXXXDO.java | Domain实体类定义 | java/domain/| 适用于JPA  | 是 |
+| MpXXXDO.java | Domain实体类定义 | java/domain/| 适用于MybatisPlus  | 是 |
+| MpXXXMapper.java | Mapper接口 | java/dao/ | 适用于MybatisPlus | 该文件只需生成1次 |
 | XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 该文件只需生成1次 |
 | XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
 | XXXCommonMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
@@ -170,7 +172,7 @@ java/domain/JpaXXXDO.java
 ### 使用建议
 - 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
 - 如果您采用 mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
-- 如果数据表字段变化比较频繁，建议采用 mybatis通用Mapper
+- 如果数据表字段变化比较频繁，建议采用 Mybatis通用Mapper 或 MybatisPlus
 
 ### 扩展
 #### 适配更多数据库
@@ -362,6 +364,12 @@ public class SwaggerConfig {
 <dependency>
     <groupId>org.apache.dubbo</groupId>
     <artifactId>dubbo-spring-boot-starter</artifactId>
+    <version>X.X.X</version>
+</dependency>
+
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus</artifactId>
     <version>X.X.X</version>
 </dependency>
 ```
