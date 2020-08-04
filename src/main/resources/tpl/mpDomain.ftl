@@ -26,7 +26,7 @@ import ${imp};
  * @author ${table.author!''}
  */
 @TableName("${table.name}")<#if pk??><#if table.dbType == 'oracle'>
-@KeySequence(value = "<#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>", clazz = ${pk.columnJavaType}.class)</#if></#if>
+@KeySequence(value = "<#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>")</#if></#if>
 public class ${table.javaClassName}DO <#if baseEntityClass??>extends ${baseEntityClass}<#else>implements Serializable</#if> {
 <#include "./public/serialVersionUID.ftl"/>
 
