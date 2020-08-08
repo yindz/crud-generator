@@ -11,6 +11,6 @@ import tk.mybatis.mapper.common.Mapper;
  *
  * @author ${table.author!''}
  */
-public interface ${table.javaClassName}CommonMapper extends Mapper<${table.javaClassName}DO> {
-
+public interface ${table.javaClassName}Mapper extends Mapper<${table.javaClassName}DO> {
+    //TODO 可在此编写自己的代码
 }

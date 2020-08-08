@@ -45,13 +45,13 @@
 | MpXXXDO.java | Domain实体类定义 | java/domain/| 适用于MybatisPlus  | 是 |
 | MpXXXMapper.java | Mapper接口 | java/dao/ | 适用于MybatisPlus | 该文件只需生成1次 |
 | XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 该文件只需生成1次 |
-| XXXCommonMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
-| XXXCommonMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
+| TkXXXMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
+| TkXXXMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
 | XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 是 |
 | XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层 | 该文件只需生成1次 |
 | IXXXService.java | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
 | XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 该文件只需生成1次 |
-| TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
+| TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
 | MpXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于MybatisPlus | 该文件只需生成1次 |
 | XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
 | CommonConverter.java | 通用对象转换工具 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |

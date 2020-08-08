@@ -1,29 +1,14 @@
 package ${table.pkgName};
 
-import java.util.Map;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.google.common.base.Preconditions;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Sets;
 <#include "./public/logger.ftl"/>
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
-import org.apache.commons.lang3.StringUtils;
+import tk.mybatis.mapper.weekend.Weekend;
+import tk.mybatis.mapper.weekend.WeekendCriteria;
 
-<#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
-
-import tk.mybatis.mapper.entity.Example;
-
-import ${basePkgName}.dto.${table.javaClassName}DTO;
-import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
-import ${basePkgName}.domain.${table.javaClassName}DO;
-import ${basePkgName}.service.I${table.javaClassName}Service;
-import ${basePkgName}.dao.${table.javaClassName}CommonMapper;
-import ${basePkgName}.util.${table.javaClassName}Converter;
+import com.github.pagehelper.PageHelper;
+<#include "./public/serviceCommonImports.ftl"/>
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 <#if table.versionColumn??><#list table.columns as column><#if table.versionColumn == column.columnName><#assign versionColumn = column></#if></#list></#if>
 
@@ -37,10 +22,7 @@ import ${basePkgName}.util.${table.javaClassName}Converter;
 <#else>@Service
 </#if>
 public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName}Service {
-    private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}ServiceImpl.class);
-
-    @Autowired
-    private ${table.javaClassName}CommonMapper ${table.javaClassNameLower}Mapper;
+    <#include "./public/serviceHeader.ftl"/>
 
     /**
      * 分页查询
@@ -50,39 +32,26 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}QueryDTO query) {
-        Preconditions.checkArgument(query != null, "查询条件为空");
-        Preconditions.checkArgument(query.getPageNo() != null && query.getPageNo() > 0, "页码必须大于0");
-        Preconditions.checkArgument(query.getPageSize() != null && query.getPageSize() > 0, "分页大小必须大于0");
-        Map<String, Object> map = new LinkedHashMap<>();
-        ${table.javaClassName}Converter.valuesToMap(query, map, Sets.newHashSet("pageNo", "pageSize", "orderBy", "orderDirection"));
+        <#include "./public/checkQueryArguments.ftl"/>
 
-        Example example = new Example(${table.javaClassName}DO.class);
-        Example.Criteria criteria = example.createCriteria();
-        map.forEach((k, v) -> {
-            if(k == null || v == null){
-                return;
-            }
-            if (v instanceof String) {
-                String str = (String) v;
-                if (StringUtils.isNotEmpty(str)) {
-                    criteria.andEqualTo(k, str);
-                }
-            } else {
-                criteria.andEqualTo(k, v);
-            }
-        });
+        Weekend<${table.javaClassName}DO> cond = Weekend.of(${table.javaClassName}DO.class);
+        WeekendCriteria<${table.javaClassName}DO, Object> criteria = cond.weekendCriteria();
+        <#list table.columns as column>
+        if (query.get${column.columnCamelNameUpper}() != null<#if column.isChar == 1> && StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}())</#if>) {
+            criteria.andEqualTo(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}());
+        }
+        </#list>
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
-        <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");</#if>
+        <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");<#else>//TODO 请设置排序字段</#if>
         }
         if (${table.javaClassName}Converter.ASC.equalsIgnoreCase(query.getOrderDirection())) {
-            example.orderBy(query.getOrderBy()).asc();
+            cond.orderBy(query.getOrderBy()).asc();
         } else {
-            example.orderBy(query.getOrderBy()).desc();
+            cond.orderBy(query.getOrderBy()).desc();
         }
-
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
-        PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.selectByExample(example));
+        PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.selectByExample(cond));
         return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
     }
 
@@ -125,7 +94,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             logger.info("${table.name}数据插入成功! {}", record);
             return true;
         } else {
-            logger.warn("${table.name}数据插入失败! {}", record);
+            logger.error("${table.name}数据插入失败! {}", record);
             return false;
         }
     }
@@ -171,7 +140,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             logger.info("${table.name}数据更新成功! {}", record);
             return true;
         } else {
-            logger.warn("${table.name}数据更新失败! {}", record);
+            logger.error("${table.name}数据更新失败! {}", record);
             return false;
         }
     }
@@ -193,7 +162,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return true;
         } else {
-            logger.warn("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
+            logger.error("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return false;
         }
     }

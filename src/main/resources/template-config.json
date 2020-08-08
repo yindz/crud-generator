@@ -68,7 +68,7 @@
     "templateName": "tkMapperClass.ftl",
     "targetBaseDirName": "java",
     "targetPkgName": "dao",
-    "targetFileName": "#CommonMapper.java",
+    "targetFileName": "Tk#Mapper.java",
     "isCore": 0,
     "overwriteExistingFile": 0,
     "remark": "适用于mybatis通用Mapper的Mapper接口"
@@ -94,10 +94,19 @@
     "templateName": "tkMapperXml.ftl",
     "targetBaseDirName": "resources",
     "targetPkgName": "dao",
-    "targetFileName": "#CommonMapper.xml",
+    "targetFileName": "Tk#Mapper.xml",
     "isCore": 0,
     "overwriteExistingFile": 0,
     "remark": "适用于mybatis通用Mapper的Mapper XML"
+  },
+  {
+    "templateName": "mpMapperXml.ftl",
+    "targetBaseDirName": "resources",
+    "targetPkgName": "dao",
+    "targetFileName": "Mp#Mapper.xml",
+    "isCore": 0,
+    "overwriteExistingFile": 0,
+    "remark": "适用于MybatisPlus的Mapper XML"
   },
   {
     "templateName": "serviceInterface.ftl",
@@ -122,8 +131,7 @@
     "targetBaseDirName": "java",
     "targetPkgName": "service",
     "targetFileName": "Tk#ServiceImpl.java",
-    "isCore": 0,
-    "overwriteExistingFile": 0,
+    "isCore": 1,
     "remark": "适用于mybatis通用Mapper的服务接口实现"
   },
   {

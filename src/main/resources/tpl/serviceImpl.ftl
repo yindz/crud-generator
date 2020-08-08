@@ -4,24 +4,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Sets;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 <#include "./public/logger.ftl"/>
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-<#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
-import org.apache.commons.lang3.StringUtils;
-
-import ${basePkgName}.domain.${table.javaClassName}DO;
-import ${basePkgName}.dto.${table.javaClassName}DTO;
-import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
-import ${basePkgName}.service.I${table.javaClassName}Service;
-import ${basePkgName}.util.${table.javaClassName}Converter;
-import ${basePkgName}.dao.${table.javaClassName}Mapper;
+<#include "./public/serviceCommonImports.ftl"/>
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 
 /**
@@ -33,10 +21,7 @@ import ${basePkgName}.dao.${table.javaClassName}Mapper;
 <#else>@Service
 </#if>
 public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName}Service {
-    private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}ServiceImpl.class);
-
-    @Autowired
-    private ${table.javaClassName}Mapper ${table.javaClassNameLower}Mapper;
+    <#include "./public/serviceHeader.ftl"/>
 
     /**
      * 分页查询
@@ -46,9 +31,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}QueryDTO query) {
-        Preconditions.checkArgument(query != null, "查询条件为空");
-        Preconditions.checkArgument(query.getPageNo() != null && query.getPageNo() > 0, "页码必须大于0");
-        Preconditions.checkArgument(query.getPageSize() != null && query.getPageSize() > 0, "分页大小必须大于0");
+        <#include "./public/checkQueryArguments.ftl"/>
 
         Map<String, Object> queryMap = new HashMap<>();
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
@@ -101,7 +84,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             logger.info("${table.name}数据插入成功! {}", record);
             return true;
         } else {
-            logger.warn("${table.name}数据插入失败! {}", record);
+            logger.error("${table.name}数据插入失败! {}", record);
             return false;
         }
     }
@@ -144,7 +127,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             logger.info("${table.name}数据更新成功! {}", record);
             return true;
         } else {
-            logger.warn("${table.name}数据更新失败! {}", record);
+            logger.error("${table.name}数据更新失败! {}", record);
             return false;
         }
     }
@@ -166,7 +149,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return true;
         } else {
-            logger.warn("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
+            logger.error("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return false;
         }
     }
