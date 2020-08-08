@@ -6,7 +6,6 @@
 - [主键字段检测规则](#主键字段检测规则)
 - [使用范例](#使用范例)
 - [最佳实践](#最佳实践)
-  - [当数据表字段发生变化时](#当数据表字段发生变化时)
   - [使用建议](#使用建议)
 - [扩展](#扩展)
   - [适配更多数据库](#适配更多数据库)
@@ -147,31 +146,10 @@ public class App {
 ```
 
 ## 最佳实践
-### 当数据表字段发生变化时
-- 如果您采用原版 mybatis，则需要重新生成以下文件: 
-```
-java/vo/XXXVO.java
-java/dto/XXXDTO.java
-java/entity/XXXDO.java
-resources/XXXMapper.xml
-```
-- 如果您采用 mybatis 通用Mapper，则需要重新生成以下文件: 
-```
-java/vo/XXXVO.java
-java/dto/XXXDTO.java
-java/domain/XXXDO.java
-```
-
-- 如果您采用JPA，则需要重新生成以下文件: 
-```
-java/vo/XXXVO.java
-java/dto/XXXDTO.java
-java/domain/JpaXXXDO.java
-```
 
 ### 使用建议
 - 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
-- 如果您采用 mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
+- 如果您采用 Mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 Mybatis通用Mapper 或 MybatisPlus
 
 ### 扩展
