@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Sets;
 <#include "./public/logger.ftl"/>
@@ -16,20 +15,18 @@ import org.apache.commons.lang3.StringUtils;
 
 <#if useDubboServiceAnnotation = 1>import org.apache.dubbo.config.annotation.Service;<#else>import org.springframework.stereotype.Service;</#if>
 
-import tk.mybatis.mapper.entity.Example;
-
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
 import ${basePkgName}.domain.${table.javaClassName}DO;
 import ${basePkgName}.service.I${table.javaClassName}Service;
-import ${basePkgName}.dao.${table.javaClassName}CommonMapper;
+import ${basePkgName}.dao.${table.javaClassName}Mapper;
 import ${basePkgName}.util.${table.javaClassName}Converter;
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 <#if table.versionColumn??><#list table.columns as column><#if table.versionColumn == column.columnName><#assign versionColumn = column></#if></#list></#if>
 
 /**
  * ${table.comments}服务接口实现
- * 使用mybatis通用mapper
+ * 适用于MybatisPlus
  *
  * @author ${table.author!''}
  */
@@ -40,7 +37,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     private static final Logger logger = LoggerFactory.getLogger(${table.javaClassName}ServiceImpl.class);
 
     @Autowired
-    private ${table.javaClassName}CommonMapper ${table.javaClassNameLower}Mapper;
+    private ${table.javaClassName}Mapper ${table.javaClassNameLower}Mapper;
 
     /**
      * 分页查询
@@ -53,11 +50,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(query != null, "查询条件为空");
         Preconditions.checkArgument(query.getPageNo() != null && query.getPageNo() > 0, "页码必须大于0");
         Preconditions.checkArgument(query.getPageSize() != null && query.getPageSize() > 0, "分页大小必须大于0");
+        QueryWrapper<${table.javaClassName}DO> wrapper = new QueryWrapper<>();
         Map<String, Object> map = new LinkedHashMap<>();
         ${table.javaClassName}Converter.valuesToMap(query, map, Sets.newHashSet("pageNo", "pageSize", "orderBy", "orderDirection"));
-
-        Example example = new Example(${table.javaClassName}DO.class);
-        Example.Criteria criteria = example.createCriteria();
         map.forEach((k, v) -> {
             if(k == null || v == null){
                 return;
@@ -65,10 +60,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             if (v instanceof String) {
                 String str = (String) v;
                 if (StringUtils.isNotEmpty(str)) {
-                    criteria.andEqualTo(k, str);
+                    wrapper.eq(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, k), v);
                 }
             } else {
-                criteria.andEqualTo(k, v);
+                wrapper.eq(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, k), v);
             }
         });
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
@@ -76,14 +71,28 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");</#if>
         }
         if (${table.javaClassName}Converter.ASC.equalsIgnoreCase(query.getOrderDirection())) {
-            example.orderBy(query.getOrderBy()).asc();
+            wrapper.orderByAsc(query.getOrderBy());
         } else {
-            example.orderBy(query.getOrderBy()).desc();
+            wrapper.orderByDesc(query.getOrderBy());
         }
-
-        PageHelper.startPage(query.getPageNo(), query.getPageSize());
-        PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.selectByExample(example));
-        return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
+        Page<${table.javaClassName}DO> page = new Page<>(query.getPageNo(), query.getPageSize());
+        IPage<${table.javaClassName}DO> p = ${table.javaClassNameLower}Mapper.selectPage(page, wrapper);
+        if (p == null) {
+            return null;
+        }
+        PageInfo<${table.javaClassName}DTO> b = new PageInfo<>();
+        b.setTotal((int) p.getTotal());
+        b.setPageNum((int) p.getCurrent());
+        b.setPageSize((int) p.getSize());
+        b.setPages((int) p.getPages());
+        if (p.getRecords() != null && !p.getRecords().isEmpty()) {
+            List<${table.javaClassName}DTO> list = new ArrayList();
+            p.getRecords().forEach(e -> {
+               list.add(${table.javaClassName}Converter.domainToDTO(e));
+            });
+            b.setList(list);
+        }
+        return b;
     }
 
     <#if pk??>
@@ -100,7 +109,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         }
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-        ${table.javaClassName}DO obj = ${table.javaClassNameLower}Mapper.selectByPrimaryKey(cond);
+        ${table.javaClassName}DO obj = ${table.javaClassNameLower}Mapper.selectById(cond);
         if (obj != null) {
             return ${table.javaClassName}Converter.domainToDTO(obj);
         } else {
@@ -120,7 +129,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(record != null, "待插入的数据为空"); <#if versionColumn??>
         record.set${versionColumn.columnCamelNameUpper}(1L);</#if>
         ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
-        int inserted = ${table.javaClassNameLower}Mapper.insertSelective(cond);
+        int inserted = ${table.javaClassNameLower}Mapper.insert(cond);
         if (inserted != 0) {
             logger.info("${table.name}数据插入成功! {}", record);
             return true;
@@ -146,7 +155,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              }
             <#if versionColumn??>
              record.set${versionColumn.columnCamelNameUpper}(1L);</#if>
-             if (${table.javaClassNameLower}Mapper.insertSelective(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
+             if (${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
              }
          }
@@ -166,7 +175,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(record != null, "待更新的数据为空");
         <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待更新的数据${pk.columnCamelNameLower}为空");</#if>
         ${table.javaClassName}DO cond = ${table.javaClassName}Converter.dtoToDomain(record);
-        int updated = ${table.javaClassNameLower}Mapper.updateByPrimaryKeySelective(cond);
+        int updated = ${table.javaClassNameLower}Mapper.updateById(cond);
         if (updated != 0) {
             logger.info("${table.name}数据更新成功! {}", record);
             return true;
@@ -189,7 +198,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(${pk.columnCamelNameLower} != null, "待删除的数据${pk.columnCamelNameLower}为空");
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-        if(${table.javaClassNameLower}Mapper.deleteByPrimaryKey(cond) != 0) {
+        if(${table.javaClassNameLower}Mapper.deleteById(cond) != 0) {
             logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return true;
         } else {
@@ -211,7 +220,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         for (${pk.columnJavaType} ${pk.columnCamelNameLower} : ${pk.columnCamelNameLower}List) {
             ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
             cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-            if (${table.javaClassNameLower}Mapper.deleteByPrimaryKey(cond) == 0) {
+            if (${table.javaClassNameLower}Mapper.deleteById(cond) == 0) {
                 logger.error("删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
                 throw new RuntimeException("删除${table.comments}数据失败!");
             }

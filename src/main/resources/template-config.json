@@ -127,6 +127,15 @@
     "remark": "适用于mybatis通用Mapper的服务接口实现"
   },
   {
+    "templateName": "mpServiceImpl.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "service",
+    "targetFileName": "Mp#ServiceImpl.java",
+    "isCore": 0,
+    "overwriteExistingFile": 0,
+    "remark": "适用于MybatisPlus的服务接口实现"
+  },
+  {
     "templateName": "controller.ftl",
     "targetBaseDirName": "java",
     "targetPkgName": "controller",
