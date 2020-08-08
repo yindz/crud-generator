@@ -111,6 +111,9 @@ public class App {
         
         //需去掉的表名前缀(留空不去掉任何前缀)
         table.setTableNamePrefixToRemove("T_");
+
+        //设置启用模糊查询的字段名(多个以逗号隔开)，如果字段为字符串类型则在查询方法入参中会增加 xxxLike 属性
+        table.setLikeColumns("title,category");
         
         //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
         //table.setPrimaryKeyColumn("code");
@@ -132,7 +135,7 @@ public class App {
         //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀
         //generator.setGlobalTableNamePrefixToRemove("t_");
         
-        //默认使用 Spring 的 @Service 注解。如果需要使用 Dubbo 的@Service注解，请设置该值为true
+        //默认使用 Spring 的 @Service 注解。如果需要使用 Dubbo 的 @Service 注解，请设置该值为true
         //generator.setUseDubboService(true);
         
         //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
