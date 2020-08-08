@@ -52,6 +52,7 @@
 | IXXXService.java | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
 | XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 该文件只需生成1次 |
 | TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
+| MpXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于MybatisPlus | 该文件只需生成1次 |
 | XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
 | CommonConverter.java | 通用对象转换工具 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
 | XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
@@ -151,6 +152,7 @@ public class App {
 - 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
 - 如果您采用 Mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 Mybatis通用Mapper 或 MybatisPlus
+- 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的作者可能想做的事情太多，导致其API相对较乱(特别是它的分页API比较奇怪)，相比之下，Mybatis通用Mapper 会更适合比较规范化且规模较大的项目
 
 ### 扩展
 #### 适配更多数据库
