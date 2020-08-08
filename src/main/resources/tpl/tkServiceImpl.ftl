@@ -40,6 +40,11 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         if (query.get${column.columnCamelNameUpper}() != null<#if column.isChar == 1> && StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}())</#if>) {
             criteria.andEqualTo(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}());
         }
+        <#if column.enableLike == 1>
+        if (query.get${column.columnCamelNameUpper}Like() != null<#if column.isChar == 1> && StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}Like())</#if>) {
+            criteria.andLike(${table.javaClassName}DO::get${column.columnCamelNameUpper}, "%" + query.get${column.columnCamelNameUpper}Like() + "%");
+        }
+        </#if>
         </#list>
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序

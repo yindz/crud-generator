@@ -37,6 +37,11 @@ public class TableContext {
      */
     private Integer pageSize = 10;
 
+    /**
+     * 允许模糊查询的字段名，多个以逗号隔开
+     */
+    private String likeColumns;
+
     public static TableContext withName(String name) {
         TableContext tc = new TableContext();
         tc.setTableName(name);
@@ -97,5 +102,13 @@ public class TableContext {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getLikeColumns() {
+        return likeColumns;
+    }
+
+    public void setLikeColumns(String likeColumns) {
+        this.likeColumns = likeColumns;
     }
 }

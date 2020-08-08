@@ -102,6 +102,11 @@ public class ColumnInfo {
      */
     private int isPrimaryKey = 0;
 
+    /**
+     * 是否启用模糊查询
+     */
+    private int enableLike = 0;
+
     public String getTableName() {
         return tableName;
     }
@@ -252,5 +257,13 @@ public class ColumnInfo {
 
     public void setIsPrimaryKey(int isPrimaryKey) {
         this.isPrimaryKey = isPrimaryKey;
+    }
+
+    public int getEnableLike() {
+        return enableLike;
+    }
+
+    public void setEnableLike(int enableLike) {
+        this.enableLike = enableLike;
     }
 }

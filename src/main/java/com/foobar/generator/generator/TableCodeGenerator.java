@@ -241,6 +241,15 @@ public class TableCodeGenerator {
     private List<ColumnInfo> getColumnInfo(TableContext table) {
         List<ColumnInfo> resultList = dbUtil.getColumnInfo(table.getTableName());
         if (resultList != null && !resultList.isEmpty()) {
+            Set<String> likeColumns = new TreeSet<>();
+            if (StringUtils.isNotEmpty(table.getLikeColumns())) {
+                String[] tmp = table.getLikeColumns().split(",");
+                Arrays.stream(tmp).forEach(s -> {
+                    if (StringUtils.isNotEmpty(s)) {
+                        likeColumns.add(s);
+                    }
+                });
+            }
             boolean hasPrimaryKey = resultList.stream().anyMatch(r -> 1 == r.getIsPrimaryKey());
             if (!hasPrimaryKey && StringUtils.isEmpty(table.getPrimaryKeyColumn())) {
                 throw new IllegalArgumentException("数据表 " + table.getTableName() + " 无主键及唯一索引字段，请手动指定primaryKeyColumn参数值");
@@ -277,6 +286,9 @@ public class TableCodeGenerator {
                     if (c.getColumnName().equalsIgnoreCase(table.getPrimaryKeyColumn())) {
                         c.setIsPrimaryKey(1);
                     }
+                }
+                if (!likeColumns.isEmpty() && likeColumns.contains(c.getColumnName()) && c.getIsChar() == 1) {
+                    c.setEnableLike(1);
                 }
             });
             logger.info("数据表 {} 包含 {} 个字段", table.getTableName(), resultList.size());

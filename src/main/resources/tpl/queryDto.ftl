@@ -29,6 +29,13 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
      * 排序方向: asc或desc
      */
     private String orderDirection = "desc";
+<#list table.columns as column><#if column.enableLike == 1>
+
+    /**
+    * ${column.columnComment!''}模糊匹配值
+    */
+    private ${column.columnJavaType} ${column.columnCamelNameLower}Like;
+</#if></#list>
 
     public Integer getPageNo() {
         return pageNo;
@@ -61,4 +68,13 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
     public void setOrderDirection(String orderDirection) {
         this.orderDirection = orderDirection;
     }
+<#list table.columns as column><#if column.enableLike == 1>
+
+    public ${column.columnJavaType} get${column.columnCamelNameUpper}Like() {
+        return this.${column.columnCamelNameLower}Like;
+    }
+
+    public void set${column.columnCamelNameUpper}Like(${column.columnJavaType} ${column.columnCamelNameLower}Like) {
+        this.${column.columnCamelNameLower}Like = ${column.columnCamelNameLower}Like;
+    }</#if></#list>
 }
