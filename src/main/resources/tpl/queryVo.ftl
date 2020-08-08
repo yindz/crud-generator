@@ -44,6 +44,11 @@ public class ${table.javaClassName}QueryVO extends ${table.javaClassName}VO {
     @ApiModelProperty(value = "排序方向: asc或desc", dataType = "String", required = false, example = "desc")</#if>
     @Pattern(regexp = "(?i)asc|desc", message = "排序方向必须是asc或desc", groups = {Default.class})
     private String orderDirection = "desc";
+<#list table.columns as column><#if column.enableLike == 1>
+
+    @ApiModelProperty(value = "${column.columnComment!''}模糊匹配值", dataType = "String", required = false, example = "abc")
+    private ${column.columnJavaType} ${column.columnCamelNameLower}Like;
+</#if></#list>
 
     public Integer getPageNo() {
         return pageNo;
@@ -76,4 +81,13 @@ public class ${table.javaClassName}QueryVO extends ${table.javaClassName}VO {
     public void setOrderDirection(String orderDirection) {
         this.orderDirection = orderDirection;
     }
+<#list table.columns as column><#if column.enableLike == 1>
+
+    public ${column.columnJavaType} get${column.columnCamelNameUpper}Like() {
+        return this.${column.columnCamelNameLower}Like;
+    }
+
+    public void set${column.columnCamelNameUpper}Like(${column.columnJavaType} ${column.columnCamelNameLower}Like) {
+        this.${column.columnCamelNameLower}Like = ${column.columnCamelNameLower}Like;
+    }</#if></#list>
 }

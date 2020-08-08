@@ -175,8 +175,7 @@
     "targetBaseDirName": "java",
     "targetPkgName": "dto",
     "targetFileName": "#QueryDTO.java",
-    "isCore": 0,
-    "overwriteExistingFile": 0,
+    "isCore": 1,
     "remark": "查询条件DTO"
   },
   {
@@ -184,8 +183,7 @@
     "targetBaseDirName": "java",
     "targetPkgName": "vo",
     "targetFileName": "#QueryVO.java",
-    "isCore": 0,
-    "overwriteExistingFile": 0,
+    "isCore": 1,
     "remark": "查询条件VO"
   },
   {
