@@ -99,6 +99,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      @Transactional(rollbackFor = Exception.class)
      public boolean insertAll(List<${table.javaClassName}DTO> recordList) {
          Preconditions.checkArgument(recordList != null && !recordList.isEmpty(), "待插入的数据为空");
+         //说明: 因为Oracle不允许超过1000个参数，所以此处逐条插入
          for (${table.javaClassName}DTO record : recordList) {
              if (record == null) {
                  continue;
