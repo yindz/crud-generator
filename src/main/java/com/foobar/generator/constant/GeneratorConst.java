@@ -56,6 +56,7 @@ public final class GeneratorConst {
         javaBoxTypeMap.put("varchar2", "String");
         javaBoxTypeMap.put("number", "Long");
         javaBoxTypeMap.put("timestamp", "Date");
+        javaBoxTypeMap.put("timestamp(6)", "Date");
 
         mybatisTypeMap.put("bigint", "BIGINT");
         mybatisTypeMap.put("binary", "BLOB");
@@ -91,6 +92,7 @@ public final class GeneratorConst {
         mybatisTypeMap.put("varchar2", "VARCHAR");
         mybatisTypeMap.put("number", "BIGINT");
         mybatisTypeMap.put("timestamp", "TIMESTAMP");
+        mybatisTypeMap.put("timestamp(6)", "TIMESTAMP");
 
         importsTypeMap.put("Date", "java.util.Date");
         importsTypeMap.put("BigDecimal", "java.math.BigDecimal");
