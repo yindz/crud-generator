@@ -23,7 +23,6 @@
     <select id="get${table.javaClassName}List" parameterType="map" resultMap="queryResultMap">
         select a.*
         from ${table.name} a
-        where 1=1
         <where>
             <include refid="${table.name}_where"/>
         </where>
