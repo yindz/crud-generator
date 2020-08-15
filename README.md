@@ -158,7 +158,7 @@ public class App {
 - 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
 - 如果您采用 Mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 Mybatis通用Mapper 或 MybatisPlus
-- 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的作者可能想做的事情太多，导致其API相对较乱(特别是它的分页API比较奇怪)，相比之下，Mybatis通用Mapper 会更适合比较规范化且规模较大的项目
+- 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的开发团队想做的事情太多，且其中某些开发人员缺乏对开源项目负责任的职业态度，导致其API相对较乱(特别是它的分页API比较奇怪)，相比之下，如果您的项目规模较大较规范，且需要长期维护，那么建议选用目前的 [Mybatis通用Mapper](https://github.com/abel533/Mapper)!
 
 ### 扩展
 #### 适配更多数据库
