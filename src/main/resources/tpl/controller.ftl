@@ -1,14 +1,9 @@
 package ${table.pkgName};
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Preconditions;
 import com.github.pagehelper.PageInfo;
 <#include "./public/logger.ftl"/>
 import javax.validation.groups.Default;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import ${basePkgName}.vo.${table.javaClassName}VO;
 import ${basePkgName}.vo.${table.javaClassName}QueryVO;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
-import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
 import ${basePkgName}.service.I${table.javaClassName}Service;
 import ${basePkgName}.util.${table.javaClassName}Converter;
 import ${basePkgName}.validator.InsertGroup;
