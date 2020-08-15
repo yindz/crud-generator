@@ -17,6 +17,18 @@
         <if test="${column.columnCamelNameLower}Like != null<#if column.isChar == 1> and ${column.columnCamelNameLower}Like != ''</#if>">
             and a.${column.columnName} like <#if table.dbType == 'oracle'>'%'||${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}||'%'</#if><#if table.dbType == 'mysql'>concat('%',${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}},'%')</#if><#if table.dbType == 'sqlserver'>'%'+${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}+'%'</#if><#if table.dbType == 'postgresql'>concat('%',${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}},'%')</#if>
         </if></#if>
+        <#if column.enableRange == 1>
+        <if test="${column.columnCamelNameLower}Min != null">
+            <![CDATA[
+            and a.${column.columnName} >= ${r"#{"}${column.columnCamelNameLower}Min, jdbcType=${column.columnMyBatisType}}
+            ]]>
+        </if>
+        <if test="${column.columnCamelNameLower}Max != null">
+            <![CDATA[
+            and a.${column.columnName} <= ${r"#{"}${column.columnCamelNameLower}Max, jdbcType=${column.columnMyBatisType}}
+            ]]>
+        </if>
+        </#if>
         </#list>
     </sql>
 
