@@ -115,6 +115,9 @@ public class App {
         //设置启用模糊查询的字段名(多个以逗号隔开)，如果字段为字符串类型则在查询方法入参中会增加 xxxLike 属性
         table.setLikeColumns("title,category");
         
+        //设置启用范围查询的字段名(多个以逗号隔开)，如果字段为时间或数字类型则在查询方法入参中会增加 xxxMin/xxxMax 属性
+        table.setRangeColumns("create_date,id");
+        
         //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
         //table.setPrimaryKeyColumn("code");
         
