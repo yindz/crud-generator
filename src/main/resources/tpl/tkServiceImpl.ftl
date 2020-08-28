@@ -45,6 +45,14 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             criteria.andLike(${table.javaClassName}DO::get${column.columnCamelNameUpper}, "%" + query.get${column.columnCamelNameUpper}Like() + "%");
         }
         </#if>
+        <#if column.enableRange == 1>
+        if (query.get${column.columnCamelNameUpper}Min() != null) {
+            criteria.andGreaterThanOrEqualTo(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}Min());
+        }
+        if (query.get${column.columnCamelNameUpper}Max() != null) {
+            criteria.andLessThanOrEqualTo(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}Max());
+        }
+        </#if>
         </#list>
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序

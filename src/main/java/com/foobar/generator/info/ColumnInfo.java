@@ -107,6 +107,11 @@ public class ColumnInfo {
      */
     private int enableLike = 0;
 
+    /**
+     * 是否启用范围查询
+     */
+    private int enableRange = 0;
+
     public String getTableName() {
         return tableName;
     }
@@ -265,5 +270,13 @@ public class ColumnInfo {
 
     public void setEnableLike(int enableLike) {
         this.enableLike = enableLike;
+    }
+
+    public int getEnableRange() {
+        return enableRange;
+    }
+
+    public void setEnableRange(int enableRange) {
+        this.enableRange = enableRange;
     }
 }

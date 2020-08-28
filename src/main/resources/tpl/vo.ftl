@@ -24,7 +24,7 @@ import ${basePkgName}.validator.UpdateGroup;
  *
  * @author ${table.author!''}
  */<#if useSwagger == 1>
-@ApiModel("${table.comments}VO对象")</#if>
+@ApiModel(value = "${table.comments}VO对象", description = "${table.comments}VO对象")</#if>
 public class ${table.javaClassName}VO <#if baseEntityClass??>extends ${baseEntityClass}<#else>implements Serializable</#if> {
     <#include "./public/serialVersionUID.ftl"/>
 
@@ -32,7 +32,7 @@ public class ${table.javaClassName}VO <#if baseEntityClass??>extends ${baseEntit
     /**
      * ${column.columnComment!''}
      */<#if useSwagger == 1>
-    @ApiModelProperty(value = "${column.columnComment!''}", dataType = "${column.columnJavaType}", required = <#if column.nullable == 0>true<#else>false</#if><#if column.isNumber == 1>, example = "1"</#if>)</#if><#if column.nullable == 0><#if column.isChar == 1>
+    @ApiModelProperty(value = "${column.columnComment!''}", dataType = "${column.columnJavaType}"<#if column.nullable == 0>, required = true</#if><#if column.isNumber == 1>, example = "1"</#if>)</#if><#if column.nullable == 0><#if column.isChar == 1>
     @NotBlank(message = "${column.columnComment!''}(${column.columnCamelNameLower})为空", groups = {<#if column.isPrimaryKey == 1>UpdateGroup.class<#else>InsertGroup.class</#if>})<#else>
     @NotNull(message = "${column.columnComment!''}(${column.columnCamelNameLower})为空", groups = {<#if column.isPrimaryKey == 1>UpdateGroup.class<#else>InsertGroup.class</#if>})</#if></#if><#if column.isChar == 1>
     @Length(max = ${column.columnLength}, message = "${column.columnComment!''}(${column.columnCamelNameLower})长度不能超过{max}个字符", groups = {Default.class})</#if><#if column.isDateTime == 1>

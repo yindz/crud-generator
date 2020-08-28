@@ -42,6 +42,11 @@ public class TableContext {
      */
     private String likeColumns;
 
+    /**
+     * 允许按范围查询的字段
+     */
+    private String rangeColumns;
+
     public static TableContext withName(String name) {
         TableContext tc = new TableContext();
         tc.setTableName(name);
@@ -110,5 +115,13 @@ public class TableContext {
 
     public void setLikeColumns(String likeColumns) {
         this.likeColumns = likeColumns;
+    }
+
+    public String getRangeColumns() {
+        return rangeColumns;
+    }
+
+    public void setRangeColumns(String rangeColumns) {
+        this.rangeColumns = rangeColumns;
     }
 }

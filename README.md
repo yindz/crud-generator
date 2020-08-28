@@ -115,6 +115,9 @@ public class App {
         //设置启用模糊查询的字段名(多个以逗号隔开)，如果字段为字符串类型则在查询方法入参中会增加 xxxLike 属性
         table.setLikeColumns("title,category");
         
+        //设置启用范围查询的字段名(多个以逗号隔开)，如果字段为时间或数字类型则在查询方法入参中会增加 xxxMin/xxxMax 属性
+        table.setRangeColumns("create_date,id");
+        
         //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
         //table.setPrimaryKeyColumn("code");
         
@@ -155,7 +158,7 @@ public class App {
 - 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
 - 如果您采用 Mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 Mybatis通用Mapper 或 MybatisPlus
-- 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的作者可能想做的事情太多，导致其API相对较乱(特别是它的分页API比较奇怪)，相比之下，Mybatis通用Mapper 会更适合比较规范化且规模较大的项目
+- 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的开发团队想做的事情太多，且其中某些开发人员缺乏对开源项目负责任的职业态度，导致其API相对较乱(特别是它的分页API比较奇怪)，相比之下，如果您的项目规模较大较规范，且需要长期维护，那么建议选用目前的 [Mybatis通用Mapper](https://github.com/abel533/Mapper)!
 
 ### 扩展
 #### 适配更多数据库
