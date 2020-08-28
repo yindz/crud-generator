@@ -21,7 +21,10 @@
     </sql>
 
     <select id="get${table.javaClassName}List" parameterType="map" resultMap="queryResultMap">
-        select a.*
+        select
+        <#list table.columns as column>
+            a.${column.columnName}<#if column?has_next>,</#if>
+        </#list>
         from ${table.name} a
         <where>
             <include refid="${table.name}_where"/>
