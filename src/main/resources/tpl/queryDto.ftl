@@ -125,7 +125,7 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
     }
 
     public void set${column.columnCamelNameUpper}In(List<${column.columnJavaType}> ${column.columnCamelNameLower}In) {
-        this.${column.columnCamelNameLower}Min = ${column.columnCamelNameLower}Min;
+        this.${column.columnCamelNameLower}In = ${column.columnCamelNameLower}In;
     }
     </#if>
     </#list>
