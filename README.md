@@ -96,61 +96,49 @@ public class App {
     
         TableCodeGenerator generator = new TableCodeGenerator(param);    
         RunParam rp = new RunParam();
-        
-        //可以自行指定生成的javadoc注释中author的名称；如留空或不设置，则程序将使用当前操作系统的用户名
-        //rp.setAuthor("张三");
-    
-        //java基础包名(留空则默认使用com.example.myapp)
-        rp.setBasePkgName("com.foobar.bizapp");
-        
-        //输出目录的绝对路径(留空则生成到当前用户主目录)
         rp.setOutputPath("E:\\tmp\\generated");
         
         //表名
-        TableContext table = TableContext.withName("T_ORDER_INFO");
-        
-        //需去掉的表名前缀(留空不去掉任何前缀)
-        table.setTableNamePrefixToRemove("T_");
-
-        //设置启用模糊查询的字段名(多个以逗号隔开)，如果字段为字符串类型则在查询方法入参中会增加 xxxLike 属性
-        table.setLikeColumns("title,category");
-        
-        //设置启用范围查询的字段名(多个以逗号隔开)，如果字段为时间或数字类型则在查询方法入参中会增加 xxxMin/xxxMax 属性
-        table.setRangeColumns("create_date,id");
-        
-        //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
-        //table.setPrimaryKeyColumn("code");
-        
-        //如果该表有乐观锁，可在此设置其字段名，默认值为 version (不区分大小写)
-        //table.setVersionColumn("total");
-    
-        //默认分页大小为10，如需修改，可在此设置一个大于0的整数
-        table.setPageSize(20);
-    
-        //针对Oracle数据库，可以指定序列名称; 如果不指定，则默认使用 SEQ_表名 作为序列名称
-        table.setSequenceName("SEQ_ORDER");
-        
+        TableContext table = TableContext.withName("T_ORDER_INFO");        
         rp.addTable(table);
-    
-        //如果VO/DO/DTO等类需要继承某个基础类，可以在此指定基础类的完整路径
-        //rp.setBaseEntityClass("com.foobar.common.BaseEntity");
-        
-        //如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在 TableContext 中逐个配置前缀
-        //generator.setGlobalTableNamePrefixToRemove("t_");
-        
-        //默认使用 Spring 的 @Service 注解。如果需要使用 Dubbo 的 @Service 注解，请设置该值为true
-        //generator.setUseDubboService(true);
-        
-        //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
-        //generator.setGenerateAll(false);
-        
-        //如果不希望生成swagger注解，可设置该值为false; 默认true
-        //generator.setUseSwagger(false);
         
         //生成
         generator.run(rp);
+    }
 }
 ```
+RunParam 的可选参数设置：
+
+| 方法名 | 含义 | 备注 | 
+|  ----  | ---- |---- |
+| setAuthor() | 指定生成的javadoc注释中author的名称 | 默认使用当前操作系统用户名 |
+| setBasePkgName() | 指定java基础包名 | 默认使用com.example.myapp |
+| setOutputPath() | 指定输出目录的绝对路径 | 默认输出到当前用户主目录 |
+| setBaseEntityClass() | 如果VO/DO/DTO等类需要继承某个基础类，可以在此指定基础类的完整路径 | 默认不继承任何基础类 |
+
+
+
+TableContext 的可选参数设置：
+
+| 方法名 | 含义 | 备注 | 
+|  ----  | ---- |---- |
+| setTableNamePrefixToRemove() | 指定需去掉的表名前缀 | 留空则不去掉任何前缀 |
+| setLikeColumns() | 指定启用模糊查询的字段名(多个以逗号隔开) | 如果字段为字符串类型则在相应QueryDTO类中增加 xxxLike 属性 |
+| setRangeColumns() | 指定启用范围查询的字段名(多个以逗号隔开) | 如果字段为时间或数字类型则在相应QueryDTO类中增加 xxxMin/xxxMax 属性 |
+| setInColumns() | 指定启用IN查询的字段名(多个以逗号隔开) | 在相应QueryDTO类中增加 xxxIn 属性 |
+| setPrimaryKeyColumn() | 手动指定主键字段名(不区分大小写) | 如果程序无法自动检测到主键字段，则在此参数指定(适用于无主键且无唯一索引的表) |
+| setVersionColumn() | 如果该表有乐观锁，可在此指定其字段名(不区分大小写) | 默认值为 version |
+| setPageSize() | 指定一个大于0的整数来指定默认分页大小 | 默认为10 |
+| setSequenceName() | 针对Oracle数据库，可以指定序列名称 | 如果不指定，则默认使用 SEQ_表名 作为序列名称 |
+
+
+TableCodeGenerator 的可选参数设置：
+
+| 方法名 | 含义 | 备注 | 
+|  ----  | ---- |---- |
+| setGlobalTableNamePrefixToRemove() | 需去掉的表名前缀(全局) | 如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在TableContext中逐个配置前缀; 如果二者同时有值，则使用TableContext中的值 |
+| setUseDubboService() | 是否使用 Dubbo 的@Service注解 | 默认使用 Spring 的@Service注解 |
+| setUseSwagger() | 是否生成swagger相关注解 | 默认true |
 
 ## 最佳实践
 
