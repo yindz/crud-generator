@@ -3,6 +3,7 @@ package ${table.pkgName};
 <#list table.imports as imp>
 import ${imp};
 </#list>
+import java.util.List;
 import ${basePkgName}.dto.${table.javaClassName}DTO;
 
 /**
@@ -50,7 +51,15 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
      * ${column.columnComment!''}范围结束
      */
     private ${column.columnJavaType} ${column.columnCamelNameLower}Max;
-</#if></#list>
+</#if>
+<#if column.enableIn == 1>
+
+    /**
+     * ${column.columnComment!''} IN参数
+     */
+    private List<${column.columnJavaType}> ${column.columnCamelNameLower}In;
+</#if>
+</#list>
 
     public Integer getPageNo() {
         return pageNo;
@@ -108,5 +117,16 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
     public void set${column.columnCamelNameUpper}Max(${column.columnJavaType} ${column.columnCamelNameLower}Max) {
         this.${column.columnCamelNameLower}Max = ${column.columnCamelNameLower}Max;
     }
-    </#if></#list>
+    </#if>
+    <#if column.enableIn == 1>
+
+    public List<${column.columnJavaType}> get${column.columnCamelNameUpper}In() {
+        return this.${column.columnCamelNameLower}In;
+    }
+
+    public void set${column.columnCamelNameUpper}In(List<${column.columnJavaType}> ${column.columnCamelNameLower}In) {
+        this.${column.columnCamelNameLower}Min = ${column.columnCamelNameLower}Min;
+    }
+    </#if>
+    </#list>
 }

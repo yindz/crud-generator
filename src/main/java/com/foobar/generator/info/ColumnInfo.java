@@ -112,6 +112,11 @@ public class ColumnInfo {
      */
     private int enableRange = 0;
 
+    /**
+     * 是否启用IN查询
+     */
+    private int enableIn = 0;
+
     public String getTableName() {
         return tableName;
     }
@@ -278,5 +283,13 @@ public class ColumnInfo {
 
     public void setEnableRange(int enableRange) {
         this.enableRange = enableRange;
+    }
+
+    public int getEnableIn() {
+        return enableIn;
+    }
+
+    public void setEnableIn(int enableIn) {
+        this.enableIn = enableIn;
     }
 }

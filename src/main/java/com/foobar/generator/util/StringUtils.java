@@ -12,7 +12,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 字符串工具类
@@ -59,7 +62,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @param xmlFile
      * @param map
      */
-    public static void loadSqlFile(String xmlFile, Map<String, String> map){
+    public static void loadSqlFile(String xmlFile, Map<String, String> map) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder dbd = dbf.newDocumentBuilder();
@@ -81,5 +84,29 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 拆分字符串并转换成Set
+     *
+     * @param src 待拆分的字符串
+     * @param sep 分隔符
+     * @return Set
+     */
+    public static Set<String> splitToSet(String src, String sep) {
+        Set<String> resultSet = new HashSet<>();
+        if (isBlank(src) || isBlank(sep)) {
+            return resultSet;
+        }
+        String[] tmp = src.split(sep);
+        if (tmp.length == 0) {
+            return resultSet;
+        }
+        Arrays.stream(tmp).forEach(s -> {
+            if (isNotBlank(s)) {
+                resultSet.add(s);
+            }
+        });
+        return resultSet;
     }
 }

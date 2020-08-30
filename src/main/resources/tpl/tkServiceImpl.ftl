@@ -53,6 +53,11 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             criteria.andLessThanOrEqualTo(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}Max());
         }
         </#if>
+        <#if column.enableIn == 1>
+        if (query.get${column.columnCamelNameUpper}In() != null && !query.get${column.columnCamelNameUpper}In().isEmpty()) {
+           criteria.andIn(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}In());
+        }
+        </#if>
         </#list>
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序

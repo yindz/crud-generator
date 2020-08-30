@@ -241,24 +241,9 @@ public class TableCodeGenerator {
     private List<ColumnInfo> getColumnInfo(TableContext table) {
         List<ColumnInfo> resultList = dbUtil.getColumnInfo(table.getTableName());
         if (resultList != null && !resultList.isEmpty()) {
-            Set<String> likeColumns = new TreeSet<>();
-            if (StringUtils.isNotEmpty(table.getLikeColumns())) {
-                String[] tmp = table.getLikeColumns().split(",");
-                Arrays.stream(tmp).forEach(s -> {
-                    if (StringUtils.isNotEmpty(s)) {
-                        likeColumns.add(s);
-                    }
-                });
-            }
-            Set<String> rangeColumns = new TreeSet<>();
-            if (StringUtils.isNotEmpty(table.getRangeColumns())) {
-                String[] tmp = table.getRangeColumns().split(",");
-                Arrays.stream(tmp).forEach(s -> {
-                    if (StringUtils.isNotEmpty(s)) {
-                        rangeColumns.add(s);
-                    }
-                });
-            }
+            Set<String> likeColumns = StringUtils.splitToSet(table.getLikeColumns(), ",");
+            Set<String> rangeColumns = StringUtils.splitToSet(table.getRangeColumns(), ",");
+            Set<String> inColumns = StringUtils.splitToSet(table.getInColumns(), ",");
             boolean hasPrimaryKey = resultList.stream().anyMatch(r -> 1 == r.getIsPrimaryKey());
             if (!hasPrimaryKey && StringUtils.isEmpty(table.getPrimaryKeyColumn())) {
                 throw new IllegalArgumentException("数据表 " + table.getTableName() + " 无主键及唯一索引字段，请手动指定primaryKeyColumn参数值");
@@ -304,6 +289,9 @@ public class TableCodeGenerator {
                     if (c.getIsDateTime() == 1 || c.getIsNumber() == 1) {
                         c.setEnableRange(1);
                     }
+                }
+                if (inColumns.contains(c.getColumnName())) {
+                    c.setEnableIn(1);
                 }
             });
             logger.info("数据表 {} 包含 {} 个字段", table.getTableName(), resultList.size());

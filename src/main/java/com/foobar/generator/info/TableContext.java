@@ -47,6 +47,11 @@ public class TableContext {
      */
     private String rangeColumns;
 
+    /**
+     * 允许按in查询的字段
+     */
+    private String inColumns;
+
     public static TableContext withName(String name) {
         TableContext tc = new TableContext();
         tc.setTableName(name);
@@ -123,5 +128,13 @@ public class TableContext {
 
     public void setRangeColumns(String rangeColumns) {
         this.rangeColumns = rangeColumns;
+    }
+
+    public String getInColumns() {
+        return inColumns;
+    }
+
+    public void setInColumns(String inColumns) {
+        this.inColumns = inColumns;
     }
 }

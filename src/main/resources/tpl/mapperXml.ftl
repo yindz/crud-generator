@@ -15,7 +15,7 @@
         </if>
         <#if column.enableLike == 1>
         <if test="${column.columnCamelNameLower}Like != null<#if column.isChar == 1> and ${column.columnCamelNameLower}Like != ''</#if>">
-            and a.${column.columnName} like <#if table.dbType == 'oracle'>'%'||${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}||'%'</#if><#if table.dbType == 'mysql'>concat('%',${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}},'%')</#if><#if table.dbType == 'sqlserver'>'%'+${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}+'%'</#if><#if table.dbType == 'postgresql'>concat('%',${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}},'%')</#if>
+            and a.${column.columnName} like <#if table.dbType == 'oracle'>'%'||${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}||'%'</#if><#if table.dbType == 'mysql'>concat('%', ${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}, '%')</#if><#if table.dbType == 'sqlserver'>'%'+${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}+'%'</#if><#if table.dbType == 'postgresql'>concat('%',${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}},'%')</#if>
         </if></#if>
         <#if column.enableRange == 1>
         <if test="${column.columnCamelNameLower}Min != null">
@@ -27,6 +27,14 @@
             <![CDATA[
             and a.${column.columnName} <= ${r"#{"}${column.columnCamelNameLower}Max, jdbcType=${column.columnMyBatisType}}
             ]]>
+        </if>
+        </#if>
+        <#if column.enableIn == 1>
+        <if test="${column.columnCamelNameLower}In != null and ${column.columnCamelNameLower}In.size() &gt; 0">
+           and a.${column.columnName} in
+           <foreach collection="${column.columnCamelNameLower}In" item="${column.columnCamelNameLower}Value" open="(" close=")" separator=",">
+               ${r"#{"}${column.columnCamelNameLower}Value, jdbcType=${column.columnMyBatisType}}
+           </foreach>
         </if>
         </#if>
         </#list>
@@ -53,11 +61,10 @@
     </select>
 
     <insert id="insert" parameterType="${basePkgName}.domain.${table.javaClassName}DO" useGeneratedKeys="true"<#if pk??> keyColumn="${pk.columnName}" keyProperty="${pk.columnCamelNameLower}"</#if>>
-        <#if table.dbType == 'oracle'><#if pk??>
-        <selectKey keyProperty="${pk.columnCamelNameLower}" resultType="${pk.columnJavaType}" order="BEFORE">
+        <#if table.dbType == 'oracle'><#if pk??><selectKey keyProperty="${pk.columnCamelNameLower}" resultType="${pk.columnJavaType}" order="BEFORE">
             select <#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>.nextval from dual
-        </selectKey></#if></#if>
-        insert into ${table.name} (
+        </selectKey>
+        </#if></#if>insert into ${table.name} (
             <#list table.columns as column>
             ${column.columnName}<#if column?has_next>,</#if>
             </#list>
@@ -82,7 +89,6 @@
     </update>
 
     <delete id="delete" parameterType="${basePkgName}.domain.${table.javaClassName}DO">
-        delete from ${table.name}
-        <#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if>
+        delete from ${table.name} <#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if>
     </delete>
 </mapper>
