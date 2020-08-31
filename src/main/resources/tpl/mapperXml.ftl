@@ -54,7 +54,7 @@
     </select>
 
     <select id="get${table.javaClassName}Count" parameterType="map" resultType="java.lang.Integer">
-        select count(a.*) from ${table.name} a
+        select count(*) from ${table.name} a
         <where>
             <include refid="${table.name}_where"/>
         </where>
