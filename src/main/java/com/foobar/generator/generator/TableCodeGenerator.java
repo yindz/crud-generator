@@ -436,6 +436,10 @@ public class TableCodeGenerator {
         //表名
         tableInfo.setName(table.getTableName());
         tableInfo.setKebabCaseName(simpleTableName.replaceAll("_", "-").toLowerCase());
+        if (GeneratorConst.ORACLE.equals(dbType)) {
+            tableInfo.setSchemaName(schemaName);
+        }
+
         //表注释
         tableInfo.setComments(columnInfoList.get(0).getTableComment());
         if (StringUtils.isEmpty(tableInfo.getComments())) {

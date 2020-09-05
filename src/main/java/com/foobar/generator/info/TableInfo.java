@@ -16,6 +16,11 @@ public class TableInfo {
     private String dbType;
 
     /**
+     * 数据库schema名称
+     */
+    private String schemaName;
+
+    /**
      * 数据表原始名称
      */
     private String name;
@@ -81,6 +86,14 @@ public class TableInfo {
 
     public void setDbType(String dbType) {
         this.dbType = dbType;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
     }
 
     public String getName() {

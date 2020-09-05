@@ -22,7 +22,7 @@ import ${imp};
  *
  * @author ${table.author!''}
  */
-@Table(name = "${table.name}")
+@Table(name = "${table.name}"<#if table.schemaName??>, schema = "${table.schemaName}"</#if>)
 public class ${table.javaClassName}DO <#if baseEntityClass??>extends ${baseEntityClass}<#else>implements Serializable</#if> {
 <#include "./public/serialVersionUID.ftl"/>
 
@@ -31,7 +31,7 @@ public class ${table.javaClassName}DO <#if baseEntityClass??>extends ${baseEntit
      * ${column.columnComment!''}
      */<#if column.isPrimaryKey == 1>
     @Id<#if table.dbType == 'oracle'>
-    @KeySql(sql = "select <#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>.nextval from dual", order = ORDER.BEFORE)</#if><#if table.dbType == 'mysql'>
+    @KeySql(sql = "select <#if table.schemaName??>${table.schemaName}.</#if><#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>.nextval from dual", order = ORDER.BEFORE)</#if><#if table.dbType == 'mysql'>
     @KeySql(useGeneratedKeys = true)</#if><#if table.dbType == 'sqlserver'>@GeneratedValue(strategy = GenerationType.IDENTITY)</#if><#if table.dbType == 'postgresql'>@KeySql(useGeneratedKeys = true)
     @Column(name = "${column.columnCamelNameLower}", insertable = false)</#if></#if><#if table.versionColumn??><#if table.versionColumn == column.columnName>
     @Version</#if></#if>
