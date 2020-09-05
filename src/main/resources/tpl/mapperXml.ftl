@@ -49,8 +49,8 @@
         <where>
             <include refid="${table.name}_where"/>
         </where>
-        <if test="orderBy != null and orderBy != null">order by a.${r"${"}orderBy}</if>
-        <if test="orderDirection != null and orderDirection != null"> ${r"${"}orderDirection}</if>
+        <if test="orderBy != null and orderBy != ''">order by a.${r"${"}orderBy}</if>
+        <if test="orderDirection != null and orderDirection != ''"> ${r"${"}orderDirection}</if>
     </select>
 
     <select id="get${table.javaClassName}Count" parameterType="map" resultType="java.lang.Integer">
