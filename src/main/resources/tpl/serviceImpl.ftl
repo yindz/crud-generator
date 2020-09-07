@@ -59,11 +59,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         if (${pk.columnCamelNameLower} == null) {
             throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
         }
-        Map<String, Object> queryMap = new HashMap<>();
-        queryMap.put("${pk.columnCamelNameLower}", ${pk.columnCamelNameLower});
-        List<${table.javaClassName}DO> list = ${table.javaClassNameLower}Mapper.get${table.javaClassName}List(queryMap);
-        if (list != null && !list.isEmpty()) {
-            return ${table.javaClassName}Converter.domainToDTO(list.get(0));
+        ${table.javaClassName}DO record = ${table.javaClassNameLower}Mapper.get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
+        if (record != null) {
+            return ${table.javaClassName}Converter.domainToDTO(record);
         } else {
             return null;
         }

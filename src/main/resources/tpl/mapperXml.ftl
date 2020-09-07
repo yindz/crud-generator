@@ -8,6 +8,12 @@
         </#list>
     </resultMap>
 
+    <sql id="${table.name}_columns">
+        <#list table.columns as column>
+            a.${column.columnName}<#if column?has_next>,</#if>
+        </#list>
+    </sql>
+
     <sql id="${table.name}_where">
         <#list table.columns as column>
         <if test="${column.columnCamelNameLower} != null<#if column.isChar == 1> and ${column.columnCamelNameLower} != ''</#if>">
@@ -41,10 +47,7 @@
     </sql>
 
     <select id="get${table.javaClassName}List" parameterType="map" resultMap="queryResultMap">
-        select
-        <#list table.columns as column>
-            a.${column.columnName}<#if column?has_next>,</#if>
-        </#list>
+        select <include refid="${table.name}_columns"/>
         from <#if table.schemaName??>${table.schemaName}.</#if>${table.name} a
         <where>
             <include refid="${table.name}_where"/>
@@ -52,6 +55,14 @@
         <if test="orderBy != null and orderBy != ''">order by a.${r"${"}orderBy}</if>
         <if test="orderDirection != null and orderDirection != ''"> ${r"${"}orderDirection}</if>
     </select>
+
+    <#if pk??>
+    <select id="get${table.javaClassName}By${pk.columnCamelNameUpper}" resultMap="queryResultMap">
+        select <include refid="${table.name}_columns"/>
+        from <#if table.schemaName??>${table.schemaName}.</#if>${table.name} a
+        where a.${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}
+    </select>
+    </#if>
 
     <select id="get${table.javaClassName}Count" parameterType="map" resultType="java.lang.Integer">
         select count(*) from <#if table.schemaName??>${table.schemaName}.</#if>${table.name} a

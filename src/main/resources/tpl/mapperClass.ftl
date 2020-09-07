@@ -3,6 +3,9 @@ package ${table.pkgName};
 import ${basePkgName}.domain.${table.javaClassName}DO;
 import java.util.List;
 import java.util.Map;
+<#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
+<#if pk??>
+import org.apache.ibatis.annotations.Param;</#if>
 
 /**
  * ${table.comments}Mapper
@@ -21,6 +24,15 @@ public interface ${table.javaClassName}Mapper {
      * @return 查询结果
      */
     List<${table.javaClassName}DO> get${table.javaClassName}List(Map<String, Object> query);
+
+    <#if pk??>
+    /**
+     * 根据主键查询
+     *
+     * @param ${pk.columnCamelNameLower} 主键值
+     * @return 查询结果
+     */
+    ${table.javaClassName}DO get${table.javaClassName}By${pk.columnCamelNameUpper}(@Param("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
 
     /**
      * 查询数量
