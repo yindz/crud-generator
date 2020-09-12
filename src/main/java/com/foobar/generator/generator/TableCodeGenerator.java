@@ -36,7 +36,7 @@ public class TableCodeGenerator {
     /**
      * 线程池
      */
-    private final ExecutorService threadPool;
+    private ExecutorService threadPool;
 
     /**
      * 模板缓存
@@ -184,9 +184,7 @@ public class TableCodeGenerator {
         //获取当前用户名
         currentUser = System.getenv().get("USERNAME");
 
-        int cpus = Runtime.getRuntime().availableProcessors();
-        //最多4个线程
-        threadPool = Executors.newFixedThreadPool(Math.min(cpus, 4));
+
     }
 
     /**
@@ -212,6 +210,11 @@ public class TableCodeGenerator {
         }
         List<TableContext> tablesToSubmit = findTablesToSubmit(runParam.getTableContexts());
         logger.info("本次将生成 {} 张表的代码", tablesToSubmit.size());
+
+        //线程数不超过CPU核心数
+        int cpus = Runtime.getRuntime().availableProcessors();
+        threadPool = Executors.newFixedThreadPool(Math.min(tablesToSubmit.size(), cpus));
+
         prepareColumnsCache(tablesToSubmit);
         dbUtil.clean();
         tablesToSubmit.forEach(t -> threadPool.execute(() -> generateTableCodeFiles(t)));
