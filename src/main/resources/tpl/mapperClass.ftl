@@ -6,6 +6,7 @@ import java.util.Map;
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 <#if pk??>
 import org.apache.ibatis.annotations.Param;</#if>
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * ${table.comments}Mapper
@@ -15,6 +16,7 @@ import org.apache.ibatis.annotations.Param;</#if>
  *
  * @author ${table.author!''}
  */
+@Mapper
 public interface ${table.javaClassName}Mapper {
 
     /**
