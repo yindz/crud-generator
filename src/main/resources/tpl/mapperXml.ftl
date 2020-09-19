@@ -8,6 +8,9 @@
         </#list>
     </resultMap>
 
+    <!--表名-->
+    <sql id="TABLE_NAME"><#if table.schemaName??>${table.schemaName}.</#if>${table.name}</sql>
+
     <sql id="${table.name}_columns">
         <#list table.columns as column>
             a.${column.columnName}<#if column?has_next>,</#if>
@@ -48,7 +51,7 @@
 
     <select id="get${table.javaClassName}List" parameterType="map" resultMap="queryResultMap">
         select <include refid="${table.name}_columns"/>
-        from <#if table.schemaName??>${table.schemaName}.</#if>${table.name} a
+        from <include refid="TABLE_NAME"/> a
         <where>
             <include refid="${table.name}_where"/>
         </where>
@@ -59,23 +62,23 @@
     <#if pk??>
     <select id="get${table.javaClassName}By${pk.columnCamelNameUpper}" resultMap="queryResultMap">
         select <include refid="${table.name}_columns"/>
-        from <#if table.schemaName??>${table.schemaName}.</#if>${table.name} a
+        from <include refid="TABLE_NAME"/> a
         where a.${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}
     </select>
     </#if>
 
     <select id="get${table.javaClassName}Count" parameterType="map" resultType="java.lang.Integer">
-        select count(*) from <#if table.schemaName??>${table.schemaName}.</#if>${table.name} a
+        select count(*) from <include refid="TABLE_NAME"/> a
         <where>
             <include refid="${table.name}_where"/>
         </where>
     </select>
 
-    <insert id="insert" parameterType="${basePkgName}.domain.${table.javaClassName}DO" useGeneratedKeys="true"<#if pk??> keyColumn="${pk.columnName}" keyProperty="${pk.columnCamelNameLower}"</#if>>
-        <#if table.dbType == 'oracle'><#if pk??><selectKey keyProperty="${pk.columnCamelNameLower}" resultType="${pk.columnJavaType}" order="BEFORE">
+    <insert id="insert" parameterType="${basePkgName}.domain.${table.javaClassName}DO"<#if pk??> useGeneratedKeys="true" keyColumn="${pk.columnName}" keyProperty="${pk.columnCamelNameLower}"</#if>>
+        <#if pk??><#if table.dbType == 'oracle'><selectKey keyProperty="${pk.columnCamelNameLower}" resultType="${pk.columnJavaType}" order="BEFORE">
             select <#if table.schemaName??>${table.schemaName}.</#if><#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>.nextval from dual
-        </selectKey>
-        </#if></#if>insert into <#if table.schemaName??>${table.schemaName}.</#if>${table.name} (
+        </selectKey></#if>
+        </#if>insert into <include refid="TABLE_NAME"/> (
             <#list table.columns as column>
             ${column.columnName}<#if column?has_next>,</#if>
             </#list>
@@ -88,7 +91,7 @@
     </insert>
 
     <update id="update" parameterType="${basePkgName}.domain.${table.javaClassName}DO">
-        update <#if table.schemaName??>${table.schemaName}.</#if>${table.name}
+        update <include refid="TABLE_NAME"/>
         <set>
             <#list table.columns as column>
                 <#if column.isPrimaryKey == 0>
@@ -100,6 +103,6 @@
     </update>
 
     <delete id="delete" parameterType="${basePkgName}.domain.${table.javaClassName}DO">
-        delete from <#if table.schemaName??>${table.schemaName}.</#if>${table.name} <#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if>
+        delete from <include refid="TABLE_NAME"/> <#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if>
     </delete>
 </mapper>
