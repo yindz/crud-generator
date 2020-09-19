@@ -11,13 +11,15 @@
     <!--表名-->
     <sql id="TABLE_NAME"><#if table.schemaName??>${table.schemaName}.</#if>${table.name}</sql>
 
-    <sql id="${table.name}_columns">
+    <!--所有字段-->
+    <sql id="ALL_COLUMNS">
         <#list table.columns as column>
             a.${column.columnName}<#if column?has_next>,</#if>
         </#list>
     </sql>
 
-    <sql id="${table.name}_where">
+    <!--各种查询条件-->
+    <sql id="QUERY_CONDITIONS">
         <#list table.columns as column>
         <if test="${column.columnCamelNameLower} != null<#if column.isChar == 1> and ${column.columnCamelNameLower} != ''</#if>">
             and a.${column.columnName} = ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}
@@ -49,11 +51,13 @@
         </#list>
     </sql>
 
+    <!--主键条件-->
+    <sql id="PK_CONDITION"><#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if></sql>
+
     <select id="get${table.javaClassName}List" parameterType="map" resultMap="queryResultMap">
-        select <include refid="${table.name}_columns"/>
-        from <include refid="TABLE_NAME"/> a
+        select <include refid="ALL_COLUMNS"/> from <include refid="TABLE_NAME"/> a
         <where>
-            <include refid="${table.name}_where"/>
+            <include refid="QUERY_CONDITIONS"/>
         </where>
         <if test="orderBy != null and orderBy != ''">order by a.${r"${"}orderBy}</if>
         <if test="orderDirection != null and orderDirection != ''"> ${r"${"}orderDirection}</if>
@@ -61,16 +65,15 @@
 
     <#if pk??>
     <select id="get${table.javaClassName}By${pk.columnCamelNameUpper}" resultMap="queryResultMap">
-        select <include refid="${table.name}_columns"/>
-        from <include refid="TABLE_NAME"/> a
-        where a.${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}
+        select <include refid="ALL_COLUMNS"/> from <include refid="TABLE_NAME"/> a
+        <include refid="PK_CONDITION"/>
     </select>
     </#if>
 
     <select id="get${table.javaClassName}Count" parameterType="map" resultType="java.lang.Integer">
         select count(*) from <include refid="TABLE_NAME"/> a
         <where>
-            <include refid="${table.name}_where"/>
+            <include refid="QUERY_CONDITIONS"/>
         </where>
     </select>
 
@@ -78,15 +81,11 @@
         <#if pk??><#if table.dbType == 'oracle'><selectKey keyProperty="${pk.columnCamelNameLower}" resultType="${pk.columnJavaType}" order="BEFORE">
             select <#if table.schemaName??>${table.schemaName}.</#if><#if table.sequenceName??>${table.sequenceName}<#else>SEQ_${table.name}</#if>.nextval from dual
         </selectKey></#if>
-        </#if>insert into <include refid="TABLE_NAME"/> (
-            <#list table.columns as column>
-            ${column.columnName}<#if column?has_next>,</#if>
-            </#list>
+        </#if>insert into <include refid="TABLE_NAME"/> (<#list table.columns as column><#if table.dbType == 'mysql' && column.isPrimaryKey == 1><#else>
+            ${column.columnName}<#if column?has_next>,</#if></#if></#list>
         )
-        values (
-            <#list table.columns as column>
-            ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}<#if column?has_next>,</#if>
-            </#list>
+        values (<#list table.columns as column><#if table.dbType == 'mysql' && column.isPrimaryKey == 1><#else>
+            ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}<#if column?has_next>,</#if></#if></#list>
         )
     </insert>
 
@@ -99,10 +98,10 @@
                 </#if>
             </#list>
         </set>
-        <#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if>
+        <#if pk??><include refid="PK_CONDITION"/></#if>
     </update>
 
     <delete id="delete" parameterType="${basePkgName}.domain.${table.javaClassName}DO">
-        delete from <include refid="TABLE_NAME"/> <#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if>
+        delete from <include refid="TABLE_NAME"/> <#if pk??><include refid="PK_CONDITION"/></#if>
     </delete>
 </mapper>
