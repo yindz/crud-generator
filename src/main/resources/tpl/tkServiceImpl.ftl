@@ -197,6 +197,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     public boolean deleteAll(List<${pk.columnJavaType}> ${pk.columnCamelNameLower}List) {
         Preconditions.checkArgument(${pk.columnCamelNameLower}List != null && !${pk.columnCamelNameLower}List.isEmpty(), "待删除的${table.comments}数据${pk.columnComment}列表为空");
         for (${pk.columnJavaType} ${pk.columnCamelNameLower} : ${pk.columnCamelNameLower}List) {
+            if (${pk.columnCamelNameLower} == null) {
+                continue;
+            }
             ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
             cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
             if (${table.javaClassNameLower}Mapper.deleteByPrimaryKey(cond) == 0) {
