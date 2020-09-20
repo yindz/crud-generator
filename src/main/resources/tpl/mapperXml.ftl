@@ -98,10 +98,10 @@
                 </#if>
             </#list>
         </set>
-        <#if pk??><include refid="PK_CONDITION"/></#if>
+        <include refid="PK_CONDITION"/>
     </update>
 
     <delete id="delete" parameterType="${basePkgName}.domain.${table.javaClassName}DO">
-        delete from <include refid="TABLE_NAME"/> <#if pk??><include refid="PK_CONDITION"/></#if>
+        delete from <include refid="TABLE_NAME"/> <include refid="PK_CONDITION"/>
     </delete>
 </mapper>
