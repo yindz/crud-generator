@@ -31,7 +31,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      * @return 分页查询结果
      */
     @Override
-    public PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}QueryDTO query) {
+    public PageInfo<${table.javaClassName}DTO> getRecordList(${table.javaClassName}QueryDTO query) {
         <#include "./public/checkQueryArguments.ftl"/>
 
         Weekend<${table.javaClassName}DO> cond = Weekend.of(${table.javaClassName}DO.class);
@@ -81,7 +81,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      * @return 查询结果
      */
     @Override
-    public ${table.javaClassName}DTO get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+    public ${table.javaClassName}DTO getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
         if (${pk.columnCamelNameLower} == null) {
             throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
         }

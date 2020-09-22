@@ -23,7 +23,7 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      * @return 分页查询结果
      */
     @Override
-    public PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(${table.javaClassName}QueryVO query) {
+    public PageInfo<${table.javaClassName}VO> getRecordList(${table.javaClassName}QueryVO query) {
         return null;
     }
 
@@ -35,7 +35,7 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      * @return ${table.comments}数据
      */
     @Override
-    public ${table.javaClassName}VO get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+    public ${table.javaClassName}VO getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
         return null;
     }</#if>
 

@@ -48,9 +48,9 @@ public class ${table.javaClassName}Controller {
      * @return 分页查询结果
      */<#if useSwagger == 1>
     @ApiOperation(value = "分页查询${table.comments}数据", httpMethod = "GET",tags = {"分页查询${table.comments}数据"})</#if>
-    @GetMapping(value = "/get${table.javaClassName}List")
-    public PageInfo<${table.javaClassName}VO> get${table.javaClassName}List(@Validated({Default.class}) ${table.javaClassName}QueryVO query) {
-        PageInfo<${table.javaClassName}DTO> pageInfo = ${table.javaClassNameLower}Service.get${table.javaClassName}List(${table.javaClassName}Converter.voToQueryDTO(query));
+    @GetMapping(value = "/getRecordList")
+    public PageInfo<${table.javaClassName}VO> getRecordList(@Validated({Default.class}) ${table.javaClassName}QueryVO query) {
+        PageInfo<${table.javaClassName}DTO> pageInfo = ${table.javaClassNameLower}Service.getRecordList(${table.javaClassName}Converter.voToQueryDTO(query));
         return ${table.javaClassName}Converter.toVOPageInfo(pageInfo);
     }
 
@@ -62,8 +62,8 @@ public class ${table.javaClassName}Controller {
      * @return ${table.comments}数据
      */
     @ApiOperation(value = "根据主键查询${table.comments}数据", httpMethod = "GET",tags = {"根据主键查询${table.comments}数据"})
-    @GetMapping(value = "/get${table.javaClassName}By${pk.columnCamelNameUpper}")
-    public ${table.javaClassName}VO get${table.javaClassName}By${pk.columnCamelNameUpper}(@ApiParam(value = "待查询的${table.comments}记录${pk.columnComment}", type = "${pk.columnJavaType}", required = true, example = "1") @RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+    @GetMapping(value = "/getRecord")
+    public ${table.javaClassName}VO getRecord(@ApiParam(value = "待查询的${table.comments}记录${pk.columnComment}", type = "${pk.columnJavaType}", required = true, example = "1") @RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}) {
         return ${table.javaClassName}Converter.dtoToVO(${table.javaClassNameLower}Service.get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnCamelNameLower}));
     }</#if>
 

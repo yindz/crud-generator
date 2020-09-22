@@ -20,7 +20,7 @@ public interface I${table.javaClassName}Service {
      * @param query           查询条件
      * @return 分页查询结果
      */
-    PageInfo<${table.javaClassName}DTO> get${table.javaClassName}List(${table.javaClassName}QueryDTO query);
+    PageInfo<${table.javaClassName}DTO> getRecordList(${table.javaClassName}QueryDTO query);
 
     <#if pk??>
     /**
@@ -29,7 +29,7 @@ public interface I${table.javaClassName}Service {
      * @param ${pk.columnCamelNameLower}    主键值
      * @return 查询结果
      */
-    ${table.javaClassName}DTO get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
+    ${table.javaClassName}DTO getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
 
     /**
      * 插入记录
