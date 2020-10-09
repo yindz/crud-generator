@@ -43,7 +43,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         query.setOrderDirection(${table.javaClassName}Converter.getOrderDirection(query.getOrderDirection()));
         ${table.javaClassName}Converter.valuesToMap(query, queryMap, Sets.newHashSet("pageNo", "pageSize"));
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
-        PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.get${table.javaClassName}List(queryMap));
+        PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.getRecordList(queryMap));
         return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
     }
 
@@ -59,7 +59,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         if (${pk.columnCamelNameLower} == null) {
             throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
         }
-        ${table.javaClassName}DO record = ${table.javaClassNameLower}Mapper.get${table.javaClassName}By${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
+        ${table.javaClassName}DO record = ${table.javaClassNameLower}Mapper.getRecordBy${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
         if (record != null) {
             return ${table.javaClassName}Converter.domainToDTO(record);
         } else {

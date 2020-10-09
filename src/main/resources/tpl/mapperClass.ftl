@@ -25,7 +25,7 @@ public interface ${table.javaClassName}Mapper {
      * @param query 查询条件
      * @return 查询结果
      */
-    List<${table.javaClassName}DO> get${table.javaClassName}List(Map<String, Object> query);
+    List<${table.javaClassName}DO> getRecordList(Map<String, Object> query);
 
     <#if pk??>
     /**
@@ -34,7 +34,7 @@ public interface ${table.javaClassName}Mapper {
      * @param ${pk.columnCamelNameLower} 主键值
      * @return 查询结果
      */
-    ${table.javaClassName}DO get${table.javaClassName}By${pk.columnCamelNameUpper}(@Param("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
+    ${table.javaClassName}DO getRecordBy${pk.columnCamelNameUpper}(@Param("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
 
     /**
      * 查询数量
@@ -42,7 +42,7 @@ public interface ${table.javaClassName}Mapper {
      * @param query 查询条件
      * @return 查询结果
      */
-    int get${table.javaClassName}Count(Map<String, Object> query);
+    int getRecordCount(Map<String, Object> query);
 
     /**
      * 插入

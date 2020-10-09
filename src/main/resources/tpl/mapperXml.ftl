@@ -54,7 +54,7 @@
     <!--主键条件-->
     <sql id="PK_CONDITION"><#if pk??>where ${pk.columnName} = ${r"#{"}${pk.columnCamelNameLower}, jdbcType=${pk.columnMyBatisType}}</#if></sql>
 
-    <select id="get${table.javaClassName}List" parameterType="map" resultMap="queryResultMap">
+    <select id="getRecordList" parameterType="map" resultMap="queryResultMap">
         select <include refid="ALL_COLUMNS"/> from <include refid="TABLE_NAME"/> a
         <where>
             <include refid="QUERY_CONDITIONS"/>
@@ -64,13 +64,13 @@
     </select>
 
     <#if pk??>
-    <select id="get${table.javaClassName}By${pk.columnCamelNameUpper}" resultMap="queryResultMap">
+    <select id="getRecordBy${pk.columnCamelNameUpper}" resultMap="queryResultMap">
         select <include refid="ALL_COLUMNS"/> from <include refid="TABLE_NAME"/> a
         <include refid="PK_CONDITION"/>
     </select>
     </#if>
 
-    <select id="get${table.javaClassName}Count" parameterType="map" resultType="java.lang.Integer">
+    <select id="getRecordCount" parameterType="map" resultType="java.lang.Integer">
         select count(*) from <include refid="TABLE_NAME"/> a
         <where>
             <include refid="QUERY_CONDITIONS"/>
