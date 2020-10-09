@@ -127,6 +127,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      @Transactional(rollbackFor = Exception.class)
      public boolean insertAll(List<${table.javaClassName}DTO> recordList) {
          Preconditions.checkArgument(recordList != null && !recordList.isEmpty(), "待插入的数据为空");
+         int success = 0;
          //说明: 因为Oracle不允许超过1000个参数，所以此处逐条插入
          for (${table.javaClassName}DTO record : recordList) {
              if (record == null) {
@@ -137,8 +138,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              if (${table.javaClassNameLower}Mapper.insertSelective(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
              }
+             success++;
          }
-         logger.info("本次总共插入{}条${table.name}数据", recordList.size());
+         logger.info("本次总共插入{}条${table.name}数据", success);
          return true;
     }
 
@@ -196,6 +198,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteAll(List<${pk.columnJavaType}> ${pk.columnCamelNameLower}List) {
         Preconditions.checkArgument(${pk.columnCamelNameLower}List != null && !${pk.columnCamelNameLower}List.isEmpty(), "待删除的${table.comments}数据${pk.columnComment}列表为空");
+        int success = 0;
         for (${pk.columnJavaType} ${pk.columnCamelNameLower} : ${pk.columnCamelNameLower}List) {
             if (${pk.columnCamelNameLower} == null) {
                 continue;
@@ -206,8 +209,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
                 logger.error("删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
                 throw new RuntimeException("删除${table.comments}数据失败!");
             }
+            success++;
         }
-        logger.info("本次总共删除{}条${table.name}表数据! ${pk.columnCamelNameLower}List={}", ${pk.columnCamelNameLower}List.size(), ${pk.columnCamelNameLower}List);
+        logger.info("本次总共删除{}条${table.name}表数据! ${pk.columnCamelNameLower}List={}", success, ${pk.columnCamelNameLower}List);
         return true;
     }</#if>
 }
