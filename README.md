@@ -147,6 +147,7 @@ TableCodeGenerator 的可选参数设置：
 - 如果您采用 Mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 Mybatis通用Mapper 或 MybatisPlus
 - 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的开发团队想做的事情太多，且其中某些开发人员缺乏对开源项目负责任的职业态度，导致其API相对较乱(特别是它的分页API比较奇怪)，相比之下，如果您的项目规模较大较规范，且需要长期维护，那么建议选用目前的 [Mybatis通用Mapper](https://github.com/abel533/Mapper)!
+- 如果使用了Mybatis通用Mapper或MybatisPlus，则您的java版本需要1.8或更高(因为代码中使用了Lambda表达式)
 
 ### 扩展
 #### 适配更多数据库
