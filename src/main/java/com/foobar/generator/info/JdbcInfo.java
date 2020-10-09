@@ -8,7 +8,7 @@ package com.foobar.generator.info;
 public class JdbcInfo {
 
     /**
-     * 数据库类型:mysql/oracle，不区分大小写
+     * 数据库类型:mysql/oracle/sqlserver/postgresql，不区分大小写
      */
     private String dbType;
 

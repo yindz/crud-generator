@@ -32,10 +32,10 @@
 - 支持生成 [Postman](https://www.postman.com/) 可导入的API接口JSON定义文件
 
 ## 文件说明
-| 文件名 | 含义 | 路径 | 备注 | 当数据表字段发生变化时是否需要重新生成 | 
+| 文件名 | 含义 | 路径 | 备注 | 表字段变化后是否重新生成 | 
 |  ----  | ---- |---- |---- | ---- |
 | XXXVO.java | VO类| java/vo/ |  用于接收/输出数据  | 是 |
-| XXXQueryVO.java | 查询条件 | java/vo/ | 用于接收查询条件 | 该文件只需生成1次 |
+| XXXQueryVO.java | 查询条件 | java/vo/ | 用于接收查询条件 | 是 |
 | XXXController.java | 控制器代码 | java/controller/ | 对外暴露HTTP接口 | 该文件只需生成1次 |
 | XXXDO.java | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
 | XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
@@ -48,7 +48,7 @@
 | TkXXXMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
 | TkXXXMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
 | XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 是 |
-| XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层 | 该文件只需生成1次 |
+| XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层 | 是 |
 | IXXXService.java | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
 | XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 该文件只需生成1次 |
 | TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
@@ -123,8 +123,8 @@ TableContext 的可选参数设置：
 | 方法名 | 含义 | 备注 | 
 |  ----  | ---- |---- |
 | setTableNamePrefixToRemove() | 指定需去掉的表名前缀 | 留空则不去掉任何前缀 |
-| setLikeColumns() | 指定启用模糊查询的字段名(多个以逗号隔开) | 如果字段为字符串类型则在相应QueryDTO类中增加 xxxLike 属性 |
-| setRangeColumns() | 指定启用范围查询的字段名(多个以逗号隔开) | 如果字段为时间或数字类型则在相应QueryDTO类中增加 xxxMin/xxxMax 属性 |
+| setLikeColumns() | 指定启用模糊查询的字段名(用于字符类型字段，多个以逗号隔开) | 如果字段为字符类型则在相应QueryDTO类中增加 xxxLike 属性 |
+| setRangeColumns() | 指定启用取值范围查询的字段名(用于时间或数字类型字段，多个以逗号隔开) | 如果字段为时间或数字类型则在相应QueryDTO类中增加 xxxMin/xxxMax 属性 |
 | setInColumns() | 指定启用IN查询的字段名(多个以逗号隔开) | 在相应QueryDTO类中增加 xxxIn 属性 |
 | setPrimaryKeyColumn() | 手动指定主键字段名(不区分大小写) | 如果程序无法自动检测到主键字段，则在此参数指定(适用于无主键且无唯一索引的表) |
 | setVersionColumn() | 如果该表有乐观锁，可在此指定其字段名(不区分大小写) | 默认值为 version |

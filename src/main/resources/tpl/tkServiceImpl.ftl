@@ -37,12 +37,12 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Weekend<${table.javaClassName}DO> cond = Weekend.of(${table.javaClassName}DO.class);
         WeekendCriteria<${table.javaClassName}DO, Object> criteria = cond.weekendCriteria();
         <#list table.columns as column>
-        if (query.get${column.columnCamelNameUpper}() != null<#if column.isChar == 1> && StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}())</#if>) {
-            criteria.andEqualTo(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}());
+        if (query.get${column.columnCamelNameUpper}() != null<#if column.isChar == 1> && StringUtils.isNotBlank(query.get${column.columnCamelNameUpper}())</#if>) {
+            criteria.andEqualTo(${table.javaClassName}DO::get${column.columnCamelNameUpper}, <#if column.isChar == 1>StringUtils.trim(</#if>query.get${column.columnCamelNameUpper}()<#if column.isChar == 1>)</#if>);
         }
         <#if column.enableLike == 1>
-        if (query.get${column.columnCamelNameUpper}Like() != null<#if column.isChar == 1> && StringUtils.isNotEmpty(query.get${column.columnCamelNameUpper}Like())</#if>) {
-            criteria.andLike(${table.javaClassName}DO::get${column.columnCamelNameUpper}, "%" + query.get${column.columnCamelNameUpper}Like() + "%");
+        if (query.get${column.columnCamelNameUpper}Like() != null<#if column.isChar == 1> && StringUtils.isNotBlank(query.get${column.columnCamelNameUpper}Like())</#if>) {
+            criteria.andLike(${table.javaClassName}DO::get${column.columnCamelNameUpper}, "%" + StringUtils.trim(query.get${column.columnCamelNameUpper}Like()) + "%");
         }
         </#if>
         <#if column.enableRange == 1>
@@ -199,11 +199,11 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     public boolean deleteAll(List<${pk.columnJavaType}> ${pk.columnCamelNameLower}List) {
         Preconditions.checkArgument(${pk.columnCamelNameLower}List != null && !${pk.columnCamelNameLower}List.isEmpty(), "待删除的${table.comments}数据${pk.columnComment}列表为空");
         int success = 0;
+        ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         for (${pk.columnJavaType} ${pk.columnCamelNameLower} : ${pk.columnCamelNameLower}List) {
             if (${pk.columnCamelNameLower} == null) {
                 continue;
             }
-            ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
             cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
             if (${table.javaClassNameLower}Mapper.deleteByPrimaryKey(cond) == 0) {
                 logger.error("删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
