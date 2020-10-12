@@ -444,8 +444,8 @@ public class TableCodeGenerator {
         }
 
         //表注释
-        tableInfo.setComments(columnInfoList.get(0).getTableComment());
-        if (StringUtils.isEmpty(tableInfo.getComments())) {
+        tableInfo.setComments(StringUtils.trim(columnInfoList.get(0).getTableComment()));
+        if (StringUtils.isBlank(tableInfo.getComments())) {
             tableInfo.setComments(tableInfo.getName());
         }
         //所有字段
