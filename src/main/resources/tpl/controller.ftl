@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @author ${table.author!''}
  */<#if useSwagger == 1>
-@Api(tags = {"${table.comments}API"})</#if>
+@Api(value = "/${table.javaClassNameLower}", tags = {"${table.comments}API"})</#if>
 @RequestMapping("/${table.javaClassNameLower}")
 @RestController
 public class ${table.javaClassName}Controller {
