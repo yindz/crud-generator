@@ -28,6 +28,11 @@ public class TableContext {
     private String versionColumn = "version";
 
     /**
+     * 逻辑删除标识字段名(用于逻辑删除，默认del_flag)
+     */
+    private String logicDeleteColumn;
+
+    /**
      * 序列名称
      */
     private String sequenceName;
@@ -96,6 +101,14 @@ public class TableContext {
 
     public void setVersionColumn(String versionColumn) {
         this.versionColumn = versionColumn;
+    }
+
+    public String getLogicDeleteColumn() {
+        return logicDeleteColumn;
+    }
+
+    public void setLogicDeleteColumn(String logicDeleteColumn) {
+        this.logicDeleteColumn = logicDeleteColumn;
     }
 
     public String getSequenceName() {

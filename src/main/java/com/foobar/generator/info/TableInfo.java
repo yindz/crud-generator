@@ -71,6 +71,11 @@ public class TableInfo {
     private String versionColumn;
 
     /**
+     * 逻辑删除标识字段名(用于逻辑删除)
+     */
+    private String logicDeleteColumn;
+
+    /**
      * 序列名称
      */
     private String sequenceName;
@@ -174,6 +179,14 @@ public class TableInfo {
 
     public void setVersionColumn(String versionColumn) {
         this.versionColumn = versionColumn;
+    }
+
+    public String getLogicDeleteColumn() {
+        return logicDeleteColumn;
+    }
+
+    public void setLogicDeleteColumn(String logicDeleteColumn) {
+        this.logicDeleteColumn = logicDeleteColumn;
     }
 
     public String getSequenceName() {

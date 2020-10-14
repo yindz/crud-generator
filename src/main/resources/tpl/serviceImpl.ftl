@@ -11,6 +11,7 @@ import com.github.pagehelper.PageHelper;
 
 <#include "./public/serviceCommonImports.ftl"/>
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
+<#if table.logicDeleteColumn??><#list table.columns as column><#if table.logicDeleteColumn == column.columnName><#assign logicDeleteColumn = column></#if></#list></#if>
 
 /**
  * ${table.comments}服务接口实现
@@ -42,6 +43,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         }
         query.setOrderDirection(${table.javaClassName}Converter.getOrderDirection(query.getOrderDirection()));
         ${table.javaClassName}Converter.valuesToMap(query, queryMap, Sets.newHashSet("pageNo", "pageSize"));
+<#if logicDeleteColumn??>        queryMap.put("${logicDeleteColumn.columnCamelNameLower}", <#if logicDeleteColumn.isNumber == 1>0<#else>"0"</#if>);</#if>
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
         PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.getRecordList(queryMap));
         return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
@@ -60,7 +62,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
         }
         ${table.javaClassName}DO record = ${table.javaClassNameLower}Mapper.getRecordBy${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-        if (record != null) {
+        if (record != null<#if logicDeleteColumn??> && Objects.equals(<#if logicDeleteColumn.isNumber == 1>0,<#else>"0",</#if> obj.get${logicDeleteColumn.columnCamelNameUpper}())</#if>) {
             return ${table.javaClassName}Converter.domainToDTO(record);
         } else {
             return null;
@@ -146,7 +148,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(${pk.columnCamelNameLower} != null, "待删除的数据${pk.columnCamelNameLower}为空");
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-        if (${table.javaClassNameLower}Mapper.delete(cond) != 0) {
+<#if logicDeleteColumn??>        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
+        int rowCount = ${table.javaClassNameLower}Mapper.update(cond);<#else>
+        int rowCount = ${table.javaClassNameLower}Mapper.delete(cond);</#if>
+        if (rowCount != 0) {
             logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return true;
         } else {
@@ -172,7 +177,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
                 continue;
             }
             cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-            if (${table.javaClassNameLower}Mapper.delete(cond) == 0) {
+    <#if logicDeleteColumn??>        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
+            int rowCount = ${table.javaClassNameLower}Mapper.update(cond);<#else>
+            int rowCount = ${table.javaClassNameLower}Mapper.delete(cond);</#if>
+            if (rowCount == 0) {
                 logger.error("删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
                 throw new RuntimeException("删除${table.comments}数据失败!");
             }

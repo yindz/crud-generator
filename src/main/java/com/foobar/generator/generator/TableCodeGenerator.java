@@ -459,6 +459,7 @@ public class TableCodeGenerator {
         tableInfo.setImports(generateImports(columnInfoList));
         tableInfo.setAuthor(currentUser);
         tableInfo.setVersionColumn(dbUtil.setTableNameCase(table.getVersionColumn()));
+        tableInfo.setLogicDeleteColumn(dbUtil.setTableNameCase(table.getLogicDeleteColumn()));
         tableInfo.setPageSize(table.getPageSize());
         tableInfo.setSequenceName(table.getSequenceName());
 

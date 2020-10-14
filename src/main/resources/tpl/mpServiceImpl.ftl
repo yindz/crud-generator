@@ -10,6 +10,7 @@ import com.google.common.collect.Sets;
 <#include "./public/serviceCommonImports.ftl"/>
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 <#if table.versionColumn??><#list table.columns as column><#if table.versionColumn == column.columnName><#assign versionColumn = column></#if></#list></#if>
+<#if table.logicDeleteColumn??><#list table.columns as column><#if table.logicDeleteColumn == column.columnName><#assign logicDeleteColumn = column></#if></#list></#if>
 
 /**
  * ${table.comments}服务接口实现
@@ -34,21 +35,31 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         <#include "./public/checkQueryArguments.ftl"/>
 
         QueryWrapper<${table.javaClassName}DO> wrapper = new QueryWrapper<>();
-        Map<String, Object> map = new LinkedHashMap<>();
-        ${table.javaClassName}Converter.valuesToMap(query, map, Sets.newHashSet("pageNo", "pageSize", "orderBy", "orderDirection"));
-        map.forEach((k, v) -> {
-            if(k == null || v == null){
-                return;
-            }
-            if (v instanceof String) {
-                String str = (String) v;
-                if (StringUtils.isNotEmpty(str)) {
-                    wrapper.eq(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, k), v);
-                }
-            } else {
-                wrapper.eq(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, k), v);
-            }
-        });
+        LambdaQueryWrapper<${table.javaClassName}DO> lambdaQueryWrapper = wrapper.lambda();
+        <#list table.columns as column>
+        if (query.get${column.columnCamelNameUpper}() != null<#if column.isChar == 1> && StringUtils.isNotBlank(query.get${column.columnCamelNameUpper}())</#if>) {
+            lambdaQueryWrapper.eq(${table.javaClassName}DO::get${column.columnCamelNameUpper}, <#if column.isChar == 1>StringUtils.trim(</#if>query.get${column.columnCamelNameUpper}()<#if column.isChar == 1>)</#if>);
+        }
+        <#if column.enableLike == 1>
+        if (query.get${column.columnCamelNameUpper}Like() != null<#if column.isChar == 1> && StringUtils.isNotBlank(query.get${column.columnCamelNameUpper}Like())</#if>) {
+            lambdaQueryWrapper.like(${table.javaClassName}DO::get${column.columnCamelNameUpper}, "%" + StringUtils.trim(query.get${column.columnCamelNameUpper}Like()) + "%");
+        }
+        </#if>
+        <#if column.enableRange == 1>
+        if (query.get${column.columnCamelNameUpper}Min() != null) {
+            lambdaQueryWrapper.ge(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}Min());
+        }
+        if (query.get${column.columnCamelNameUpper}Max() != null) {
+            lambdaQueryWrapper.le(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}Max());
+        }
+        </#if>
+        <#if column.enableIn == 1>
+        if (query.get${column.columnCamelNameUpper}In() != null && !query.get${column.columnCamelNameUpper}In().isEmpty()) {
+            lambdaQueryWrapper.in(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}In());
+        }
+        </#if>
+        </#list>
+<#if logicDeleteColumn??>        lambdaQueryWrapper.eq("${logicDeleteColumn.columnCamelNameLower}", <#if logicDeleteColumn.isNumber == 1>0<#else>"0"</#if>);</#if>
         if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
         <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");</#if>
@@ -93,7 +104,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
         ${table.javaClassName}DO obj = ${table.javaClassNameLower}Mapper.selectById(cond);
-        if (obj != null) {
+        if (obj != null<#if logicDeleteColumn??> && Objects.equals(<#if logicDeleteColumn.isNumber == 1>0,<#else>"0",</#if> obj.get${logicDeleteColumn.columnCamelNameUpper}())</#if>) {
             return ${table.javaClassName}Converter.domainToDTO(obj);
         } else {
             return null;
@@ -183,7 +194,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Preconditions.checkArgument(${pk.columnCamelNameLower} != null, "待删除的数据${pk.columnCamelNameLower}为空");
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-        if(${table.javaClassNameLower}Mapper.deleteById(cond) != 0) {
+<#if logicDeleteColumn??>        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
+        int rowCount = ${table.javaClassNameLower}Mapper.updateById(cond);<#else>
+        int rowCount = ${table.javaClassNameLower}Mapper.deleteById(cond);</#if>
+        if(rowCount != 0) {
             logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return true;
         } else {
@@ -209,7 +223,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
                 continue;
             }
             cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-            if (${table.javaClassNameLower}Mapper.deleteById(cond) == 0) {
+    <#if logicDeleteColumn??>        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
+            int rowCount = ${table.javaClassNameLower}Mapper.updateById(cond);<#else>
+            int rowCount = ${table.javaClassNameLower}Mapper.deleteById(cond);</#if>
+            if (rowCount == 0) {
                 logger.error("删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
                 throw new RuntimeException("删除${table.comments}数据失败!");
             }
