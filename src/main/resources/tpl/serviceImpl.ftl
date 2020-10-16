@@ -10,6 +10,7 @@ import com.github.pagehelper.PageHelper;
 <#include "./public/logger.ftl"/>
 
 <#include "./public/serviceCommonImports.ftl"/>
+<#if resultClass??>import ${resultClass};</#if>
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 <#if table.logicDeleteColumn??><#list table.columns as column><#if table.logicDeleteColumn == column.columnName><#assign logicDeleteColumn = column></#if></#list></#if>
 
@@ -31,7 +32,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      * @return 分页查询结果
      */
     @Override
-    public PageInfo<${table.javaClassName}DTO> getRecordList(${table.javaClassName}QueryDTO query) {
+    public <#if resultClassName??>${resultClassName}<</#if>PageInfo<${table.javaClassName}DTO><#if resultClassName??>></#if> getRecordList(${table.javaClassName}QueryDTO query) {
         <#include "./public/checkQueryArguments.ftl"/>
 
         Map<String, Object> queryMap = new HashMap<>();
@@ -46,7 +47,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
 <#if logicDeleteColumn??>        queryMap.put("${logicDeleteColumn.columnCamelNameLower}", <#if logicDeleteColumn.isNumber == 1>0<#else>"0"</#if>);</#if>
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
         PageInfo<${table.javaClassName}DO> pageInfo = new PageInfo<>(${table.javaClassNameLower}Mapper.getRecordList(queryMap));
-        return ${table.javaClassName}Converter.toDTOPageInfo(pageInfo);
+        return <#if resultClassName??>new ${resultClassName}(</#if>${table.javaClassName}Converter.toDTOPageInfo(pageInfo)<#if resultClassName??>)</#if>;
     }
 
     <#if pk??>
@@ -57,15 +58,15 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      * @return 查询结果
      */
     @Override
-    public ${table.javaClassName}DTO getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+    public <#if resultClassName??>${resultClassName}<</#if>${table.javaClassName}DTO<#if resultClassName??>></#if> getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
         if (${pk.columnCamelNameLower} == null) {
             throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
         }
         ${table.javaClassName}DO record = ${table.javaClassNameLower}Mapper.getRecordBy${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
         if (record != null<#if logicDeleteColumn??> && Objects.equals(<#if logicDeleteColumn.isNumber == 1>0,<#else>"0",</#if> obj.get${logicDeleteColumn.columnCamelNameUpper}())</#if>) {
-            return ${table.javaClassName}Converter.domainToDTO(record);
+            return <#if resultClassName??>new ${resultClassName}(</#if>${table.javaClassName}Converter.domainToDTO(record)<#if resultClassName??>)</#if>;
         } else {
-            return null;
+            return <#if resultClassName??>new ${resultClassName}(</#if>null<#if resultClassName??>)</#if>;
         }
     }</#if>
 
@@ -77,15 +78,15 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean insert(${table.javaClassName}DTO record) {
+    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> insert(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待插入的数据为空");
         int inserted = ${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record));
         if (inserted != 0) {
             logger.info("${table.name}数据插入成功! {}", record);
-            return true;
+            return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
         } else {
             logger.error("${table.name}数据插入失败! {}", record);
-            return false;
+            return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
         }
     }
 
@@ -97,7 +98,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
      @Override
      @Transactional(rollbackFor = Exception.class)
-     public boolean insertAll(List<${table.javaClassName}DTO> recordList) {
+     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> insertAll(List<${table.javaClassName}DTO> recordList) {
          Preconditions.checkArgument(recordList != null && !recordList.isEmpty(), "待插入的数据为空");
          int success = 0;
          //说明: 因为Oracle不允许超过1000个参数，所以此处逐条插入
@@ -111,7 +112,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              success++;
          }
          logger.info("本次总共插入{}条${table.name}数据", success);
-         return true;
+         return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
      }
 
     /**
@@ -122,16 +123,16 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean update(${table.javaClassName}DTO record) {
+    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> update(${table.javaClassName}DTO record) {
         Preconditions.checkArgument(record != null, "待更新的数据为空");
         <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待更新的数据${pk.columnCamelNameLower}为空");</#if>
         int updated = ${table.javaClassNameLower}Mapper.update(${table.javaClassName}Converter.dtoToDomain(record));
         if (updated != 0) {
             logger.info("${table.name}数据更新成功! {}", record);
-            return true;
+            return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
         } else {
             logger.error("${table.name}数据更新失败! {}", record);
-            return false;
+            return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
         }
     }
 
@@ -144,7 +145,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
         Preconditions.checkArgument(${pk.columnCamelNameLower} != null, "待删除的数据${pk.columnCamelNameLower}为空");
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
@@ -153,10 +154,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         int rowCount = ${table.javaClassNameLower}Mapper.delete(cond);</#if>
         if (rowCount != 0) {
             logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
-            return true;
+            return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
         } else {
             logger.error("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
-            return false;
+            return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
         }
     }
 
@@ -168,7 +169,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteAll(List<${pk.columnJavaType}> ${pk.columnCamelNameLower}List) {
+    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> deleteAll(List<${pk.columnJavaType}> ${pk.columnCamelNameLower}List) {
         Preconditions.checkArgument(${pk.columnCamelNameLower}List != null && !${pk.columnCamelNameLower}List.isEmpty(), "待删除的${table.comments}数据${pk.columnComment}列表为空");
         int success = 0;
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
@@ -187,6 +188,6 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             success++;
         }
         logger.info("本次总共删除{}条${table.name}表数据! ${pk.columnCamelNameLower}List={}", success, ${pk.columnCamelNameLower}List);
-        return true;
+        return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
     }</#if>
 }

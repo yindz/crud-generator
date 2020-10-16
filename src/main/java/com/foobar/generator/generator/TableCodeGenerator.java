@@ -109,6 +109,11 @@ public class TableCodeGenerator {
     private String baseEntityClass;
 
     /**
+     * 返回结果类路径
+     */
+    private String resultClass;
+
+    /**
      * 是否生成所有代码
      * 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码
      *
@@ -202,11 +207,14 @@ public class TableCodeGenerator {
         if (StringUtils.isEmpty(this.pkgName)) {
             this.pkgName = GeneratorConst.DEFAULT_PKG_NAME;
         }
-        if (StringUtils.isNotEmpty(runParam.getAuthor())) {
+        if (StringUtils.isNotBlank(runParam.getAuthor())) {
             this.currentUser = runParam.getAuthor();
         }
-        if (StringUtils.isNotEmpty(runParam.getBaseEntityClass())) {
-            this.baseEntityClass = runParam.getBaseEntityClass();
+        if (StringUtils.isNotBlank(runParam.getBaseEntityClass())) {
+            this.baseEntityClass = StringUtils.trim(runParam.getBaseEntityClass());
+        }
+        if (StringUtils.isNotBlank(runParam.getResultClass())) {
+            this.resultClass = StringUtils.trim(runParam.getResultClass());
         }
         List<TableContext> tablesToSubmit = findTablesToSubmit(runParam.getTableContexts());
         logger.info("本次将生成 {} 张表的代码", tablesToSubmit.size());
@@ -466,6 +474,14 @@ public class TableCodeGenerator {
         RenderData data = new RenderData();
         data.setBasePkgName(pkgName);
         data.setBaseEntityClass(baseEntityClass);
+        data.setResultClass(resultClass);
+        if (StringUtils.isNotBlank(resultClass)) {
+            String[] tmp = resultClass.split("\\.");
+            if (tmp.length > 0) {
+                //截取类路径最后一段作为类名
+                data.setResultClassName(tmp[tmp.length - 1]);
+            }
+        }
         data.setTable(tableInfo);
         data.setUuid((list) -> UUID.randomUUID());
         data.setUseDubboServiceAnnotation(this.useDubboService ? 1 : 0);

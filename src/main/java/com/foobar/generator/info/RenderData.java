@@ -21,6 +21,16 @@ public class RenderData {
     private String baseEntityClass;
 
     /**
+     * 返回结果类路径
+     */
+    private String resultClass;
+
+    /**
+     * 返回结果类名
+     */
+    private String resultClassName;
+
+    /**
      * 表信息
      */
     private TableInfo table;
@@ -99,5 +109,21 @@ public class RenderData {
 
     public void setUseSwagger(int useSwagger) {
         this.useSwagger = useSwagger;
+    }
+
+    public String getResultClass() {
+        return resultClass;
+    }
+
+    public void setResultClass(String resultClass) {
+        this.resultClass = resultClass;
+    }
+
+    public String getResultClassName() {
+        return resultClassName;
+    }
+
+    public void setResultClassName(String resultClassName) {
+        this.resultClassName = resultClassName;
     }
 }

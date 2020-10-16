@@ -10,6 +10,7 @@ import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+<#if resultClass??>import ${resultClass};</#if>
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 
 /**
@@ -27,7 +28,7 @@ public interface I${table.javaClassName}Client {
      * @return 分页查询结果
      */
     @RequestMapping(value = "/get${table.javaClassName}List", method = RequestMethod.GET)
-    PageInfo<${table.javaClassName}VO> getRecordList(@SpringQueryMap ${table.javaClassName}QueryVO query);
+    <#if resultClassName??>${resultClassName}<</#if>PageInfo<${table.javaClassName}VO><#if resultClassName??>></#if> getRecordList(@SpringQueryMap ${table.javaClassName}QueryVO query);
 
     <#if pk??>
     /**
@@ -37,7 +38,7 @@ public interface I${table.javaClassName}Client {
      * @return ${table.comments}数据
      */
     @RequestMapping(value = "/getRecord", method = RequestMethod.GET)
-    ${table.javaClassName}VO getRecord(@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
+    <#if resultClassName??>${resultClassName}<</#if>${table.javaClassName}VO<#if resultClassName??>></#if> getRecord(@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
 
     /**
      * 插入${table.comments}记录
@@ -46,7 +47,7 @@ public interface I${table.javaClassName}Client {
      * @return 是否成功
      */
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    boolean insert(${table.javaClassName}VO vo);
+    <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> insert(${table.javaClassName}VO vo);
 
     /**
      * 更新${table.comments}记录
@@ -55,7 +56,7 @@ public interface I${table.javaClassName}Client {
      * @return 是否成功
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    boolean update(${table.javaClassName}VO vo);
+    <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> update(${table.javaClassName}VO vo);
 
     /**
      * 删除${table.comments}记录
@@ -64,5 +65,5 @@ public interface I${table.javaClassName}Client {
      * @return 是否成功
      */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    boolean delete(<#if pk??>@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>);
+    <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(<#if pk??>@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>);
 }

@@ -5,6 +5,7 @@ import ${basePkgName}.vo.${table.javaClassName}VO;
 import ${basePkgName}.vo.${table.javaClassName}QueryVO;
 <#include "./public/logger.ftl"/>
 import org.springframework.stereotype.Component;
+<#if resultClass??>import ${resultClass};</#if>
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 
 /**
@@ -23,8 +24,8 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      * @return 分页查询结果
      */
     @Override
-    public PageInfo<${table.javaClassName}VO> getRecordList(${table.javaClassName}QueryVO query) {
-        return null;
+    public <#if resultClassName??>${resultClassName}<</#if>PageInfo<${table.javaClassName}VO><#if resultClassName??>></#if> getRecordList(${table.javaClassName}QueryVO query) {
+        return <#if resultClassName??>new ${resultClassName}(</#if>null<#if resultClassName??>)</#if>;
     }
 
     <#if pk??>
@@ -35,8 +36,8 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      * @return ${table.comments}数据
      */
     @Override
-    public ${table.javaClassName}VO getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
-        return null;
+    public <#if resultClassName??>${resultClassName}<</#if>${table.javaClassName}VO<#if resultClassName??>></#if> getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+        return <#if resultClassName??>new ${resultClassName}(</#if>null<#if resultClassName??>)</#if>;
     }</#if>
 
     /**
@@ -46,8 +47,8 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      * @return 是否成功
      */
     @Override
-    public boolean insert(${table.javaClassName}VO vo) {
-        return false;
+    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> insert(${table.javaClassName}VO vo) {
+        return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
     }
 
     /**
@@ -57,8 +58,8 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      * @return 是否成功
      */
     @Override
-    public boolean update(${table.javaClassName}VO vo) {
-        return false;
+    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> update(${table.javaClassName}VO vo) {
+        return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
     }
 
     <#if pk??>
@@ -69,7 +70,7 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      * @return 是否成功
      */
     @Override
-    public boolean delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
-        return false;
+    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+        return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
     }</#if>
 }

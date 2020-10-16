@@ -31,6 +31,11 @@ public class RunParam {
     private String author;
 
     /**
+     * 返回结果类路径
+     */
+    private String resultClass;
+
+    /**
      * 需要生成的表信息
      */
     private Set<TableContext> tableContexts;
@@ -82,5 +87,13 @@ public class RunParam {
 
     public void setBaseEntityClass(String baseEntityClass) {
         this.baseEntityClass = baseEntityClass;
+    }
+
+    public String getResultClass() {
+        return resultClass;
+    }
+
+    public void setResultClass(String resultClass) {
+        this.resultClass = resultClass;
     }
 }
