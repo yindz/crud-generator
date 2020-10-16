@@ -101,6 +101,9 @@ public class App {
         //表名
         TableContext table = TableContext.withName("T_ORDER_INFO");        
         rp.addTable(table);
+
+        //结果使用Result类来包装，如 MyResult<Boolean>
+        rp.setResultClass("com.test.common.MyResult");
         
         //生成
         generator.run(rp);
@@ -115,6 +118,7 @@ RunParam 的可选参数设置：
 | setBasePkgName() | 指定java基础包名 | 默认使用com.example.myapp |
 | setOutputPath() | 指定输出目录的绝对路径 | 默认输出到当前用户主目录 |
 | setBaseEntityClass() | 如果VO/DO/DTO等类需要继承某个基础类，可以在此指定基础类的完整路径 | 默认不继承任何基础类 |
+| setResultClass() | 如果service层及接口层返回值需要使用某个基础类进行包装，可以在此指定该类的完整路径 | 默认无 |
 
 
 
