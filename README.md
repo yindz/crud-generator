@@ -99,7 +99,9 @@ public class App {
         rp.setOutputPath("E:\\tmp\\generated");
         
         //表名
-        TableContext table = TableContext.withName("T_ORDER_INFO");        
+        TableContext table = TableContext.withName("T_ORDER_INFO");
+        //需去掉的表名前缀
+        table.setTableNamePrefixToRemove("T_");  
         rp.addTable(table);
 
         //结果使用Result类来包装，如 MyResult<Boolean>
@@ -117,7 +119,7 @@ RunParam 的可选参数设置：
 | setAuthor() | 指定生成的javadoc注释中author的名称 | 默认使用当前操作系统用户名 |
 | setBasePkgName() | 指定java基础包名 | 默认使用com.example.myapp |
 | setOutputPath() | 指定输出目录的绝对路径 | 默认输出到当前用户主目录 |
-| setBaseEntityClass() | 如果VO/DO/DTO等类需要继承某个基础类，可以在此指定基础类的完整路径 | 默认不继承任何基础类 |
+| setBaseEntityClass() | 如果VO/DO/DTO等实体类需要继承某个基础类，可以在此指定基础类的完整路径 | 默认无 |
 | setResultClass() | 如果service层及接口层返回值需要使用某个基础类进行包装，可以在此指定该类的完整路径 | 默认无 |
 
 
