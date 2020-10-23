@@ -3,8 +3,6 @@ package com.foobar.generator.util;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.foobar.generator.config.GeneratorConfig;
-import com.foobar.generator.info.TemplateInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
