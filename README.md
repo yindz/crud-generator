@@ -25,7 +25,6 @@
 - 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SQLServer、PostgreSQL 等四种类型数据库
 - 支持生成原版 Mybatis 以及 [Mybatis通用Mapper](https://github.com/abel533/Mapper) 、[MybatisPlus](https://mybatis.plus)相关代码
 - 支持生成 Mybatis 分页代码(基于 [Mybatis-PageHelper](https://github.com/pagehelper/Mybatis-PageHelper))
-- 支持生成基于 [Spring Data JPA](https://spring.io/projects/spring-data-jpa) 的实体类和DAO层接口代码
 - 支持生成基于 [Hibernate Validator](https://hibernate.org/validator/documentation/) 的参数校验注解
 - 支持生成基于 [Spring Cloud OpenFeign](https://cloud.spring.io/spring-cloud-openfeign/reference/html/) 的服务消费端代码
 - 支持生成基于 [Swagger](https://swagger.io/docs/) 的API接口及参数注解
@@ -37,20 +36,18 @@
 | XXXVO.java | VO类| java/vo/ |  用于接收/输出数据  | 是 |
 | XXXQueryVO.java | 查询条件 | java/vo/ | 用于接收查询条件 | 是 |
 | XXXController.java | 控制器代码 | java/controller/ | 对外暴露HTTP接口 | 该文件只需生成1次 |
-| XXXDO.java | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
-| XXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
-| XXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
+| origXXXDO.java | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
+| origXXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
+| origXXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
 | TkXXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
-| JpaXXXDO.java | Domain实体类定义 | java/domain/| 适用于JPA  | 是 |
 | MpXXXDO.java | Domain实体类定义 | java/domain/| 适用于MybatisPlus  | 是 |
 | MpXXXMapper.java | Mapper接口 | java/dao/ | 适用于MybatisPlus | 该文件只需生成1次 |
-| XXXDao.java | DAO接口 | java/dao/ |  适用于JPA | 该文件只需生成1次 |
 | TkXXXMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
 | TkXXXMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
 | XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 是 |
 | XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层 | 是 |
 | IXXXService.java | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
-| XXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 该文件只需生成1次 |
+| origXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 该文件只需生成1次 |
 | TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
 | MpXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于MybatisPlus | 该文件只需生成1次 |
 | XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
@@ -74,7 +71,7 @@ public class App {
         JdbcInfo param = new JdbcInfo();
         
         //指定数据库类型
-        param.setDbType(GeneratorConst.ORACLE);
+        param.setDbType(DatabaseType.ORACLE.getCode());
         
         //数据库主机名或IP
         param.setHost("192.168.2.102");
@@ -106,6 +103,9 @@ public class App {
 
         //结果使用Result类来包装，如 MyResult<Boolean>
         rp.setResultClass("com.test.common.MyResult");
+    
+        //使用Mybatis通用Mapper作为dao层中间件
+        generator.setDaoType(DaoType.TkMyBatis);
         
         //生成
         generator.run(rp);
@@ -146,6 +146,7 @@ TableCodeGenerator 的可选参数设置：
 | setGlobalTableNamePrefixToRemove() | 需去掉的表名前缀(全局) | 如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在TableContext中逐个配置前缀; 如果二者同时有值，则使用TableContext中的值 |
 | setUseDubboService() | 是否使用 Dubbo 的@Service注解 | 默认使用 Spring 的@Service注解 |
 | setUseSwagger() | 是否生成swagger相关注解 | 默认true |
+| setDaoType() | 指定dao层中间件的类型(三选一：原版MyBatis/Mybatis通用Mapper/MyBatisPlus) | 默认使用原版MyBatis |
 
 ## 最佳实践
 
@@ -289,11 +290,6 @@ public class SwaggerConfig {
 ### 第三方依赖
 自动生成的代码中用到了一些第三方开源组件，它们的maven坐标如下(版本号请自行匹配)：
 ```xml
-<dependency>
-    <groupId>org.springframework.data</groupId>
-    <artifactId>spring-data-jpa</artifactId>
-    <version>X.X.X</version>
-</dependency>
 
 <dependency>
     <groupId>org.springframework.cloud</groupId>
