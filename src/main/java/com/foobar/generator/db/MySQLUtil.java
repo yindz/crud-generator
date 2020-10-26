@@ -1,7 +1,7 @@
 package com.foobar.generator.db;
 
 import com.foobar.generator.config.GeneratorConfig;
-import com.foobar.generator.constant.GeneratorConst;
+import com.foobar.generator.constant.DatabaseType;
 import com.foobar.generator.info.ColumnInfo;
 import com.foobar.generator.info.DbUtilInfo;
 import com.foobar.generator.info.JdbcInfo;
@@ -32,7 +32,7 @@ public class MySQLUtil extends AbstractDbUtil {
      */
     @Override
     public void prepareConnection(JdbcInfo jdbcInfo) throws Exception {
-        this.dbType = GeneratorConst.MYSQL;
+        this.dbType = DatabaseType.MYSQL.getCode();
         this.schemaName = jdbcInfo.getSchema();
         DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(this.dbType);
         Class.forName(dbUtilInfo.getClassName());

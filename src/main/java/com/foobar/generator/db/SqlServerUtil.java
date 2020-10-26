@@ -1,7 +1,7 @@
 package com.foobar.generator.db;
 
 import com.foobar.generator.config.GeneratorConfig;
-import com.foobar.generator.constant.GeneratorConst;
+import com.foobar.generator.constant.DatabaseType;
 import com.foobar.generator.info.ColumnInfo;
 import com.foobar.generator.info.DbUtilInfo;
 import com.foobar.generator.info.JdbcInfo;
@@ -9,7 +9,9 @@ import com.foobar.generator.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +32,7 @@ public class SqlServerUtil extends AbstractDbUtil {
      */
     @Override
     public void prepareConnection(JdbcInfo jdbcInfo) throws Exception {
-        this.dbType = GeneratorConst.SQLSERVER;
+        this.dbType = DatabaseType.SQLSERVER.getCode();
         this.schemaName = jdbcInfo.getSchema();
         DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(this.dbType);
         Class.forName(dbUtilInfo.getClassName());

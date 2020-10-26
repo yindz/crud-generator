@@ -1,6 +1,8 @@
 package com.foobar.generator.generator;
 
 import com.foobar.generator.config.GeneratorConfig;
+import com.foobar.generator.constant.DaoType;
+import com.foobar.generator.constant.DatabaseType;
 import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.db.AbstractDbUtil;
 import com.foobar.generator.info.*;
@@ -19,6 +21,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 数据表代码生成器
@@ -32,6 +35,11 @@ public class TableCodeGenerator {
      * 数据库类型
      */
     private final String dbType;
+
+    /**
+     * DAO层中间件类型
+     */
+    private DaoType daoType;
 
     /**
      * 线程池
@@ -152,6 +160,15 @@ public class TableCodeGenerator {
     }
 
     /**
+     * 配置DAO层中间件类型
+     *
+     * @param daoType
+     */
+    public void setDaoType(DaoType daoType) {
+        this.daoType = daoType;
+    }
+
+    /**
      * 构造函数
      *
      * @param jdbcInfo JDBC参数
@@ -175,6 +192,9 @@ public class TableCodeGenerator {
             logger.error("初始化数据库连接时发生异常", e);
             throw new Exception("初始化数据库连接时发生异常");
         }
+        if (daoType == null) {
+            daoType = DaoType.MyBatis;
+        }
         this.schemaName = jdbcInfo.getSchema();
         allTableNamesList = getAllTableNames(schemaName);
         if (allTableNamesList == null || allTableNamesList.isEmpty()) {
@@ -188,8 +208,6 @@ public class TableCodeGenerator {
 
         //获取当前用户名
         currentUser = System.getenv().get("USERNAME");
-
-
     }
 
     /**
@@ -447,7 +465,7 @@ public class TableCodeGenerator {
         //表名
         tableInfo.setName(table.getTableName());
         tableInfo.setKebabCaseName(simpleTableName.replaceAll("_", "-").toLowerCase());
-        if (GeneratorConst.ORACLE.equals(dbType)) {
+        if (DatabaseType.ORACLE.getCode().equals(dbType)) {
             tableInfo.setSchemaName(schemaName);
         }
 
@@ -487,9 +505,26 @@ public class TableCodeGenerator {
         data.setUseDubboServiceAnnotation(this.useDubboService ? 1 : 0);
         data.setUseSwagger(this.useSwagger ? 1 : 0);
 
-        //输出
-        render(GeneratorConfig.coreTemplateList, data, javaClassName);
+        //dao模板
+        List<TemplateInfo> daoTemplateList;
+        if (DaoType.TkMyBatis.equals(daoType)) {
+            //MyBatis通用Mapper
+            daoTemplateList = GeneratorConfig.coreTemplateList.stream().filter(x -> x.getTemplateName().startsWith(GeneratorConst.TK)).collect(Collectors.toList());
+        } else if (DaoType.MyBatisPlus.equals(daoType)) {
+            //MyBatisPlus
+            daoTemplateList = GeneratorConfig.coreTemplateList.stream().filter(x -> x.getTemplateName().startsWith(GeneratorConst.MP)).collect(Collectors.toList());
+        } else {
+            //原版MyBatis
+            daoTemplateList = GeneratorConfig.coreTemplateList.stream().filter(x -> x.getTemplateName().startsWith(GeneratorConst.ORIG)).collect(Collectors.toList());
+        }
+
+        //除dao以外的其它核心模板
+        List<TemplateInfo> coreTemplateList = GeneratorConfig.coreTemplateList.stream().filter(x -> !x.getTemplateName().startsWith(GeneratorConst.ORIG)
+                && !x.getTemplateName().startsWith(GeneratorConst.TK) && !x.getTemplateName().startsWith(GeneratorConst.MP)).collect(Collectors.toList());
+        render(coreTemplateList, data, javaClassName);
+        render(daoTemplateList, data, javaClassName);
         if (this.generateAll) {
+            //非核心模板
             render(GeneratorConfig.otherTemplateList, data, javaClassName);
         }
         logger.info("数据表 {} 的代码已生成完毕", table.getTableName());
