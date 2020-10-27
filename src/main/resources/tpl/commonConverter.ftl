@@ -1,18 +1,15 @@
 package ${table.pkgName};
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.cglib.beans.BeanCopier;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.beans.BeanUtils;
 
 import com.github.pagehelper.PageInfo;
-import com.google.common.base.CaseFormat;
 
 /**
  * 通用对象转换工具
@@ -22,8 +19,6 @@ import com.google.common.base.CaseFormat;
 public class CommonConverter {
 
     private static final Map<String, BeanCopier> beanCopierMap = new ConcurrentHashMap<>();
-    private static final Map<String, Field> fieldMap = new ConcurrentHashMap<>();
-    private static final Map<String, String> fieldToColumnMap = new ConcurrentHashMap<>();
 
     public static final String ASC = "ASC";
     public static final String DESC = "DESC";
@@ -100,24 +95,6 @@ public class CommonConverter {
     }
 
     /**
-     * 获取排序字段名
-     *
-     * @param target    类
-     * @param fieldName 排序属性名
-     * @return 排序字段名
-     */
-    public static String getOrderColumn(Class target, String fieldName) {
-         if (target == null || fieldName == null) {
-             return null;
-         }
-         Field field = findField(target, fieldName);
-         if (field == null) {
-            return null;
-         }
-         return fieldToColumnMap.computeIfAbsent(target.getName() + "/" + fieldName, k -> CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, k));
-    }
-
-    /**
      * 获取排序方向
      *
      * @param orderDirection 调用者传入的排序方向
@@ -125,34 +102,6 @@ public class CommonConverter {
      */
     public static String getOrderDirection(String orderDirection) {
         return ASC.equalsIgnoreCase(orderDirection) ? ASC : DESC;
-    }
-
-    /**
-     * 获取类属性
-     *
-     * @param target  类
-     * @param name    属性名
-     * @return 类属性
-     */
-    public static Field findField(Class target, String name) {
-        if (target == null || name == null) {
-            return null;
-        }
-        if (!fieldPattern.matcher(name).matches()) {
-            throw new IllegalArgumentException("字段名无效!");
-        }
-        return fieldMap.computeIfAbsent(target.getName() + "/" + name, k-> ReflectionUtils.findField(target, k));
-    }
-
-    /**
-     * 判断类属性是否存在
-     *
-     * @param target  类
-     * @param name    属性名
-     * @return 类属性是否存在
-     */
-    public static boolean isFieldExists(Class target, String name) {
-         return findField(target, name) != null;
     }
 
     /**

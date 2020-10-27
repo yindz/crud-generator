@@ -183,8 +183,7 @@
     "targetBaseDirName": "java",
     "targetPkgName": "util",
     "targetFileName": "#Converter.java",
-    "isCore": 0,
-    "overwriteExistingFile": 0,
+    "isCore": 1,
     "remark": "转换工具类"
   },
   {

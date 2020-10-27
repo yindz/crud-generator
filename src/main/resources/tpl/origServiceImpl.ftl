@@ -36,11 +36,11 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         <#include "./public/checkQueryArguments.ftl"/>
 
         Map<String, Object> queryMap = new HashMap<>();
-        if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
+        if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
     <#if pk??>        query.setOrderBy("${pk.columnCamelNameLower}");</#if>
         } else {
-            query.setOrderBy(${table.javaClassName}Converter.getOrderColumn(${table.javaClassName}DO.class, query.getOrderBy()));
+            query.setOrderBy(${table.javaClassName}Converter.getOrderColumn(query.getOrderBy()));
         }
         query.setOrderDirection(${table.javaClassName}Converter.getOrderDirection(query.getOrderDirection()));
         ${table.javaClassName}Converter.valuesToMap(query, queryMap, Sets.newHashSet("pageNo", "pageSize"));

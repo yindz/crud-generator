@@ -62,7 +62,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         </#if>
         </#list>
 <#if logicDeleteColumn??>        criteria.andEqualTo(${table.javaClassName}DO::get${logicDeleteColumn.columnCamelNameUpper}, <#if logicDeleteColumn.isNumber == 1>0<#else>"0"</#if>);</#if>
-        if (!${table.javaClassName}Converter.isFieldExists(${table.javaClassName}DO.class, query.getOrderBy())) {
+        if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
         <#if pk??>    query.setOrderBy("${pk.columnCamelNameLower}");<#else>//TODO 请设置排序字段</#if>
         }
