@@ -3,7 +3,6 @@ package ${table.pkgName};
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.regex.Pattern;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.cglib.beans.BeanCopier;
@@ -23,8 +22,6 @@ public class CommonConverter {
     public static final String ASC = "ASC";
     public static final String DESC = "DESC";
 
-    public static final Pattern fieldPattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]*$");
-
     /**
      * 对象转换
      *
@@ -36,7 +33,7 @@ public class CommonConverter {
      */
     public static <S, T> T convert(S src, Class<T> target){
         if(src == null || target == null) {
-            return null;
+            throw new IllegalArgumentException("待转换的类型为空");
         }
         BeanCopier bc = getBeanCopier(src.getClass(), target);
         try {
@@ -61,16 +58,7 @@ public class CommonConverter {
      */
     public static <S, T> PageInfo<T> convertPageInfo(PageInfo<S> src, Class<T> target) {
          if (src == null || target == null) {
-            return null;
-         }
-         List<T> list = new ArrayList<>();
-         if (src.getList() != null && !src.getList().isEmpty()) {
-            src.getList().forEach(e -> {
-                if (e == null) {
-                    return;
-                }
-                list.add(convert(e, target));
-            });
+             throw new IllegalArgumentException("待转换的类型为空");
          }
          PageInfo<T> b = new PageInfo<>();
          b.setTotal(src.getTotal());
@@ -90,7 +78,16 @@ public class CommonConverter {
          b.setNavigateLastPage(src.getNavigateLastPage());
          b.setNavigatepageNums(src.getNavigatepageNums());
          b.setNavigatePages(src.getNavigatePages());
-         b.setList(list);
+         if (src.getList() != null && !src.getList().isEmpty()) {
+             List<T> list = new ArrayList<>();
+             src.getList().forEach(e -> {
+                 if (e == null) {
+                     return;
+                 }
+                 list.add(convert(e, target));
+             });
+             b.setList(list);
+         }
          return b;
     }
 
@@ -140,6 +137,9 @@ public class CommonConverter {
     }
 
     private static BeanCopier getBeanCopier(Class source, Class target) {
+        if (source == null || target == null) {
+            throw new IllegalArgumentException("待转换的类型为空");
+        }
         return beanCopierMap.computeIfAbsent(source.getName() + "/" + target.getName(), k -> BeanCopier.create(source, target, false));
     }
 }
