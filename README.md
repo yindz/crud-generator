@@ -52,7 +52,7 @@
 | MpXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于MybatisPlus | 该文件只需生成1次 |
 | XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
 | CommonConverter.java | 通用对象转换工具 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
-| XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
+| XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 是 |
 | InsertGroup.java | 校验分组(插入) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
 | UpdateGroup.java | 校验分组(更新) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
 | XXX.postman_collection.json | Postman接口定义 | json/ | 使用方法：Postman>Import | 是 |
