@@ -23,12 +23,12 @@ public class TableContext {
     private String primaryKeyColumn;
 
     /**
-     * 版本号字段名(用于乐观锁，默认version)
+     * 版本号字段名(用于乐观锁)
      */
-    private String versionColumn = "version";
+    private String versionColumn;
 
     /**
-     * 逻辑删除标识字段名(用于逻辑删除，默认del_flag)
+     * 逻辑删除标识字段名(用于逻辑删除)
      */
     private String logicDeleteColumn;
 
