@@ -133,7 +133,7 @@ TableContext 的可选参数设置：
 | setRangeColumns() | 指定启用取值范围查询的字段名(用于时间或数字类型字段，多个以逗号隔开) | 如果字段为时间或数字类型则在相应QueryDTO类中增加 xxxMin/xxxMax 属性 |
 | setInColumns() | 指定启用IN查询的字段名(多个以逗号隔开) | 在相应QueryDTO类中增加 xxxIn 属性 |
 | setPrimaryKeyColumn() | 手动指定主键字段名(不区分大小写) | 如果程序无法自动检测到主键字段，则在此参数指定(适用于无主键且无唯一索引的表) |
-| setVersionColumn() | 如果该表有乐观锁，可在此指定其字段名(不区分大小写) | 默认值为 version |
+| setVersionColumn() | 如果该表有乐观锁，可在此指定其字段名(不区分大小写) | 默认无 |
 | setPageSize() | 指定一个大于0的整数来指定默认分页大小 | 默认为10 |
 | setSequenceName() | 针对Oracle数据库，可以指定序列名称 | 如果不指定，则默认使用 SEQ_表名 作为序列名称 |
 | setLogicDeleteColumn() | 如果该表需要实现逻辑删除功能，可以指定相应字段名 | 如果不指定，则无逻辑删除功能 |
