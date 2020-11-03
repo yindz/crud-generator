@@ -106,6 +106,9 @@ public class App {
     
         //使用Mybatis通用Mapper作为dao层中间件
         generator.setDaoType(DaoType.TkMyBatis);
+
+        //将表名从下划线转驼峰后再加上Entity后缀作为类名
+        generator.setClassNameGenerator(t -> CaseUtils.toCamelCase(t, true, '_') + "Entity");
         
         //生成
         generator.run(rp);
@@ -147,6 +150,7 @@ TableCodeGenerator 的可选参数设置：
 | setUseDubboService() | 是否使用 Dubbo 的@Service注解 | 默认使用 Spring 的@Service注解 |
 | setUseSwagger() | 是否生成swagger相关注解 | 默认true |
 | setDaoType() | 指定dao层中间件的类型(三选一：原版MyBatis/Mybatis通用Mapper/MyBatisPlus) | 默认使用原版MyBatis |
+| setClassNameGenerator() | 指定类名的自定义生成规则 | 默认将表名从下划线形式转成驼峰形式 |
 
 ## 最佳实践
 
