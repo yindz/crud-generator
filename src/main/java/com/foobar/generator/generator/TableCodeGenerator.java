@@ -239,8 +239,9 @@ public class TableCodeGenerator {
         long begin = System.currentTimeMillis();
         checkDir(runParam.getOutputPath());
         this.pkgName = StringUtils.trim(runParam.getBasePkgName());
-        if (StringUtils.isEmpty(this.pkgName)) {
+        if (StringUtils.isBlank(this.pkgName)) {
             this.pkgName = GeneratorConst.DEFAULT_PKG_NAME;
+            logger.warn("将使用默认的包名: {}", this.pkgName);
         }
         if (StringUtils.isNotBlank(runParam.getAuthor())) {
             this.currentUser = runParam.getAuthor();
@@ -265,7 +266,7 @@ public class TableCodeGenerator {
         while (!threadPool.awaitTermination(500, TimeUnit.MILLISECONDS)) {
             logger.debug("等待线程池关闭");
         }
-        logger.info("{}下面表相应代码已生成到 {}, 耗时 {} 毫秒, 总计 {} 张表", this.schemaName, runParam.getOutputPath(), System.currentTimeMillis() - begin, tablesToSubmit.size());
+        logger.info("代码已生成到 {}, 耗时 {} 毫秒, 总计 {} 张表", runParam.getOutputPath(), System.currentTimeMillis() - begin, tablesToSubmit.size());
         //代码生成完毕后自动打开相应的目录
         Desktop.getDesktop().open(new File(this.baseOutputPath));
     }
