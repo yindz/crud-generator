@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -122,6 +123,11 @@ public class TableCodeGenerator {
     private String resultClass;
 
     /**
+     * 类名生成函数
+     */
+    private Function<String, String> classNameGenerator;
+
+    /**
      * 是否生成所有代码
      * 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码
      *
@@ -166,6 +172,15 @@ public class TableCodeGenerator {
      */
     public void setDaoType(DaoType daoType) {
         this.daoType = daoType;
+    }
+
+    /**
+     * 配置自定义的类名生成函数
+     *
+     * @param classNameGenerator
+     */
+    public void setClassNameGenerator(Function<String, String> classNameGenerator) {
+        this.classNameGenerator = classNameGenerator;
     }
 
     /**
@@ -457,7 +472,14 @@ public class TableCodeGenerator {
             //去掉前缀后的表名
             simpleTableName = StringUtils.removeStart(table.getTableName(), prefixToRemove);
         }
-        String javaClassName = StringUtils.underlineToCamel(simpleTableName, true);
+        String javaClassName;
+        if (this.classNameGenerator != null) {
+            //使用自定义的类名生成函数
+            javaClassName = this.classNameGenerator.apply(simpleTableName);
+        } else {
+            //默认:下划线转驼峰且首字母大写
+            javaClassName = StringUtils.underlineToCamel(simpleTableName, true);
+        }
 
         //表基本信息
         TableInfo tableInfo = new TableInfo();
