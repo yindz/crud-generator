@@ -13,10 +13,12 @@ import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -264,6 +266,8 @@ public class TableCodeGenerator {
             logger.debug("等待线程池关闭");
         }
         logger.info("{}下面表相应代码已生成到 {}, 耗时 {} 毫秒, 总计 {} 张表", this.schemaName, runParam.getOutputPath(), System.currentTimeMillis() - begin, tablesToSubmit.size());
+        //代码生成完毕后自动打开相应的目录
+        Desktop.getDesktop().open(new File(this.baseOutputPath));
     }
 
     /**
