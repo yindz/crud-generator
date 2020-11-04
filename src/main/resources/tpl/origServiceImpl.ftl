@@ -79,8 +79,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Override
     @Transactional(rollbackFor = Exception.class)
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> insert(${table.javaClassName}DTO record) {
-        Preconditions.checkArgument(record != null, "待插入的数据为空");
-        int inserted = ${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record));
+        ${table.javaClassName}DTO domain = ${table.javaClassName}Converter.dtoToDomain(record);
+        checkInsertObject(domain);
+        int inserted = ${table.javaClassNameLower}Mapper.insert(domain);
         if (inserted != 0) {
             logger.info("${table.name}数据插入成功! {}", record);
             return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
@@ -106,7 +107,9 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              if (record == null) {
                  continue;
              }
-             if (${table.javaClassNameLower}Mapper.insert(${table.javaClassName}Converter.dtoToDomain(record)) == 0) {
+             ${table.javaClassName}DTO domain = ${table.javaClassName}Converter.dtoToDomain(record);
+             checkInsertObject(domain);
+             if (${table.javaClassNameLower}Mapper.insert(domain) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
              }
              success++;
@@ -190,4 +193,6 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         logger.info("本次总共删除{}条${table.name}表数据! ${pk.columnCamelNameLower}List={}", success, ${pk.columnCamelNameLower}List);
         return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
     }</#if>
+
+<#include "./public/insertObjectCheck.ftl"/>
 }
