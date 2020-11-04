@@ -79,7 +79,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Override
     @Transactional(rollbackFor = Exception.class)
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> insert(${table.javaClassName}DTO record) {
-        ${table.javaClassName}DTO domain = ${table.javaClassName}Converter.dtoToDomain(record);
+        ${table.javaClassName}DO domain = ${table.javaClassName}Converter.dtoToDomain(record);
         checkInsertObject(domain);
         int inserted = ${table.javaClassNameLower}Mapper.insert(domain);
         if (inserted != 0) {
@@ -107,7 +107,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              if (record == null) {
                  continue;
              }
-             ${table.javaClassName}DTO domain = ${table.javaClassName}Converter.dtoToDomain(record);
+             ${table.javaClassName}DO domain = ${table.javaClassName}Converter.dtoToDomain(record);
              checkInsertObject(domain);
              if (${table.javaClassNameLower}Mapper.insert(domain) == 0) {
                  throw new RuntimeException("插入${table.comments}数据失败!");
