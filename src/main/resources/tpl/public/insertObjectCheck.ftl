@@ -2,7 +2,7 @@
     /**
      * 检查待插入的数据各个非空字段值
      *
-     * @param query  obj
+     * @param obj 待插入数据
      */
     private void checkInsertObject(${table.javaClassName}DO obj) {
         Preconditions.checkArgument(obj != null, "待插入的数据为空");<#list table.columns as column><#if column.nullable == 0>
