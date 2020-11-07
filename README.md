@@ -47,9 +47,9 @@
 | XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 是 |
 | XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层 | 是 |
 | IXXXService.java | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
-| origXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 该文件只需生成1次 |
+| origXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 是 |
 | TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
-| MpXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于MybatisPlus | 该文件只需生成1次 |
+| MpXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于MybatisPlus | 是 |
 | XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
 | CommonConverter.java | 通用对象转换工具 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
 | XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 是 |
