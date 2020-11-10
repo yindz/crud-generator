@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * ${table.comments}Mapper
  * 说明：
- * 1.当表字段发生变化时，无需重新生成本接口代码
+ * 1.适用于原版Mybatis
  * 2.如有自定义SQL逻辑，不要直接在本接口中编写，而应该重新编写一个接口来继承本接口
  *
  * @author ${table.author!''}
