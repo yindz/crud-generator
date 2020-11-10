@@ -14,5 +14,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ${table.javaClassName}Mapper extends BaseMapper<${table.javaClassName}DO> {
-    //TODO 可在此编写自己的代码
+
 }
