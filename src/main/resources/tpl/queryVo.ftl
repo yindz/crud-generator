@@ -50,37 +50,10 @@ public class ${table.javaClassName}QueryVO extends ${table.javaClassName}VO {
     private ${column.columnJavaType} ${column.columnCamelNameLower}Like;
 </#if></#list>
 
-    public Integer getPageNo() {
-        return pageNo;
-    }
+<#include "./public/pageParams.ftl"/>
 
-    public void setPageNo(Integer pageNo) {
-        this.pageNo = pageNo;
-    }
+<#include "./public/orderParams.ftl"/>
 
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public String getOrderBy() {
-        return orderBy;
-    }
-
-    public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
-    }
-
-    public String getOrderDirection() {
-        return orderDirection;
-    }
-
-    public void setOrderDirection(String orderDirection) {
-        this.orderDirection = orderDirection;
-    }
 <#list table.columns as column><#if column.enableLike == 1>
 
     public ${column.columnJavaType} get${column.columnCamelNameUpper}Like() {
