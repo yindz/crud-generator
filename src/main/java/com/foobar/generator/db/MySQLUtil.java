@@ -2,6 +2,7 @@ package com.foobar.generator.db;
 
 import com.foobar.generator.config.GeneratorConfig;
 import com.foobar.generator.constant.DatabaseType;
+import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.info.ColumnInfo;
 import com.foobar.generator.info.DbUtilInfo;
 import com.foobar.generator.info.JdbcInfo;
@@ -102,7 +103,7 @@ public class MySQLUtil extends AbstractDbUtil {
                         || "double".equalsIgnoreCase(col.getColumnType())
                         || "decimal".equalsIgnoreCase(col.getColumnType())) {
                     //数字类型
-                    col.setIsNumber(1);
+                    col.setIsNumber(GeneratorConst.YES);
                     col.setColumnPrecision(StringUtils.parseInt(rs.getString(6)));
                     col.setColumnScale(StringUtils.parseInt(rs.getString(7)));
                     col.setColumnLength(col.getColumnPrecision());
@@ -111,17 +112,17 @@ public class MySQLUtil extends AbstractDbUtil {
                     //字符型
                     col.setCharLength(StringUtils.parseInt(rs.getString(8)));
                     col.setColumnLength(col.getCharLength());
-                    col.setIsChar(1);
+                    col.setIsChar(GeneratorConst.YES);
                 } else {
                     col.setColumnLength(StringUtils.parseInt(rs.getString(9)));
                 }
-                col.setNullable("YES".equalsIgnoreCase(rs.getString(11)) ? 1 : 0);
+                col.setNullable("YES".equalsIgnoreCase(rs.getString(11)) ? GeneratorConst.YES : GeneratorConst.NO);
                 String columnKey = rs.getString(12);
                 if ("PRI".equalsIgnoreCase(columnKey)) {
                     hasPrimaryKey = true;
-                    col.setIsPrimaryKey(1);
+                    col.setIsPrimaryKey(GeneratorConst.YES);
                 } else {
-                    col.setIsPrimaryKey(0);
+                    col.setIsPrimaryKey(GeneratorConst.NO);
                 }
                 if ("UNI".equalsIgnoreCase(columnKey)) {
                     uniqueIndexColumn = col.getColumnName();
@@ -139,7 +140,7 @@ public class MySQLUtil extends AbstractDbUtil {
                 }
                 //若无主键字段，则将最后1个唯一索引字段作为主键使用
                 if (uniqueIndexColumn.equalsIgnoreCase(ci.getColumnName())) {
-                    ci.setIsPrimaryKey(1);
+                    ci.setIsPrimaryKey(GeneratorConst.YES);
                     break;
                 }
             }

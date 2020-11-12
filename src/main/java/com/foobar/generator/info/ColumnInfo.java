@@ -1,5 +1,7 @@
 package com.foobar.generator.info;
 
+import com.foobar.generator.constant.GeneratorConst;
+
 /**
  * 列基本属性
  *
@@ -85,37 +87,37 @@ public class ColumnInfo {
     /**
      * 是否为数字
      */
-    private int isNumber = 0;
+    private int isNumber = GeneratorConst.NO;
 
     /**
      * 是否为字符
      */
-    private int isChar = 0;
+    private int isChar = GeneratorConst.NO;
 
     /**
      * 是否为时间
      */
-    private int isDateTime = 0;
+    private int isDateTime = GeneratorConst.NO;
 
     /**
      * 是否为主键
      */
-    private int isPrimaryKey = 0;
+    private int isPrimaryKey = GeneratorConst.NO;
 
     /**
      * 是否启用模糊查询
      */
-    private int enableLike = 0;
+    private int enableLike = GeneratorConst.NO;
 
     /**
      * 是否启用范围查询
      */
-    private int enableRange = 0;
+    private int enableRange = GeneratorConst.NO;
 
     /**
      * 是否启用IN查询
      */
-    private int enableIn = 0;
+    private int enableIn = GeneratorConst.NO;
 
     public String getTableName() {
         return tableName;

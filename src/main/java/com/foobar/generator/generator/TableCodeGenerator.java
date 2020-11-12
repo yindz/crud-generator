@@ -293,7 +293,7 @@ public class TableCodeGenerator {
             Set<String> likeColumns = StringUtils.splitToSet(table.getLikeColumns(), ",");
             Set<String> rangeColumns = StringUtils.splitToSet(table.getRangeColumns(), ",");
             Set<String> inColumns = StringUtils.splitToSet(table.getInColumns(), ",");
-            boolean hasPrimaryKey = resultList.stream().anyMatch(r -> 1 == r.getIsPrimaryKey());
+            boolean hasPrimaryKey = resultList.stream().anyMatch(r -> GeneratorConst.YES == r.getIsPrimaryKey());
             if (!hasPrimaryKey && StringUtils.isEmpty(table.getPrimaryKeyColumn())) {
                 throw new IllegalArgumentException("数据表 " + table.getTableName() + " 无主键及唯一索引字段，请手动指定primaryKeyColumn参数值");
             }
@@ -308,13 +308,13 @@ public class TableCodeGenerator {
                     throw new RuntimeException("数据库字段类型 " + c.getColumnType() + " 无法映射到Java类型");
                 }
                 if ("Date".equalsIgnoreCase(c.getColumnJavaType())) {
-                    c.setIsDateTime(1);
+                    c.setIsDateTime(GeneratorConst.YES);
                 }
                 c.setColumnMyBatisType(GeneratorConst.mybatisTypeMap.get(c.getColumnType().toLowerCase()));
                 if (StringUtils.isEmpty(c.getColumnMyBatisType())) {
                     throw new RuntimeException("数据库字段类型 " + c.getColumnType() + " 无法映射到MyBatis JdbcType");
                 }
-                if (c.getIsNumber() == 1) {
+                if (c.getIsNumber() == GeneratorConst.YES) {
                     if (c.getColumnScale() > 0) {
                         //有小数的时候：Java类中统一使用BigDecimal类型，MybatisXML中jdbcType统一使用DECIMAL类型
                         c.setColumnJavaType("BigDecimal");
@@ -327,20 +327,20 @@ public class TableCodeGenerator {
                 if (!hasPrimaryKey) {
                     //如果无法自动检测到任何主键字段，则使用上下文指定的主键字段
                     if (c.getColumnName().equalsIgnoreCase(table.getPrimaryKeyColumn())) {
-                        c.setIsPrimaryKey(1);
+                        c.setIsPrimaryKey(GeneratorConst.YES);
                     }
                 }
-                if (!likeColumns.isEmpty() && likeColumns.contains(c.getColumnName()) && c.getIsChar() == 1) {
-                    c.setEnableLike(1);
+                if (!likeColumns.isEmpty() && likeColumns.contains(c.getColumnName()) && c.getIsChar() == GeneratorConst.YES) {
+                    c.setEnableLike(GeneratorConst.YES);
                 }
                 if (!rangeColumns.isEmpty() && rangeColumns.contains(c.getColumnName())) {
                     //仅时间类型和数字类型支持按范围查询
-                    if (c.getIsDateTime() == 1 || c.getIsNumber() == 1) {
-                        c.setEnableRange(1);
+                    if (c.getIsDateTime() == GeneratorConst.YES || c.getIsNumber() == GeneratorConst.YES) {
+                        c.setEnableRange(GeneratorConst.YES);
                     }
                 }
                 if (inColumns.contains(c.getColumnName())) {
-                    c.setEnableIn(1);
+                    c.setEnableIn(GeneratorConst.YES);
                 }
             });
             logger.info("数据表 {} 包含 {} 个字段", table.getTableName(), resultList.size());
@@ -529,8 +529,8 @@ public class TableCodeGenerator {
         }
         data.setTable(tableInfo);
         data.setUuid((list) -> UUID.randomUUID());
-        data.setUseDubboServiceAnnotation(this.useDubboService ? 1 : 0);
-        data.setUseSwagger(this.useSwagger ? 1 : 0);
+        data.setUseDubboServiceAnnotation(this.useDubboService ? GeneratorConst.YES : GeneratorConst.NO);
+        data.setUseSwagger(this.useSwagger ? GeneratorConst.YES : GeneratorConst.NO);
 
         //dao模板
         List<TemplateInfo> daoTemplateList;
@@ -578,7 +578,7 @@ public class TableCodeGenerator {
                 throw new RuntimeException("路径" + dir.getAbsolutePath() + "不是目录");
             }
             String out = dir.getAbsolutePath() + File.separator + ti.getTargetFileName().replace(GeneratorConst.PLACEHOLDER, javaClassName);
-            if (ti.getOverwriteExistingFile() == 0) {
+            if (ti.getOverwriteExistingFile() == GeneratorConst.NO) {
                 File file = new File(out);
                 if (file.exists()) {
                     logger.info("模板 {} 对应的目标输出文件 {} 已存在，因此不再重新生成该文件", ti.getTemplateName(), out);

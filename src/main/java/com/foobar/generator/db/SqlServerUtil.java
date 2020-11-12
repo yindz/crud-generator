@@ -2,6 +2,7 @@ package com.foobar.generator.db;
 
 import com.foobar.generator.config.GeneratorConfig;
 import com.foobar.generator.constant.DatabaseType;
+import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.info.ColumnInfo;
 import com.foobar.generator.info.DbUtilInfo;
 import com.foobar.generator.info.JdbcInfo;
@@ -104,7 +105,7 @@ public class SqlServerUtil extends AbstractDbUtil {
                         || "double".equalsIgnoreCase(col.getColumnType())
                         || "decimal".equalsIgnoreCase(col.getColumnType())) {
                     //数字类型
-                    col.setIsNumber(1);
+                    col.setIsNumber(GeneratorConst.YES);
                     col.setColumnPrecision(StringUtils.parseInt(rs.getString(6)));
                     col.setColumnScale(StringUtils.parseInt(rs.getString(7)));
                     col.setColumnLength(col.getColumnPrecision());
@@ -113,15 +114,15 @@ public class SqlServerUtil extends AbstractDbUtil {
                     //字符型
                     col.setCharLength(StringUtils.parseInt(rs.getString(8)));
                     col.setColumnLength(col.getCharLength());
-                    col.setIsChar(1);
+                    col.setIsChar(GeneratorConst.YES);
                 } else {
                     col.setColumnLength(StringUtils.parseInt(rs.getString(9)));
                 }
-                col.setNullable("YES".equalsIgnoreCase(rs.getString(11)) ? 1 : 0);
+                col.setNullable("YES".equalsIgnoreCase(rs.getString(11)) ? GeneratorConst.YES : GeneratorConst.NO);
                 if (StringUtils.isNotEmpty(uniqueColumnName) && uniqueColumnName.equalsIgnoreCase(col.getColumnName())) {
-                    col.setIsPrimaryKey(1);
+                    col.setIsPrimaryKey(GeneratorConst.YES);
                 } else {
-                    col.setIsPrimaryKey(0);
+                    col.setIsPrimaryKey(GeneratorConst.NO);
                 }
                 resultList.add(col);
             }

@@ -2,6 +2,7 @@ package com.foobar.generator.db;
 
 import com.foobar.generator.config.GeneratorConfig;
 import com.foobar.generator.constant.DatabaseType;
+import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.info.ColumnInfo;
 import com.foobar.generator.info.DbUtilInfo;
 import com.foobar.generator.info.JdbcInfo;
@@ -102,10 +103,10 @@ public class OracleUtil extends AbstractDbUtil {
                     if (col.getDefaultValue() != null) {
                         col.setDefaultValue("'" + col.getDefaultValue().trim() + "'");
                     }
-                    col.setIsChar(1);
+                    col.setIsChar(GeneratorConst.YES);
                 }
-                if (col.getColumnPrecision() != 0) {
-                    col.setIsNumber(1);
+                if (col.getColumnPrecision() != GeneratorConst.NO) {
+                    col.setIsNumber(GeneratorConst.YES);
                 }
                 resultList.add(col);
             }
@@ -119,7 +120,7 @@ public class OracleUtil extends AbstractDbUtil {
                     continue;
                 }
                 if (uniqueColumnName.equalsIgnoreCase(ci.getColumnName())) {
-                    ci.setIsPrimaryKey(1);
+                    ci.setIsPrimaryKey(GeneratorConst.YES);
                     break;
                 }
             }

@@ -10,6 +10,9 @@ import java.util.Map;
  */
 public final class GeneratorConst {
 
+    public static final int YES = 1;
+    public static final int NO = 0;
+
     public static final String TK = "tk";
     public static final String MP = "mp";
     public static final String ORIG = "orig";

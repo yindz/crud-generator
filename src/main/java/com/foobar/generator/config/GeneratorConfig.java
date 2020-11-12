@@ -1,5 +1,6 @@
 package com.foobar.generator.config;
 
+import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.info.DbUtilInfo;
 import com.foobar.generator.info.TemplateInfo;
 import com.foobar.generator.util.JsonUtils;
@@ -57,7 +58,7 @@ public class GeneratorConfig {
             if (t == null) {
                 return;
             }
-            if (1 == t.getIsCore()) {
+            if (GeneratorConst.YES == t.getIsCore()) {
                 coreTemplateList.add(t);
             } else {
                 otherTemplateList.add(t);

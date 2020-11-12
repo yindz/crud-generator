@@ -1,5 +1,6 @@
 package com.foobar.generator.info;
 
+import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.util.StringUtils;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class TemplateInfo {
     /**
      * 是否覆盖已存在的同名文件
      */
-    private int overwriteExistingFile = 1;
+    private int overwriteExistingFile = GeneratorConst.YES;
 
     /**
      * 备注

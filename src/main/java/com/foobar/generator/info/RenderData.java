@@ -1,6 +1,7 @@
 package com.foobar.generator.info;
 
 import com.foobar.generator.config.GeneratorConfig;
+import com.foobar.generator.constant.GeneratorConst;
 import freemarker.template.TemplateMethodModelEx;
 
 /**
@@ -48,12 +49,12 @@ public class RenderData {
     /**
      * 是否启用Dubbo服务
      */
-    private int useDubboServiceAnnotation = 0;
+    private int useDubboServiceAnnotation = GeneratorConst.NO;
 
     /**
      * 是否启用swagger
      */
-    private int useSwagger = 1;
+    private int useSwagger = GeneratorConst.YES;
 
     public String getBasePkgName() {
         return basePkgName;

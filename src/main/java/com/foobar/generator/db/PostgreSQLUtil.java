@@ -2,6 +2,7 @@ package com.foobar.generator.db;
 
 import com.foobar.generator.config.GeneratorConfig;
 import com.foobar.generator.constant.DatabaseType;
+import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.info.ColumnInfo;
 import com.foobar.generator.info.DbUtilInfo;
 import com.foobar.generator.info.JdbcInfo;
@@ -110,7 +111,7 @@ public class PostgreSQLUtil extends AbstractDbUtil {
                         || "double".equalsIgnoreCase(col.getColumnType())
                         || "decimal".equalsIgnoreCase(col.getColumnType())) {
                     //数字类型
-                    col.setIsNumber(1);
+                    col.setIsNumber(GeneratorConst.YES);
                     //解析数字精度
                     if (columnTypeStr != null && columnTypeStr.startsWith("numeric")) {
                         Matcher matcher = numeric.matcher(columnTypeStr);
@@ -123,13 +124,13 @@ public class PostgreSQLUtil extends AbstractDbUtil {
                         || col.getColumnType().contains("text"))) {
                     //字符型
                     col.setCharLength(col.getColumnLength());
-                    col.setIsChar(1);
+                    col.setIsChar(GeneratorConst.YES);
                 }
-                col.setNullable("f".equalsIgnoreCase(rs.getString(9)) ? 1 : 0);
+                col.setNullable("f".equalsIgnoreCase(rs.getString(9)) ? GeneratorConst.YES : GeneratorConst.NO);
                 if (StringUtils.isNotEmpty(uniqueColumnName) && uniqueColumnName.equalsIgnoreCase(col.getColumnName())) {
-                    col.setIsPrimaryKey(1);
+                    col.setIsPrimaryKey(GeneratorConst.YES);
                 } else {
-                    col.setIsPrimaryKey(0);
+                    col.setIsPrimaryKey(GeneratorConst.NO);
                 }
                 resultList.add(col);
             }
