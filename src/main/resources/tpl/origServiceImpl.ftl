@@ -59,7 +59,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     public <#if resultClassName??>${resultClassName}<</#if>${table.javaClassName}DTO<#if resultClassName??>></#if> getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
-        Preconditions.checkArgument(<#if logicDeleteColumn.isChar == 1>StringUtils.isNotBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} != null</#if>, "${pk.columnCamelNameLower}为空!");
+        Preconditions.checkArgument(<#if pk.isChar == 1>StringUtils.isNotBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} != null</#if>, "${pk.columnCamelNameLower}为空!");
         ${table.javaClassName}DO record = ${table.javaClassNameLower}Mapper.getRecordBy${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
         if (record != null) {
             return <#if resultClassName??>new ${resultClassName}(</#if>${table.javaClassName}Converter.domainToDTO(record)<#if resultClassName??>)</#if>;
@@ -113,7 +113,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
              success++;
          }
          logger.info("本次总共插入{}条${table.name}数据", success);
-         return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
+         return <#if resultClassName??>new ${resultClassName}(</#if>success > 0<#if resultClassName??>)</#if>;
      }
 
     /**
@@ -147,7 +147,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Override
     @Transactional(rollbackFor = Exception.class)
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
-        Preconditions.checkArgument(<#if logicDeleteColumn.isChar == 1>StringUtils.isNotBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} != null</#if>, "${pk.columnCamelNameLower}为空!");
+        Preconditions.checkArgument(<#if pk.isChar == 1>StringUtils.isNotBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} != null</#if>, "${pk.columnCamelNameLower}为空!");
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
 <#if logicDeleteColumn??>        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
@@ -175,7 +175,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         int success = 0;
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         for (${pk.columnJavaType} ${pk.columnCamelNameLower} : ${pk.columnCamelNameLower}List) {
-            if (${pk.columnCamelNameLower} == null) {
+            if (<#if pk.isChar == 1>StringUtils.isBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} == null</#if>) {
                 continue;
             }
             cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
@@ -189,7 +189,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             success++;
         }
         logger.info("本次总共删除{}条${table.name}表数据! ${pk.columnCamelNameLower}List={}", success, ${pk.columnCamelNameLower}List);
-        return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
+        return <#if resultClassName??>new ${resultClassName}(</#if>success > 0<#if resultClassName??>)</#if>;
     }</#if>
 
 <#include "./public/insertObjectCheck.ftl"/>
