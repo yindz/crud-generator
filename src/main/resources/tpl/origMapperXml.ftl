@@ -1,4 +1,5 @@
 <#include "./public/mybatisXmlHeader.ftl"/>
+<#if table.logicDeleteColumn??><#list table.columns as column><#if table.logicDeleteColumn == column.columnName><#assign logicDeleteColumn = column></#if></#list></#if>
 <mapper namespace="${table.pkgName}.${table.javaClassName}Mapper">
     <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
     <resultMap id="queryResultMap" type="${basePkgName}.domain.${table.javaClassName}DO">
@@ -64,8 +65,8 @@
 
     <#if pk??>
     <select id="getRecordBy${pk.columnCamelNameUpper}" resultMap="queryResultMap">
-        select <include refid="ALL_COLUMNS"/> from <include refid="TABLE_NAME"/> a
-        <include refid="PK_CONDITION"/>
+        select <include refid="ALL_COLUMNS"/> from <include refid="TABLE_NAME"/>
+        <include refid="PK_CONDITION"/><#if logicDeleteColumn??> and ${logicDeleteColumn.columnName} = <#if logicDeleteColumn.isNumber == 1>0<#else>'0'</#if></#if>
     </select>
     </#if>
 

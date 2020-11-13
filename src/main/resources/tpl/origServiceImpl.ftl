@@ -63,7 +63,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
         }
         ${table.javaClassName}DO record = ${table.javaClassNameLower}Mapper.getRecordBy${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-        if (record != null<#if logicDeleteColumn??> && Objects.equals(<#if logicDeleteColumn.isNumber == 1>0,<#else>"0",</#if> obj.get${logicDeleteColumn.columnCamelNameUpper}())</#if>) {
+        if (record != null) {
             return <#if resultClassName??>new ${resultClassName}(</#if>${table.javaClassName}Converter.domainToDTO(record)<#if resultClassName??>)</#if>;
         } else {
             return <#if resultClassName??>new ${resultClassName}(</#if>null<#if resultClassName??>)</#if>;
