@@ -38,7 +38,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         Map<String, Object> queryMap = new HashMap<>();
         if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {
             //默认使用主键(唯一索引字段)排序
-    <#if pk??>        query.setOrderBy("${pk.columnCamelNameLower}");</#if>
+    <#if pk??>        query.setOrderBy("${pk.columnName}");</#if>
         } else {
             query.setOrderBy(${table.javaClassName}Converter.getOrderColumn(query.getOrderBy()));
         }
