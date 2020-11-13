@@ -85,9 +85,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      */
     @Override
     public <#if resultClassName??>${resultClassName}<</#if>${table.javaClassName}DTO<#if resultClassName??>></#if> getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
-        if (${pk.columnCamelNameLower} == null) {
-            throw new IllegalArgumentException("${pk.columnCamelNameLower}为空!");
-        }
+        Preconditions.checkArgument(<#if logicDeleteColumn.isChar == 1>StringUtils.isNotBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} != null</#if>, "${pk.columnCamelNameLower}为空!");
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
         ${table.javaClassName}DO obj = ${table.javaClassNameLower}Mapper.selectByPrimaryKey(cond);
@@ -182,7 +180,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Override
     @Transactional(rollbackFor = Exception.class)
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
-        Preconditions.checkArgument(${pk.columnCamelNameLower} != null, "待删除的数据${pk.columnCamelNameLower}为空");
+        Preconditions.checkArgument(<#if logicDeleteColumn.isChar == 1>StringUtils.isNotBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} != null</#if>, "${pk.columnCamelNameLower}为空!");
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
 <#if logicDeleteColumn??>        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
