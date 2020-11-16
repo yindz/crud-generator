@@ -31,32 +31,33 @@
 - 支持生成 [Postman](https://www.postman.com/) 可导入的API接口JSON定义文件
 
 ## 文件说明
-| 文件名 | 含义 | 路径 | 备注 | 表字段变化后是否重新生成 | 
+| 模板名 | 含义 | 路径 | 备注 | 表字段变化后是否重新生成 | 
 |  ----  | ---- |---- |---- | ---- |
-| XXXVO.java | VO类| java/vo/ |  用于接收/输出数据  | 是 |
-| XXXQueryVO.java | 查询条件 | java/vo/ | 用于接收查询条件 | 是 |
-| XXXController.java | 控制器代码 | java/controller/ | 对外暴露HTTP接口 | 该文件只需生成1次 |
-| origXXXDO.java | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
-| origXXXMapper.java | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
-| origXXXMapper.xml | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
-| TkXXXDO.java | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
-| MpXXXDO.java | Domain实体类定义 | java/domain/| 适用于MybatisPlus  | 是 |
-| MpXXXMapper.java | Mapper接口 | java/dao/ | 适用于MybatisPlus | 该文件只需生成1次 |
-| TkXXXMapper.java | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
-| TkXXXMapper.xml | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
-| XXXDTO.java | DTO类 | java/dto/ | 适用于service层 | 是 |
-| XXXQueryDTO.java | 查询条件 | java/dto/ | 适用于service层 | 是 |
-| IXXXService.java | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
-| origXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于原版mybatis | 是 |
-| TkXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
-| MpXXXServiceImpl.java | 服务接口实现 | java/service/ |  适用于MybatisPlus | 是 |
-| XXXClient.java | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
-| CommonConverter.java | 通用对象转换工具 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
-| XXXConverter.java | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 是 |
-| InsertGroup.java | 校验分组(插入) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
-| UpdateGroup.java | 校验分组(更新) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
-| XXX.postman_collection.json | Postman接口定义 | json/ | 使用方法：Postman>Import | 是 |
-| XXX.postman_environment.json | Postman环境变量定义 | json/ | 使用方法：Postman>Manage Environment>Import | 该文件只需生成1次 |
+| vo.ftl | VO类| java/vo/ |  用于接收/输出数据  | 是 |
+| queryVo.ftl | 查询条件 | java/vo/ | 用于接收查询条件 | 是 |
+| controller.ftl | 控制器代码 | java/controller/ | 对外暴露HTTP接口 | 该文件只需生成1次 |
+| origDomain.ftl | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
+| origMapperClass.ftl | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
+| origMapperXml.ftl | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
+| tkDomain.ftl | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
+| mpDomain.ftl | Domain实体类定义 | java/domain/| 适用于MybatisPlus  | 是 |
+| mpMapperClass.ftl | Mapper接口 | java/dao/ | 适用于MybatisPlus | 该文件只需生成1次 |
+| tkMapperClass.ftl | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
+| tkMapperXml.ftl | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
+| dto.ftl | DTO类 | java/dto/ | 适用于service层 | 是 |
+| queryDto.ftl | 查询条件 | java/dto/ | 适用于service层 | 是 |
+| serviceInterface.ftl | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
+| origServiceImpl.ftl | 服务接口实现 | java/service/ |  适用于原版mybatis | 是 |
+| tkServiceImpl.ftl | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
+| mpServiceImpl.ftl | 服务接口实现 | java/service/ |  适用于MybatisPlus | 是 |
+| feignClient.ftl | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
+| feignClientFallback.ftl | FeignClient服务接口Fallback实现 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
+| commonConverter.ftl | 通用对象转换工具 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 该文件只需生成1次 |
+| converter.ftl | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 是 |
+| validatorInsertGroup.ftl | 校验分组(插入) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
+| validatorUpdateGroup.ftl | 校验分组(更新) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
+| postmanCollection.ftl | Postman接口定义 | json/ | 使用方法：Postman>Import | 是 |
+| postmanEnvironment.ftl | Postman环境变量定义 | json/ | 使用方法：Postman>Manage Environment>Import | 该文件只需生成1次 |
 
 ## 主键字段检测规则
 1. 数据表有主键字段时，程序将直接使用该字段
