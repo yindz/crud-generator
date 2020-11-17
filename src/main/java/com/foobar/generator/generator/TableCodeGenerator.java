@@ -8,7 +8,9 @@ import com.foobar.generator.db.AbstractDbUtil;
 import com.foobar.generator.info.*;
 import com.foobar.generator.util.StringUtils;
 import freemarker.template.Configuration;
+import freemarker.template.SimpleNumber;
 import freemarker.template.Template;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -529,6 +531,18 @@ public class TableCodeGenerator {
         }
         data.setTable(tableInfo);
         data.setUuid((list) -> UUID.randomUUID());
+        //产生随机数
+        data.setRandomNumber((list) -> new Random().nextInt(100));
+        //产生随机字符串(长度默认1)
+        data.setRandomString(args -> {
+            int maxLength = 1;
+            if (args != null && args.size() > 0 && args.get(0) != null) {
+                //如有参数，则使用参数中指定的长度
+                SimpleNumber length = (SimpleNumber) args.get(0);
+                maxLength = length.getAsNumber().intValue();
+            }
+            return RandomStringUtils.randomAlphanumeric(1, maxLength);
+        });
         data.setUseDubboServiceAnnotation(this.useDubboService ? GeneratorConst.YES : GeneratorConst.NO);
         data.setUseSwagger(this.useSwagger ? GeneratorConst.YES : GeneratorConst.NO);
 
