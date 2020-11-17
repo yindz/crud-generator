@@ -42,6 +42,16 @@ public class RenderData {
     private TemplateMethodModelEx uuid;
 
     /**
+     * 随机数
+     */
+    private TemplateMethodModelEx randomNumber;
+
+    /**
+     * 随机字符
+     */
+    private TemplateMethodModelEx randomString;
+
+    /**
      * 时区
      */
     private String timeZone = GeneratorConfig.DEFAULT_TIME_ZONE;
@@ -126,5 +136,21 @@ public class RenderData {
 
     public void setResultClassName(String resultClassName) {
         this.resultClassName = resultClassName;
+    }
+
+    public TemplateMethodModelEx getRandomNumber() {
+        return randomNumber;
+    }
+
+    public void setRandomNumber(TemplateMethodModelEx randomNumber) {
+        this.randomNumber = randomNumber;
+    }
+
+    public TemplateMethodModelEx getRandomString() {
+        return randomString;
+    }
+
+    public void setRandomString(TemplateMethodModelEx randomString) {
+        this.randomString = randomString;
     }
 }
