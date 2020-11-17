@@ -204,6 +204,13 @@
     "remark": "校验分组(更新)"
   },
   {
+    "templateName": "unitTestCase.ftl",
+    "targetBaseDirName": "java",
+    "targetPkgName": "test",
+    "targetFileName": "#Tests.java",
+    "remark": "单元测试用例"
+  },
+  {
     "templateName": "postmanCollection.ftl",
     "targetBaseDirName": "json",
     "targetPkgName": "",
