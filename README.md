@@ -29,6 +29,7 @@
 - 支持生成基于 [Spring Cloud OpenFeign](https://cloud.spring.io/spring-cloud-openfeign/reference/html/) 的服务消费端代码
 - 支持生成基于 [Swagger](https://swagger.io/docs/) 的API接口及参数注解
 - 支持生成 [Postman](https://www.postman.com/) 可导入的API接口JSON定义文件
+- 支持生成 [JUnit](https://junit.org/junit5/) 所支持的单元测试用例文件
 
 ## 文件说明
 | 模板名 | 含义 | 路径 | 备注 | 表字段变化后是否重新生成 | 
@@ -56,6 +57,7 @@
 | converter.ftl | 对象转换工具类 | java/util/ |  用于VO/DTO/DO等对象之间的转换 | 是 |
 | validatorInsertGroup.ftl | 校验分组(插入) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
 | validatorUpdateGroup.ftl | 校验分组(更新) | java/validator/ |  用于Hibernate Validator分组校验 | 该文件只需生成1次 |
+| unitTestCase.ftl | JUnit单元测试用例 | java/test/ |  用于JUnit单元测试 | 是 |
 | postmanCollection.ftl | Postman接口定义 | json/ | 使用方法：Postman>Import | 是 |
 | postmanEnvironment.ftl | Postman环境变量定义 | json/ | 使用方法：Postman>Manage Environment>Import | 该文件只需生成1次 |
 
