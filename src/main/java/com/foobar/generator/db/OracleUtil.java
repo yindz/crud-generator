@@ -105,7 +105,7 @@ public class OracleUtil extends AbstractDbUtil {
                     }
                     col.setIsChar(GeneratorConst.YES);
                 }
-                if (col.getColumnPrecision() != GeneratorConst.NO) {
+                if (col.getColumnPrecision() != GeneratorConst.NO || "number".equalsIgnoreCase(col.getColumnType())) {
                     col.setIsNumber(GeneratorConst.YES);
                 }
                 resultList.add(col);
