@@ -45,7 +45,7 @@ public class ${table.javaClassName}Tests {
         for (int i = 0; i < 10; i++) {
             recordList.add(newRecord());
         }
-        Assert.assertTrue(<#if resultClassName??>Objects.nonNull(${table.javaClassNameLower}Service.insert(record))<#else >Objects.equals(true, ${table.javaClassNameLower}Service.insertAll(recordList))</#if>);
+        Assert.assertTrue(<#if resultClassName??>Objects.nonNull(${table.javaClassNameLower}Service.insertAll(recordList))<#else >Objects.equals(true, ${table.javaClassNameLower}Service.insertAll(recordList))</#if>);
     }
 
     <#if pk??>
