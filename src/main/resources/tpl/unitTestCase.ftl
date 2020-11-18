@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ${basePkgName}.dto.${table.javaClassName}DTO;
+import ${basePkgName}.dto.${table.javaClassName}QueryDTO;
 <#list table.columns as column><#if column.isPrimaryKey == 1><#assign pk = column></#if></#list>
 
 /**
@@ -26,6 +27,17 @@ public class ${table.javaClassName}Tests {
 
     @Autowired
     private I${table.javaClassName}Service ${table.javaClassNameLower}Service;
+
+    /**
+     * 测试分页查询${table.comments}数据
+     */
+    @Test
+    public void testSelect${table.javaClassName}List() {
+        ${table.javaClassName}QueryDTO query = new ${table.javaClassName}QueryDTO();
+        query.setPageNo(1);
+        query.setPageSize(10);
+        Assert.assertTrue(Objects.nonNull(${table.javaClassNameLower}Service.getRecordList(query)));
+    }
 
     /**
      * 测试插入1条${table.comments}数据
