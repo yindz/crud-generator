@@ -25,6 +25,7 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      */
     @Override
     public <#if resultClassName??>${resultClassName}<</#if>PageInfo<${table.javaClassName}VO><#if resultClassName??>></#if> getRecordList(${table.javaClassName}QueryVO query) {
+        //TODO 处理异常情况
         return <#if resultClassName??>new ${resultClassName}(</#if>null<#if resultClassName??>)</#if>;
     }
 
@@ -37,6 +38,7 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      */
     @Override
     public <#if resultClassName??>${resultClassName}<</#if>${table.javaClassName}VO<#if resultClassName??>></#if> getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+        //TODO 处理异常情况
         return <#if resultClassName??>new ${resultClassName}(</#if>null<#if resultClassName??>)</#if>;
     }</#if>
 
@@ -48,6 +50,7 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      */
     @Override
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> insert(${table.javaClassName}VO vo) {
+        //TODO 处理异常情况
         return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
     }
 
@@ -59,6 +62,7 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      */
     @Override
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> update(${table.javaClassName}VO vo) {
+        //TODO 处理异常情况
         return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
     }
 
@@ -71,6 +75,7 @@ public class ${table.javaClassName}ClientFallback implements I${table.javaClassN
      */
     @Override
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
+        //TODO 处理异常情况
         return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
     }</#if>
 }
