@@ -1,7 +1,7 @@
 package ${table.pkgName};
 
 import java.util.Map;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,7 @@ import ${basePkgName}.domain.${table.javaClassName}DO;
 public class ${table.javaClassName}Converter extends CommonConverter {
 
     //属性名->字段名
-    private static final Map<String, String> fieldNameMap = new HashMap<>();
+    private static final Map<String, String> fieldNameMap = new LinkedHashMap<>();
     static {
 <#list table.columns as column>
         fieldNameMap.put("${column.columnCamelNameLower}", "${column.columnName}");
@@ -35,10 +35,7 @@ public class ${table.javaClassName}Converter extends CommonConverter {
      * @return 是否存在
      */
     public static boolean isFieldExists(String fieldName) {
-        if (StringUtils.isBlank(fieldName)) {
-            return false;
-        }
-        return fieldNameMap.containsKey(fieldName);
+        return StringUtils.isNotBlank(fieldName) && fieldNameMap.containsKey(fieldName);
     }
 
     /**
@@ -48,10 +45,7 @@ public class ${table.javaClassName}Converter extends CommonConverter {
      * @return 排序字段名
      */
     public static String getOrderColumn(String fieldName) {
-        if (!isFieldExists(fieldName)) {
-            return null;
-        }
-        return fieldNameMap.get(fieldName);
+        return isFieldExists(fieldName) ? fieldNameMap.get(fieldName) : null;
     }
 
     //VO转DTO
