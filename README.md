@@ -36,20 +36,21 @@
 |  ----  | ---- |---- |---- | ---- |
 | vo.ftl | VO类| java/vo/ |  用于接收/输出数据  | 是 |
 | queryVo.ftl | 查询条件 | java/vo/ | 用于接收查询条件 | 是 |
+| dto.ftl | DTO类 | java/dto/ | 适用于service层 | 是 |
+| queryDto.ftl | 查询条件 | java/dto/ | 适用于service层 | 是 |
 | controller.ftl | 控制器代码 | java/controller/ | 对外暴露HTTP接口 | 该文件只需生成1次 |
+| serviceInterface.ftl | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
 | origDomain.ftl | 实体类 | java/entity/ |  适用于原版mybatis | 是 |
 | origMapperClass.ftl | Mapper接口 | java/dao/ | 适用于原版mybatis | 该文件只需生成1次 |
 | origMapperXml.ftl | Mapper XML | resources/ | 适用于原版mybatis  | 是 |
+| origServiceImpl.ftl | 服务接口实现 | java/service/ |  适用于原版mybatis | 是 |
 | tkDomain.ftl | Domain实体类定义 | java/domain/| 适用于mybatis通用Mapper  | 是 |
-| mpDomain.ftl | Domain实体类定义 | java/domain/| 适用于MybatisPlus  | 是 |
-| mpMapperClass.ftl | Mapper接口 | java/dao/ | 适用于MybatisPlus | 该文件只需生成1次 |
 | tkMapperClass.ftl | Mapper接口 | java/dao/ |  适用于mybatis通用Mapper | 该文件只需生成1次 |
 | tkMapperXml.ftl | Mapper XML | resources/ | 适用于mybatis通用Mapper | 该文件只需生成1次 |
-| dto.ftl | DTO类 | java/dto/ | 适用于service层 | 是 |
-| queryDto.ftl | 查询条件 | java/dto/ | 适用于service层 | 是 |
-| serviceInterface.ftl | 服务接口定义 | java/service/ |  | 该文件只需生成1次 |
-| origServiceImpl.ftl | 服务接口实现 | java/service/ |  适用于原版mybatis | 是 |
 | tkServiceImpl.ftl | 服务接口实现 | java/service/ |  适用于mybatis通用Mapper | 是 |
+| mpDomain.ftl | Domain实体类定义 | java/domain/| 适用于MybatisPlus  | 是 |
+| mpMapperClass.ftl | Mapper接口 | java/dao/ | 适用于MybatisPlus | 该文件只需生成1次 |
+| mpMapperXml.ftl | Mapper XML | resources/ |  适用于MybatisPlus | 该文件只需生成1次 |
 | mpServiceImpl.ftl | 服务接口实现 | java/service/ |  适用于MybatisPlus | 是 |
 | feignClient.ftl | FeignClient服务接口 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
 | feignClientFallback.ftl | FeignClient服务接口Fallback实现 | java/feign/ |  适用于Spring Cloud消费者端  | 该文件只需生成1次 |
@@ -161,7 +162,7 @@ TableCodeGenerator 的可选参数设置：
 - 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
 - 如果您采用 Mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 Mybatis通用Mapper 或 MybatisPlus
-- 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的开发团队想做的事情太多，且其中某些开发人员缺乏对开源项目负责任的职业态度，导致其API相对较乱(特别是它的分页API比较奇怪)，相比之下，如果您的项目规模较大较规范，且需要长期维护，那么建议选用目前的 [Mybatis通用Mapper](https://github.com/abel533/Mapper)!
+- 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的开发团队想做的事情太多，且其中某些开发人员缺乏对开源项目负责任的职业态度，导致其API相对较乱(如版本平滑升级等)，相比之下，如果希望项目规模扩大后依然规范，且需要长期维护，那么建议选用目前的 [Mybatis通用Mapper](https://github.com/abel533/Mapper)!
 - 如果使用了Mybatis通用Mapper或MybatisPlus，则您的java版本需要1.8或更高(因为代码中使用了Lambda表达式)
 
 ### 扩展
