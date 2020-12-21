@@ -143,7 +143,7 @@ TableContext 的可选参数设置：
 | setVersionColumn() | 如果该表有乐观锁，可在此指定其字段名(不区分大小写) | 默认无 |
 | setPageSize() | 指定一个大于0的整数来指定默认分页大小 | 默认为10 |
 | setSequenceName() | 针对Oracle数据库，可以指定序列名称 | 如果不指定，则默认使用 SEQ_表名 作为序列名称 |
-| setLogicDeleteColumn() | 如果该表需要实现逻辑删除功能，可以指定相应字段名 | 如果不指定，则无逻辑删除功能 |
+| setLogicDeleteColumn() | 如果该表需要实现逻辑删除功能，指定相应字段名，所有删除操作不再是物理删除而是逻辑删除 | 如果不指定，则无逻辑删除功能 |
 
 
 TableCodeGenerator 的可选参数设置：
