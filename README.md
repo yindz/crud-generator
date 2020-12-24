@@ -138,7 +138,8 @@ TableContext 的可选参数设置：
 | setTableNamePrefixToRemove() | 指定需去掉的表名前缀 | 留空则不去掉任何前缀 |
 | setLikeColumns() | 指定启用模糊查询的字段名(用于字符类型字段，多个以逗号隔开) | 如果字段为字符类型则在相应QueryDTO类中增加 xxxLike 属性 |
 | setRangeColumns() | 指定启用取值范围查询的字段名(用于时间或数字类型字段，多个以逗号隔开) | 如果字段为时间或数字类型则在相应QueryDTO类中增加 xxxMin/xxxMax 属性 |
-| setInColumns() | 指定启用IN查询的字段名(多个以逗号隔开) | 在相应QueryDTO类中增加 xxxIn 属性 |
+| setInColumns() | 指定启用 IN 查询的字段名(多个以逗号隔开) | 在相应QueryDTO类中增加 xxxIn 属性 |
+| setNotInColumns() | 指定启用 NOT IN 查询的字段名(多个以逗号隔开) | 在相应QueryDTO类中增加 xxxNotIn 属性 |
 | setPrimaryKeyColumn() | 手动指定主键字段名(不区分大小写) | 如果程序无法自动检测到主键字段，则在此参数指定(适用于无主键且无唯一索引的表) |
 | setVersionColumn() | 如果该表有乐观锁，可在此指定其字段名(不区分大小写) | 默认无 |
 | setPageSize() | 指定一个大于0的整数来指定默认分页大小 | 默认为10 |
