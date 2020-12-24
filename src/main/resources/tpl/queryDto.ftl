@@ -59,6 +59,13 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
      */
     private List<${column.columnJavaType}> ${column.columnCamelNameLower}In;
 </#if>
+<#if column.enableNotIn == 1>
+
+    /**
+     * ${column.columnComment!''} NOT IN参数
+     */
+    private List<${column.columnJavaType}> ${column.columnCamelNameLower}NotIn;
+</#if>
 </#list>
 
 <#include "./public/pageParams.ftl"/>
@@ -99,6 +106,16 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
 
     public void set${column.columnCamelNameUpper}In(List<${column.columnJavaType}> ${column.columnCamelNameLower}In) {
         this.${column.columnCamelNameLower}In = ${column.columnCamelNameLower}In;
+    }
+    </#if>
+    <#if column.enableNotIn == 1>
+
+    public List<${column.columnJavaType}> get${column.columnCamelNameUpper}NotIn() {
+        return this.${column.columnCamelNameLower}NotIn;
+    }
+
+    public void set${column.columnCamelNameUpper}NotIn(List<${column.columnJavaType}> ${column.columnCamelNameLower}NotIn) {
+        this.${column.columnCamelNameLower}NotIn = ${column.columnCamelNameLower}NotIn;
     }
     </#if>
     </#list>

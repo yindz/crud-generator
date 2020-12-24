@@ -50,6 +50,15 @@
            </foreach>
         </if>
         </#if>
+        <#if column.enableNotIn == 1>
+        <if test="${column.columnCamelNameLower}NotIn != null and ${column.columnCamelNameLower}NotIn.size() &gt; 0">
+           and a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> not in
+           <foreach collection="${column.columnCamelNameLower}NotIn" item="${column.columnCamelNameLower}Neq" open="(" close=")" separator=",">
+                ${r"#{"}${column.columnCamelNameLower}Neq, jdbcType=${column.columnMyBatisType}}
+           </foreach>
+        </if>
+
+        </#if>
         </#list>
     </sql>
 

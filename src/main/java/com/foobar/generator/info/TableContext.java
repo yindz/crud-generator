@@ -57,6 +57,11 @@ public class TableContext {
      */
     private String inColumns;
 
+    /**
+     * 允许按not in查询的字段
+     */
+    private String notInColumns;
+
     public static TableContext withName(String name) {
         TableContext tc = new TableContext();
         tc.setTableName(name);
@@ -149,5 +154,13 @@ public class TableContext {
 
     public void setInColumns(String inColumns) {
         this.inColumns = inColumns;
+    }
+
+    public String getNotInColumns() {
+        return notInColumns;
+    }
+
+    public void setNotInColumns(String notInColumns) {
+        this.notInColumns = notInColumns;
     }
 }

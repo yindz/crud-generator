@@ -295,6 +295,7 @@ public class TableCodeGenerator {
             Set<String> likeColumns = StringUtils.splitToSet(table.getLikeColumns(), ",");
             Set<String> rangeColumns = StringUtils.splitToSet(table.getRangeColumns(), ",");
             Set<String> inColumns = StringUtils.splitToSet(table.getInColumns(), ",");
+            Set<String> notInColumns = StringUtils.splitToSet(table.getNotInColumns(), ",");
             boolean hasPrimaryKey = resultList.stream().anyMatch(r -> GeneratorConst.YES == r.getIsPrimaryKey());
             if (!hasPrimaryKey && StringUtils.isEmpty(table.getPrimaryKeyColumn())) {
                 throw new IllegalArgumentException("数据表 " + table.getTableName() + " 无主键及唯一索引字段，请手动指定primaryKeyColumn参数值");
@@ -343,6 +344,9 @@ public class TableCodeGenerator {
                 }
                 if (inColumns.contains(c.getColumnName())) {
                     c.setEnableIn(GeneratorConst.YES);
+                }
+                if (notInColumns.contains(c.getColumnName())) {
+                    c.setEnableNotIn(GeneratorConst.YES);
                 }
             });
             logger.info("数据表 {} 包含 {} 个字段", table.getTableName(), resultList.size());

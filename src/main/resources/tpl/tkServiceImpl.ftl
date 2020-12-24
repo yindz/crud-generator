@@ -60,6 +60,11 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
            criteria.andIn(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}In());
         }
         </#if>
+        <#if column.enableNotIn == 1>
+        if (query.get${column.columnCamelNameUpper}NotIn() != null && !query.get${column.columnCamelNameUpper}NotIn().isEmpty()) {
+           criteria.andNotIn(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}NotIn());
+        }
+        </#if>
         </#list>
 <#if logicDeleteColumn??>        criteria.andEqualTo(${table.javaClassName}DO::get${logicDeleteColumn.columnCamelNameUpper}, <#if logicDeleteColumn.isNumber == 1>0<#else>"0"</#if>);</#if>
         if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {

@@ -119,6 +119,11 @@ public class ColumnInfo {
      */
     private int enableIn = GeneratorConst.NO;
 
+    /**
+     * 是否启用NOT IN查询
+     */
+    private int enableNotIn = GeneratorConst.NO;
+
     public String getTableName() {
         return tableName;
     }
@@ -293,5 +298,13 @@ public class ColumnInfo {
 
     public void setEnableIn(int enableIn) {
         this.enableIn = enableIn;
+    }
+
+    public int getEnableNotIn() {
+        return enableNotIn;
+    }
+
+    public void setEnableNotIn(int enableNotIn) {
+        this.enableNotIn = enableNotIn;
     }
 }

@@ -59,6 +59,11 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             lambdaQueryWrapper.in(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}In());
         }
         </#if>
+        <#if column.enableNotIn == 1>
+        if (query.get${column.columnCamelNameUpper}NotIn() != null && !query.get${column.columnCamelNameUpper}NotIn().isEmpty()) {
+           lambdaQueryWrapper.notIn(${table.javaClassName}DO::get${column.columnCamelNameUpper}, query.get${column.columnCamelNameUpper}NotIn());
+        }
+        </#if>
         </#list>
 <#if logicDeleteColumn??>        lambdaQueryWrapper.eq("${logicDeleteColumn.columnCamelNameLower}", <#if logicDeleteColumn.isNumber == 1>0<#else>"0"</#if>);</#if>
         if (!${table.javaClassName}Converter.isFieldExists(query.getOrderBy())) {
