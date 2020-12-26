@@ -1,5 +1,7 @@
 package com.foobar.generator.info;
 
+import com.foobar.generator.util.StringUtils;
+
 /**
  * 数据表上下文信息
  *
@@ -81,7 +83,7 @@ public class TableContext {
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        this.tableName = StringUtils.deleteWhitespace(tableName);
     }
 
     public String getTableNamePrefixToRemove() {
@@ -89,7 +91,7 @@ public class TableContext {
     }
 
     public void setTableNamePrefixToRemove(String tableNamePrefixToRemove) {
-        this.tableNamePrefixToRemove = tableNamePrefixToRemove;
+        this.tableNamePrefixToRemove = StringUtils.deleteWhitespace(tableNamePrefixToRemove);
     }
 
     public String getPrimaryKeyColumn() {
@@ -97,7 +99,7 @@ public class TableContext {
     }
 
     public void setPrimaryKeyColumn(String primaryKeyColumn) {
-        this.primaryKeyColumn = primaryKeyColumn;
+        this.primaryKeyColumn = StringUtils.deleteWhitespace(primaryKeyColumn);
     }
 
     public String getVersionColumn() {
@@ -105,7 +107,7 @@ public class TableContext {
     }
 
     public void setVersionColumn(String versionColumn) {
-        this.versionColumn = versionColumn;
+        this.versionColumn = StringUtils.deleteWhitespace(versionColumn);
     }
 
     public String getLogicDeleteColumn() {
@@ -113,7 +115,7 @@ public class TableContext {
     }
 
     public void setLogicDeleteColumn(String logicDeleteColumn) {
-        this.logicDeleteColumn = logicDeleteColumn;
+        this.logicDeleteColumn = StringUtils.deleteWhitespace(logicDeleteColumn);
     }
 
     public String getSequenceName() {
@@ -121,7 +123,7 @@ public class TableContext {
     }
 
     public void setSequenceName(String sequenceName) {
-        this.sequenceName = sequenceName;
+        this.sequenceName = StringUtils.deleteWhitespace(sequenceName);
     }
 
     public Integer getPageSize() {

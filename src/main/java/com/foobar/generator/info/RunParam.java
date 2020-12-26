@@ -1,5 +1,7 @@
 package com.foobar.generator.info;
 
+import com.foobar.generator.util.StringUtils;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,7 +56,7 @@ public class RunParam {
     }
 
     public void setOutputPath(String outputPath) {
-        this.outputPath = outputPath;
+        this.outputPath = StringUtils.trim(outputPath);
     }
 
     public String getAuthor() {
@@ -78,7 +80,7 @@ public class RunParam {
     }
 
     public void setBasePkgName(String basePkgName) {
-        this.basePkgName = basePkgName;
+        this.basePkgName = StringUtils.deleteWhitespace(basePkgName);
     }
 
     public String getBaseEntityClass() {
@@ -86,7 +88,7 @@ public class RunParam {
     }
 
     public void setBaseEntityClass(String baseEntityClass) {
-        this.baseEntityClass = baseEntityClass;
+        this.baseEntityClass = StringUtils.deleteWhitespace(baseEntityClass);
     }
 
     public String getResultClass() {
@@ -94,6 +96,6 @@ public class RunParam {
     }
 
     public void setResultClass(String resultClass) {
-        this.resultClass = resultClass;
+        this.resultClass = StringUtils.deleteWhitespace(resultClass);
     }
 }

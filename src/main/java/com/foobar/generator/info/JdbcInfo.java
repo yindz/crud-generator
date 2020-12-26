@@ -1,5 +1,7 @@
 package com.foobar.generator.info;
 
+import com.foobar.generator.util.StringUtils;
+
 /**
  * JDBC参数
  *
@@ -55,7 +57,7 @@ public class JdbcInfo {
     }
 
     public void setHost(String host) {
-        this.host = host;
+        this.host = StringUtils.deleteWhitespace(host);
     }
 
     public String getPort() {
@@ -63,7 +65,7 @@ public class JdbcInfo {
     }
 
     public void setPort(String port) {
-        this.port = port;
+        this.port = StringUtils.deleteWhitespace(port);
     }
 
     public String getSchema() {
@@ -71,7 +73,7 @@ public class JdbcInfo {
     }
 
     public void setSchema(String schema) {
-        this.schema = schema;
+        this.schema = StringUtils.deleteWhitespace(schema);
     }
 
     public String getUsername() {
@@ -79,7 +81,7 @@ public class JdbcInfo {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = StringUtils.deleteWhitespace(username);
     }
 
     public String getPassword() {
@@ -95,6 +97,6 @@ public class JdbcInfo {
     }
 
     public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+        this.serviceName = StringUtils.deleteWhitespace(serviceName);
     }
 }

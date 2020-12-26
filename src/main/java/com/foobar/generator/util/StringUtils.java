@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 字符串工具类
@@ -98,15 +99,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (isBlank(src) || isBlank(sep)) {
             return resultSet;
         }
-        String[] tmp = src.split(sep);
+        String[] tmp = split(deleteWhitespace(src), sep);
         if (tmp.length == 0) {
             return resultSet;
         }
-        Arrays.stream(tmp).forEach(s -> {
-            if (isNotBlank(s)) {
-                resultSet.add(s);
-            }
-        });
-        return resultSet;
+        return Arrays.stream(tmp).filter(org.apache.commons.lang3.StringUtils::isNotBlank).collect(Collectors.toSet());
     }
 }

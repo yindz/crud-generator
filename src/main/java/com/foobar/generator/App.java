@@ -1,5 +1,6 @@
 package com.foobar.generator;
 
+import com.foobar.generator.constant.DatabaseType;
 import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.generator.TableCodeGenerator;
 import com.foobar.generator.info.JdbcInfo;
@@ -15,19 +16,19 @@ public class App {
         JdbcInfo param = new JdbcInfo();
 
         //指定数据库类型
-        param.setDbType(GeneratorConst.SQLSERVER);
+        param.setDbType(DatabaseType.ORACLE.getCode());
 
         //数据库主机名或IP
-        param.setHost("192.168.75.131");
+        param.setHost("192.168.75.132");
 
         //数据库端口号
-        param.setPort("1646");
+        param.setPort("1521");
 
         //schema名称(oracle填写Schema名称，mysql或sqlserver则填写数据库名称)
         param.setSchema("newdb");
 
         //数据库用户名
-        param.setUsername("sa");
+        param.setUsername("test");
 
         //数据库用户密码
         param.setPassword("123456");
@@ -44,10 +45,10 @@ public class App {
         rp.setOutputPath("E:\\tmp\\generated");
 
         //表名
-        TableContext table = TableContext.withName("t_product");
+        TableContext table = TableContext.withName("T_PRODUCT");
 
         //需去掉的表名前缀(留空不去掉任何前缀)
-        table.setTableNamePrefixToRemove("t_");
+        table.setTableNamePrefixToRemove("T_");
 
         //手动指定主键字段名(不区分大小写); 如果程序无法自动检测到主键字段，则在此参数指定；适用于无主键且无唯一索引的表
         //table.setPrimaryKeyColumn("code");
