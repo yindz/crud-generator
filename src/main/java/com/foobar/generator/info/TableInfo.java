@@ -1,5 +1,7 @@
 package com.foobar.generator.info;
 
+import com.foobar.generator.util.StringUtils;
+
 import java.util.List;
 import java.util.SortedSet;
 
@@ -122,7 +124,7 @@ public class TableInfo {
     }
 
     public void setComments(String comments) {
-        this.comments = comments;
+        this.comments = StringUtils.trim(comments);
     }
 
     public String getJavaClassName() {
