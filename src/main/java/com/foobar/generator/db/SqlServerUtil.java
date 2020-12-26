@@ -51,7 +51,7 @@ public class SqlServerUtil extends AbstractDbUtil {
         if (schemaName == null) {
             return null;
         }
-        String sql = String.format(SQL_MAP.get("QUERY_TABLE_NAMES"), schemaName.toLowerCase());
+        String sql = String.format(SQL_MAP.get(GeneratorConst.QUERY_TABLE_NAMES), schemaName.toLowerCase());
         List<String> resultList = this.selectList(sql);
         if (resultList != null && !resultList.isEmpty()) {
             return resultList.stream().map(String::toLowerCase).collect(Collectors.toList());
@@ -73,7 +73,7 @@ public class SqlServerUtil extends AbstractDbUtil {
         if (StringUtils.isEmpty(uniqueColumnName)) {
             uniqueColumnName = findUniqueIndexColumnName(tableName);
         }
-        String sql = String.format(SQL_MAP.get("QUERY_TABLE_COLUMNS"), tableName);
+        String sql = String.format(SQL_MAP.get(GeneratorConst.QUERY_TABLE_COLUMNS), tableName);
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(sql);
             if (rs == null) {

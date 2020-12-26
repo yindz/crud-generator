@@ -51,7 +51,7 @@ public class MySQLUtil extends AbstractDbUtil {
         if (schemaName == null) {
             return null;
         }
-        String sql = String.format(SQL_MAP.get("QUERY_TABLE_NAMES"), schemaName.toLowerCase());
+        String sql = String.format(SQL_MAP.get(GeneratorConst.QUERY_TABLE_NAMES), schemaName.toLowerCase());
         List<String> resultList = this.selectList(sql);
         if (resultList != null && !resultList.isEmpty()) {
             return resultList.stream().map(String::toLowerCase).collect(Collectors.toList());
@@ -71,7 +71,7 @@ public class MySQLUtil extends AbstractDbUtil {
         List<ColumnInfo> resultList = new ArrayList<>();
         boolean hasPrimaryKey = false;
         String uniqueIndexColumn = "";
-        String sql = String.format(SQL_MAP.get("QUERY_TABLE_COLUMNS"), schemaName, tableName);
+        String sql = String.format(SQL_MAP.get(GeneratorConst.QUERY_TABLE_COLUMNS), schemaName, tableName);
         try (Statement st = connection.prepareStatement(sql)) {
             ResultSet rs = st.executeQuery(sql);
             if (rs == null) {

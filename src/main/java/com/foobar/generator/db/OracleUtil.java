@@ -51,7 +51,7 @@ public class OracleUtil extends AbstractDbUtil {
         if (schemaName == null) {
             return null;
         }
-        String sql = String.format(SQL_MAP.get("QUERY_TABLE_NAMES"), schemaName.toUpperCase());
+        String sql = String.format(SQL_MAP.get(GeneratorConst.QUERY_TABLE_NAMES), schemaName.toUpperCase());
         List<String> resultList = this.selectList(sql);
         if (resultList != null && !resultList.isEmpty()) {
             return resultList.stream().map(String::toUpperCase).collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class OracleUtil extends AbstractDbUtil {
     public List<ColumnInfo> getColumnInfo(String tableName) {
         List<ColumnInfo> resultList = new ArrayList<>();
         String uniqueColumnName = findUniqueColumnName(tableName);
-        String sql = String.format(SQL_MAP.get("QUERY_TABLE_COLUMNS"), tableName);
+        String sql = String.format(SQL_MAP.get(GeneratorConst.QUERY_TABLE_COLUMNS), tableName);
         try (Statement st = connection.prepareStatement(sql)) {
             ResultSet rs = st.executeQuery(sql);
             if (rs == null) {

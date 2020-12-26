@@ -18,6 +18,8 @@ public final class GeneratorConst {
     public static final String ORIG = "orig";
     public static final String PLACEHOLDER = "#";
     public static final String DEFAULT_PKG_NAME = "com.example.myapp";
+    public static final String QUERY_TABLE_NAMES = "QUERY_TABLE_NAMES";
+    public static final String QUERY_TABLE_COLUMNS = "QUERY_TABLE_COLUMNS";
 
     public final static Map<String, String> javaBoxTypeMap = new HashMap<>();
     public final static Map<String, String> mybatisTypeMap = new HashMap<>();
