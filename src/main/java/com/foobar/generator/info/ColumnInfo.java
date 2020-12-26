@@ -1,6 +1,7 @@
 package com.foobar.generator.info;
 
 import com.foobar.generator.constant.GeneratorConst;
+import com.foobar.generator.util.StringUtils;
 
 /**
  * 列基本属性
@@ -137,7 +138,7 @@ public class ColumnInfo {
     }
 
     public void setTableComment(String tableComment) {
-        this.tableComment = tableComment;
+        this.tableComment = StringUtils.trim(tableComment);
     }
 
     public String getColumnName() {
@@ -169,7 +170,7 @@ public class ColumnInfo {
     }
 
     public void setColumnComment(String columnComment) {
-        this.columnComment = columnComment;
+        this.columnComment = StringUtils.trim(columnComment);
     }
 
     public String getColumnType() {
