@@ -57,6 +57,11 @@ public class RenderData {
     private String timeZone = GeneratorConfig.DEFAULT_TIME_ZONE;
 
     /**
+     * 时间格式
+     */
+    private String timePattern = GeneratorConfig.DEFAULT_TIME_PATTERN;
+
+    /**
      * 是否启用Dubbo服务
      */
     private int useDubboServiceAnnotation = GeneratorConst.NO;
@@ -152,5 +157,13 @@ public class RenderData {
 
     public void setRandomString(TemplateMethodModelEx randomString) {
         this.randomString = randomString;
+    }
+
+    public String getTimePattern() {
+        return timePattern;
+    }
+
+    public void setTimePattern(String timePattern) {
+        this.timePattern = timePattern;
     }
 }

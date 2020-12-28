@@ -24,6 +24,11 @@ public class GeneratorConfig {
     public static final String DEFAULT_TIME_ZONE = "GMT+8";
 
     /**
+     * 默认时间格式
+     */
+    public static final String DEFAULT_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    /**
      * 数据库实现类映射
      */
     public static final Map<String, DbUtilInfo> dbUtilMap = new HashMap<>();
