@@ -45,8 +45,8 @@
         <#if column.enableIn == 1>
         <if test="${column.columnCamelNameLower}In != null and ${column.columnCamelNameLower}In.size() &gt; 0">
            and a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> in
-           <foreach collection="${column.columnCamelNameLower}In" item="${column.columnCamelNameLower}Value" open="(" close=")" separator=",">
-               ${r"#{"}${column.columnCamelNameLower}Value, jdbcType=${column.columnMyBatisType}}
+           <foreach collection="${column.columnCamelNameLower}In" item="${column.columnCamelNameLower}Eq" open="(" close=")" separator=",">
+               ${r"#{"}${column.columnCamelNameLower}Eq, jdbcType=${column.columnMyBatisType}}
            </foreach>
         </if>
         </#if>
