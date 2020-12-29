@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageInfo;
 
@@ -78,7 +79,7 @@ public class CommonConverter {
          b.setNavigateLastPage(src.getNavigateLastPage());
          b.setNavigatepageNums(src.getNavigatepageNums());
          b.setNavigatePages(src.getNavigatePages());
-         if (src.getList() != null && !src.getList().isEmpty()) {
+         if (!CollectionUtils.isEmpty(src.getList())) {
              List<T> list = new ArrayList<>();
              src.getList().forEach(e -> {
                  if (e == null) {

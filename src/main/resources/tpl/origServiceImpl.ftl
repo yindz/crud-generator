@@ -98,7 +98,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
      @Override
      @Transactional(rollbackFor = Exception.class)
      public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> insertAll(List<${table.javaClassName}DTO> recordList) {
-         Preconditions.checkArgument(recordList != null && !recordList.isEmpty(), "待插入的数据为空");
+         Preconditions.checkArgument(!CollectionUtils.isEmpty(recordList), "待插入的数据为空");
          int success = 0;
          //说明: 因为Oracle不允许超过1000个参数，所以此处逐条插入
          for (${table.javaClassName}DTO record : recordList) {
@@ -171,7 +171,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Override
     @Transactional(rollbackFor = Exception.class)
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> deleteAll(List<${pk.columnJavaType}> ${pk.columnCamelNameLower}List) {
-        Preconditions.checkArgument(${pk.columnCamelNameLower}List != null && !${pk.columnCamelNameLower}List.isEmpty(), "待删除的${table.comments}数据${pk.columnComment}列表为空");
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(${pk.columnCamelNameLower}List), "待删除的${table.comments}数据${pk.columnComment}列表为空");
         int success = 0;
         ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         for (${pk.columnJavaType} ${pk.columnCamelNameLower} : ${pk.columnCamelNameLower}List) {
