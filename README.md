@@ -202,21 +202,25 @@ TableCodeGenerator 的可选参数设置：
 | 变量 | 含义| 变量类型 |
 |  ----  | ----  |----  |
 | ${column.columnName} | 原始列名| String |
-| ${column.columnCamelNameLower} | 驼峰形式列名(首字母小写)|String |
+| ${column.columnCamelNameLower} | 驼峰形式列名(首字母小写)| String |
 | ${column.columnCamelNameUpper} | 驼峰形式列名(首字母大写) | String |
 | ${column.columnComment} | 列注释| String |
-| ${column.columnType} | 列类型(数据库中的类型 |String |
+| ${column.columnType} | 列类型(数据库中的类型 | String |
 | ${column.columnJavaType} | 列类型对应的Java类型| String |
 | ${column.columnMyBatisType} | 列类型对应的mybatis jdbcType| String |
 | ${column.columnLength} | 列长度| int |
 | ${column.columnPrecision} | 列精度(针对数字列) | int |
-| ${column.columnScale} | 列小数位数(针对数字列) |int |
-| ${column.nullable} | 是否可空(0否/1是) |int |
-| ${column.charLength} | 列长度(针对字符列) |int |
+| ${column.columnScale} | 列小数位数(针对数字列) | int |
+| ${column.nullable} | 是否可空(0否/1是) | int |
+| ${column.charLength} | 列长度(针对字符列) | int |
 | ${column.defaultValue} | 列默认值| String |
-| ${column.isNumber} | 是否为数字列(0否/1是) |int |
+| ${column.isNumber} | 是否为数字列(0否/1是) | int |
 | ${column.isChar} | 是否为字符列(0否/1是) | int |
-| ${column.isPrimaryKey} | 是否为主键(0否/1是) |int |
+| ${column.isPrimaryKey} | 是否为主键(0否/1是) | int |
+| ${column.enableLike} | 是否启用 LIKE 模糊查询(0否/1是，仅限于字符列) | int |
+| ${column.enableIn} | 是否启用 IN 查询(0否/1是) | int |
+| ${column.enableRange} | 是否启用范围(大于等于、小于等于)查询(0否/1是，仅限于数字和日期类型的列) | int |
+| ${column.enableNotIn} | 是否启用 NOT IN 查询(0否/1是) | int |
 
 编写完模板文件之后，在 template-config.json 文件中配置该模板的相关信息即可。
 
