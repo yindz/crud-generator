@@ -7,6 +7,7 @@
 - [使用范例](#使用范例)
 - [最佳实践](#最佳实践)
   - [使用建议](#使用建议)
+  - [常见类型映射](#常见类型映射说明)
 - [扩展](#扩展)
   - [适配更多数据库](#适配更多数据库)
   - [更多代码模板](#更多代码模板)
@@ -166,6 +167,46 @@ TableCodeGenerator 的可选参数设置：
 - 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的开发团队想做的事情太多，且其中某些开发人员缺乏对开源项目负责任的职业态度，导致其API相对较乱(如版本平滑升级等)，相比之下，如果希望项目规模扩大后依然规范，且需要长期维护，那么建议选用目前的 [Mybatis通用Mapper](https://github.com/abel533/Mapper)!
 - 如果使用了Mybatis通用Mapper或MybatisPlus，则您的java版本需要1.8或更高(因为代码中使用了Lambda表达式)
 
+### 常见类型映射说明
+| 数据库中的数据类型 | 实体类中Java变量类型 | 备注 |
+|  ----  | ----  | ---- |
+| bigint | Long |  |
+| binary | Byte[] |  |
+| bit | Boolean |  |
+| blob | Byte[] |  |
+| char | String |  |
+| date | Date |  |
+| datetime | Date |  |
+| decimal | BigDecimal |  |
+| double | Double |  |
+| float | Float |  |
+| image | Byte[] |  |
+| int | Integer |  |
+| int4 | Integer |  |
+| int8 | Long |  |
+| longblob | Byte[] |  |
+| mediumblob | Byte[] |  |
+| money | BigDecimal |  |
+| nchar | String |  |
+| ntext | String |  |
+| number | Long | 无小数时 |
+| number | BigDecimal | 有小数时 |
+| numeric | BigDecimal |  |
+| nvarchar | String |  |
+| real | Float |  |
+| smalldatetime | Date |  |
+| smallint | Integer |  |
+| smallmoney | BigDecimal |  |
+| sql_variant | String |  |
+| text | String |  |
+| timestamp | Date |  |
+| timestamp(6) | Date |  |
+| tinyint | Integer |  |
+| uniqueidentifier | String |  |
+| varbinary | Byte[] |  |
+| varchar | String |  |
+| varchar2 | String |  |
+
 ### 扩展
 #### 适配更多数据库
 1. 编写自定义的SQL语句(用于查询数据库中的表名、表注释、字段名、字段注释、字段类型、字段长度、主键、唯一索引等)，约定保存路径为 resources/sql_XXX.xml
@@ -202,24 +243,24 @@ TableCodeGenerator 的可选参数设置：
 | 变量 | 含义| 变量类型 |
 |  ----  | ----  |----  |
 | ${column.columnName} | 原始列名| String |
-| ${column.columnCamelNameLower} | 驼峰形式列名(首字母小写)| String |
+| ${column.columnCamelNameLower} | 驼峰形式列名(首字母小写) | String |
 | ${column.columnCamelNameUpper} | 驼峰形式列名(首字母大写) | String |
 | ${column.columnComment} | 列注释| String |
-| ${column.columnType} | 列类型(数据库中的类型 | String |
-| ${column.columnJavaType} | 列类型对应的Java类型| String |
-| ${column.columnMyBatisType} | 列类型对应的mybatis jdbcType| String |
+| ${column.columnType} | 列类型(数据库中的类型) | String |
+| ${column.columnJavaType} | 列类型对应的Java类型 | String |
+| ${column.columnMyBatisType} | 列类型对应的mybatis jdbcType | String |
 | ${column.columnLength} | 列长度| int |
 | ${column.columnPrecision} | 列精度(针对数字列) | int |
 | ${column.columnScale} | 列小数位数(针对数字列) | int |
 | ${column.nullable} | 是否可空(0否/1是) | int |
 | ${column.charLength} | 列长度(针对字符列) | int |
-| ${column.defaultValue} | 列默认值| String |
+| ${column.defaultValue} | 列默认值 | String |
 | ${column.isNumber} | 是否为数字列(0否/1是) | int |
 | ${column.isChar} | 是否为字符列(0否/1是) | int |
 | ${column.isPrimaryKey} | 是否为主键(0否/1是) | int |
 | ${column.enableLike} | 是否启用 LIKE 模糊查询(0否/1是，仅限于字符列) | int |
 | ${column.enableIn} | 是否启用 IN 查询(0否/1是) | int |
-| ${column.enableRange} | 是否启用范围(大于等于、小于等于)查询(0否/1是，仅限于数字和日期类型的列) | int |
+| ${column.enableRange} | 是否启用范围(大于等于、小于等于)查询(0否/1是，仅限于数字和日期时间类型的列) | int |
 | ${column.enableNotIn} | 是否启用 NOT IN 查询(0否/1是) | int |
 
 编写完模板文件之后，在 template-config.json 文件中配置该模板的相关信息即可。
