@@ -161,7 +161,7 @@ TableCodeGenerator 的可选参数设置：
 ## 最佳实践
 
 ### 使用建议
-- 如果您采用原版 mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
+- 如果您采用原版 Mybatis，不应在 resources/XXXMapper.xml 中编写自己的业务逻辑；建议自行继承 XXXMapper，然后在新的xml文件中编写自己的逻辑
 - 如果您采用 Mybatis通用Mapper，可以在 resources/XXXCommonMapper.xml 中编写自己的业务逻辑
 - 如果数据表字段变化比较频繁，建议采用 Mybatis通用Mapper 或 MybatisPlus
 - 个人意见：MybatisPlus 本身是一个优秀的增强插件，但它的开发团队想做的事情太多，且其中某些开发人员缺乏对开源项目负责任的职业态度，导致其API相对较乱(如版本平滑升级等)，相比之下，如果希望项目规模扩大后依然规范，且需要长期维护，那么建议选用目前的 [Mybatis通用Mapper](https://github.com/abel533/Mapper)!
@@ -206,6 +206,11 @@ TableCodeGenerator 的可选参数设置：
 | varbinary | Byte[] |  |
 | varchar | String |  |
 | varchar2 | String |  |
+
+### 其它说明
+- 数据表应当包含1个唯一索引或主键字段(可以与具体业务无关)
+- 如果指定Oracle数据库，则表名、字段名会统一为大写形式
+- 如果指定MySQL数据库，则表名、字段名会统一为小写形式，且会自动加上反引号
 
 ### 扩展
 #### 适配更多数据库
