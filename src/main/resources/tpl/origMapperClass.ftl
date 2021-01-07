@@ -42,7 +42,7 @@ public interface ${table.javaClassName}Mapper {
      * @param query 查询条件
      * @return 查询结果
      */
-    int getRecordCount(Map<String, Object> query);
+    long getRecordCount(Map<String, Object> query);
 
     /**
      * 插入

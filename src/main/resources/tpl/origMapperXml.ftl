@@ -83,7 +83,7 @@
     </#if>
 
     <!--查询数量-->
-    <select id="getRecordCount" parameterType="map" resultType="java.lang.Integer">
+    <select id="getRecordCount" parameterType="map" resultType="java.lang.Long">
         select count(*) from <include refid="TABLE_NAME"/> a
         <where>
             <include refid="QUERY_CONDITIONS"/>
