@@ -61,11 +61,7 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     public <#if resultClassName??>${resultClassName}<</#if>${table.javaClassName}DTO<#if resultClassName??>></#if> getRecord(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
         Preconditions.checkArgument(<#if pk.isChar == 1>StringUtils.isNotBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} != null</#if>, "${pk.columnCamelNameLower}为空!");
         ${table.javaClassName}DO record = ${table.javaClassNameLower}Mapper.getRecordBy${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-        if (record != null) {
-            return <#if resultClassName??>new ${resultClassName}(</#if>${table.javaClassName}Converter.domainToDTO(record)<#if resultClassName??>)</#if>;
-        } else {
-            return <#if resultClassName??>new ${resultClassName}(</#if>null<#if resultClassName??>)</#if>;
-        }
+        return record != null ? <#if resultClassName??>new ${resultClassName}(</#if>${table.javaClassName}Converter.domainToDTO(record)<#if resultClassName??>)</#if> : <#if resultClassName??>new ${resultClassName}(</#if>null<#if resultClassName??>)</#if>;
     }</#if>
 
     /**
