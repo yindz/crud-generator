@@ -129,10 +129,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         <#if pk??>Preconditions.checkArgument(record.get${pk.columnCamelNameUpper}() != null, "待更新的数据${pk.columnCamelNameLower}为空");</#if>
         int updated = ${table.javaClassNameLower}Mapper.update(${table.javaClassName}Converter.dtoToDomain(record));
         if (updated != 0) {
-            logger.info("${table.name}数据更新成功! {}", record);
+            logger.info("${table.name}数据更新成功! ${pk.columnCamelNameLower}={}", record.get${pk.columnCamelNameUpper}());
             return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
         } else {
-            logger.error("${table.name}数据更新失败! {}", record);
+            logger.error("${table.name}数据更新失败! ${pk.columnCamelNameLower}={}", record.get${pk.columnCamelNameUpper}());
             return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
         }
     }
