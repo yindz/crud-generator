@@ -116,10 +116,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         checkInsertObject(domain);
         int inserted = ${table.javaClassNameLower}Mapper.insertSelective(domain);
         if (inserted != 0) {
-            logger.info("${table.name}数据插入成功! {}", record);
+            logger.info("${table.name}数据插入成功!");
             return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
         } else {
-            logger.error("${table.name}数据插入失败! {}", record);
+            logger.error("${table.name}数据插入失败!");
             return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
         }
     }
