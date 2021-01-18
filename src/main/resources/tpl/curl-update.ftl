@@ -1,0 +1,1 @@
+curl -v -H "Accept: application/json" -H "Content-type: application/json;charset=UTF-8" -X POST -d '<#include "./public/recordJson.ftl"/>' http://localhost:8080/${table.javaClassNameLower}/update
