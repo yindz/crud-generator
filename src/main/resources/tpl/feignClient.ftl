@@ -7,6 +7,7 @@ import ${basePkgName}.feign.${table.javaClassName}ClientFallback;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,6 +65,6 @@ public interface I${table.javaClassName}Client {
      * @param <#if pk??>${pk.columnCamelNameLower}  待删除的${table.comments}记录${pk.columnComment}</#if>
      * @return 是否成功
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(<#if pk??>@RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>);
+    @RequestMapping(value = "/delete/{${pk.columnCamelNameLower}}", method = RequestMethod.DELETE)
+    <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(<#if pk??>@PathVariable("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>);
 }
