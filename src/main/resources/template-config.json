@@ -226,5 +226,29 @@
     "isCore": 0,
     "overwriteExistingFile": 0,
     "remark": "Postman Environment 定义文件"
+  },
+  {
+    "templateName": "curl-add.ftl",
+    "targetBaseDirName": "other",
+    "targetPkgName": "",
+    "targetFileName": "#-curl-add.sh",
+    "isCore": 1,
+    "remark": "CURL新增记录"
+  },
+  {
+    "templateName": "curl-update.ftl",
+    "targetBaseDirName": "other",
+    "targetPkgName": "",
+    "targetFileName": "#-curl-update.sh",
+    "isCore": 1,
+    "remark": "CURL修改记录"
+  },
+  {
+    "templateName": "curl-delete.ftl",
+    "targetBaseDirName": "other",
+    "targetPkgName": "",
+    "targetFileName": "#-curl-delete.sh",
+    "isCore": 1,
+    "remark": "CURL删除记录"
   }
 ]
