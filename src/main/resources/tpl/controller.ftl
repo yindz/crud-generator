@@ -7,6 +7,7 @@ import javax.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,8 +101,8 @@ public class ${table.javaClassName}Controller {
      * @return 是否成功
      */<#if useSwagger == 1>
     @ApiOperation(value = "删除${table.comments}记录", httpMethod = "DELETE", tags = {"删除${table.comments}记录"})</#if>
-    @DeleteMapping(value = "/delete")
-    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(<#if pk??>@ApiParam(value = "待删除的${table.comments}记录${pk.columnComment}", type = "${pk.columnJavaType}", required = true, example = "1") @RequestParam("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>) {
+    @DeleteMapping(value = "/delete/{${pk.columnCamelNameLower}}")
+    public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(<#if pk??>@ApiParam(value = "待删除的${table.comments}记录${pk.columnComment}", type = "${pk.columnJavaType}", required = true, example = "1") @PathVariable("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower}</#if>) {
         return <#if resultClassName??>new ${resultClassName}(</#if>${table.javaClassNameLower}Service.delete(${pk.columnCamelNameLower})<#if resultClassName??>)</#if>;
     }
 }
