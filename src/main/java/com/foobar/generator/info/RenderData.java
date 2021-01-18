@@ -52,6 +52,11 @@ public class RenderData {
     private TemplateMethodModelEx randomString;
 
     /**
+     * 随机时间戳
+     */
+    private TemplateMethodModelEx randomTimestamp;
+
+    /**
      * 时区
      */
     private String timeZone = GeneratorConfig.DEFAULT_TIME_ZONE;
@@ -165,5 +170,13 @@ public class RenderData {
 
     public void setTimePattern(String timePattern) {
         this.timePattern = timePattern;
+    }
+
+    public TemplateMethodModelEx getRandomTimestamp() {
+        return randomTimestamp;
+    }
+
+    public void setRandomTimestamp(TemplateMethodModelEx randomTimestamp) {
+        this.randomTimestamp = randomTimestamp;
     }
 }

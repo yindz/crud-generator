@@ -11,6 +11,7 @@ import freemarker.template.Configuration;
 import freemarker.template.SimpleNumber;
 import freemarker.template.Template;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -536,7 +537,7 @@ public class TableCodeGenerator {
         data.setTable(tableInfo);
         data.setUuid((list) -> UUID.randomUUID());
         //产生随机数
-        data.setRandomNumber((list) -> new Random().nextInt(100));
+        data.setRandomNumber((list) -> RandomUtils.nextInt(0, 101));
         //产生随机字符串(长度默认1)
         data.setRandomString(args -> {
             int maxLength = 1;
@@ -547,6 +548,8 @@ public class TableCodeGenerator {
             }
             return RandomStringUtils.randomAlphanumeric(1, maxLength);
         });
+        //产生随机时间戳
+        data.setRandomTimestamp(args -> System.currentTimeMillis() - RandomUtils.nextLong(1, 1000000001));
         data.setUseDubboServiceAnnotation(this.useDubboService ? GeneratorConst.YES : GeneratorConst.NO);
         data.setUseSwagger(this.useSwagger ? GeneratorConst.YES : GeneratorConst.NO);
 
