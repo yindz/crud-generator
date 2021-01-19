@@ -63,6 +63,9 @@
 | unitTestCase.ftl | JUnit单元测试用例 | java/test/ |  用于JUnit单元测试 | 是 |
 | postmanCollection.ftl | Postman接口定义 | json/ | 使用方法：Postman>Import | 是 |
 | postmanEnvironment.ftl | Postman环境变量定义 | json/ | 使用方法：Postman>Manage Environment>Import | 该文件只需生成1次 |
+| curl-add.ftl | CURL新增记录命令及参数 | other/ | 使用方法：直接命令行调用 | 是 |
+| curl-update.ftl | CURL更新记录命令及参数 | other/ | 使用方法：直接命令行调用 | 是 |
+| curl-delete.ftl | CURL删除记录命令及参数 | other/ | 使用方法：直接命令行调用 | 是 |
 
 ## 主键字段检测规则
 1. 数据表有主键字段时，程序将直接使用该字段
