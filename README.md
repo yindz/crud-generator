@@ -32,6 +32,7 @@
 - 支持生成基于 [Swagger](https://swagger.io/docs/) 的API接口及参数注解
 - 支持生成 [Postman](https://www.postman.com/) 可导入的API接口JSON定义文件
 - 支持生成 [JUnit](https://junit.org/junit5/) 所支持的单元测试用例文件
+- 支持生成基于 [CURL](https://curl.se/) 的命令行测试用例脚本文件
 
 ## 文件说明
 | 模板名 | 含义 | 路径 | 备注 | 表字段变化后是否重新生成 | 
