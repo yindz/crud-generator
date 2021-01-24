@@ -22,6 +22,7 @@
 <!-- /TOC -->
 
 ## 概述
+- 适用于 Spring Boot 架构
 - 基于数据表结构定义，自动生成 CRUD 代码，省时省力
 - 自动检测数据表字段类型、字段长度、数值精度、主键字段、唯一索引字段
 - 支持 Oracle、MySQL(Percona/MariaDB)、Microsoft SQLServer、PostgreSQL 等四种类型数据库
@@ -161,7 +162,7 @@ TableCodeGenerator 的可选参数设置：
 | setUseDubboService() | 是否使用 Dubbo 的@Service注解 | 留空，则默认使用 Spring 的@Service注解 |
 | setUseSwagger() | 是否生成swagger相关注解 | 留空，则默认true |
 | setDaoType() | 指定dao层中间件的类型(三选一：原版MyBatis/Mybatis通用Mapper/MyBatisPlus) | 留空，则默认使用原版MyBatis |
-| setClassNameGenerator() | 指定类名的自定义生成规则 | 留空，则默认将表名从下划线形式转成驼峰形式 |
+| setClassNameGenerator() | 指定类名的自定义生成规则 | 留空，则默认将表名从下划线形式转成驼峰形式作为类名 |
 
 ## 最佳实践
 
