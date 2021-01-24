@@ -71,6 +71,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             XPathFactory f = XPathFactory.newInstance();
             XPath path = f.newXPath();
             NodeList nodes = (NodeList) path.evaluate("sql/select", doc, XPathConstants.NODESET);
+            if (nodes == null || nodes.getLength() == 0) {
+                throw new RuntimeException("SQL配置文件" + xmlFile + "有效内容为空!");
+            }
             for (int i = 0; i < nodes.getLength(); i++) {
                 Node node = nodes.item(i);
                 if (node == null) {
@@ -78,9 +81,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
                 }
                 NamedNodeMap attr = node.getAttributes();
                 Node id = attr.getNamedItem("id");
-                if (id != null && StringUtils.isNotBlank(id.getNodeValue())) {
+                if (id != null && isNotBlank(id.getNodeValue())) {
                     String content = node.getTextContent();
-                    if (StringUtils.isNotBlank(content)) {
+                    if (isNotBlank(content)) {
                         map.put(id.getNodeValue(), StringUtils.trim(content));
                     }
                 }
@@ -106,6 +109,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (tmp.length == 0) {
             return resultSet;
         }
-        return Arrays.stream(tmp).filter(org.apache.commons.lang3.StringUtils::isNotBlank).collect(Collectors.toSet());
+        return Arrays.stream(tmp).filter(StringUtils::isNotBlank).collect(Collectors.toSet());
     }
 }
