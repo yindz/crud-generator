@@ -78,8 +78,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
                 }
                 NamedNodeMap attr = node.getAttributes();
                 Node id = attr.getNamedItem("id");
-                if (id != null) {
-                    map.put(id.getNodeValue(), node.getTextContent());
+                if (id != null && StringUtils.isNotBlank(id.getNodeValue())) {
+                    String content = node.getTextContent();
+                    if (StringUtils.isNotBlank(content)) {
+                        map.put(id.getNodeValue(), StringUtils.trim(content));
+                    }
                 }
             }
         } catch (Exception e) {
