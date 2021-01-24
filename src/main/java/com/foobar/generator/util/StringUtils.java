@@ -2,6 +2,8 @@ package com.foobar.generator.util;
 
 import com.foobar.generator.constant.GeneratorConst;
 import org.apache.commons.text.CaseUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
  * @author yin
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
+    private static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
 
     /**
      * 下划线转驼峰
@@ -68,11 +71,16 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder dbd = dbf.newDocumentBuilder();
             Document doc = dbd.parse(GeneratorConst.class.getResourceAsStream(xmlFile));
+            if (doc == null) {
+                logger.error("SQL配置文件{}不存在!", xmlFile);
+                return;
+            }
             XPathFactory f = XPathFactory.newInstance();
             XPath path = f.newXPath();
             NodeList nodes = (NodeList) path.evaluate("sql/select", doc, XPathConstants.NODESET);
             if (nodes == null || nodes.getLength() == 0) {
-                throw new RuntimeException("SQL配置文件" + xmlFile + "有效内容为空!");
+                logger.error("SQL配置文件{}有效内容为空!", xmlFile);
+                return;
             }
             for (int i = 0; i < nodes.getLength(); i++) {
                 Node node = nodes.item(i);
