@@ -144,11 +144,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
     @Transactional(rollbackFor = Exception.class)
     public <#if resultClassName??>${resultClassName}<</#if>Boolean<#if resultClassName??>></#if> delete(${pk.columnJavaType} ${pk.columnCamelNameLower}) {
         Preconditions.checkArgument(<#if pk.isChar == 1>StringUtils.isNotBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} != null</#if>, "${pk.columnCamelNameLower}为空!");
-        ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
+<#if logicDeleteColumn??>        ${table.javaClassName}DO cond = new ${table.javaClassName}DO();
         cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-<#if logicDeleteColumn??>        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
-        int rowCount = ${table.javaClassNameLower}Mapper.update(cond);<#else>
-        int rowCount = ${table.javaClassNameLower}Mapper.delete(cond);</#if>
+        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
+        int rowCount = ${table.javaClassNameLower}Mapper.update(cond);<#else>        int rowCount = ${table.javaClassNameLower}Mapper.delete(${pk.columnCamelNameLower});</#if>
         if (rowCount != 0) {
             logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
@@ -174,10 +173,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             if (<#if pk.isChar == 1>StringUtils.isBlank(${pk.columnCamelNameLower})<#else>${pk.columnCamelNameLower} == null</#if>) {
                 continue;
             }
+    <#if logicDeleteColumn??>
             cond.set${pk.columnCamelNameUpper}(${pk.columnCamelNameLower});
-    <#if logicDeleteColumn??>        cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
-            int rowCount = ${table.javaClassNameLower}Mapper.update(cond);<#else>
-            int rowCount = ${table.javaClassNameLower}Mapper.delete(cond);</#if>
+            cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
+            int rowCount = ${table.javaClassNameLower}Mapper.update(cond);<#else>            int rowCount = ${table.javaClassNameLower}Mapper.delete(${pk.columnCamelNameLower});</#if>
             if (rowCount == 0) {
                 logger.error("删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
                 throw new RuntimeException("删除${table.comments}数据失败!");

@@ -60,11 +60,12 @@ public interface ${table.javaClassName}Mapper {
      */
     int update(${table.javaClassName}DO record);
 
+    <#if pk??>
     /**
      * 删除
      *
      * @param record 待删除数据
      * @return 删除行数
      */
-    int delete(${table.javaClassName}DO record);
+    int delete(@Param("${pk.columnCamelNameLower}") ${pk.columnJavaType} ${pk.columnCamelNameLower});</#if>
 }

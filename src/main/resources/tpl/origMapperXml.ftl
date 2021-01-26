@@ -116,8 +116,9 @@
         <include refid="PK_CONDITION"/>
     </update>
 
+    <#if pk??>
     <!--删除-->
-    <delete id="delete" parameterType="${basePkgName}.domain.${table.javaClassName}DO">
+    <delete id="delete">
         delete from <include refid="TABLE_NAME"/> <include refid="PK_CONDITION"/>
-    </delete>
+    </delete></#if>
 </mapper>
