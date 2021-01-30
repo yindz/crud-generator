@@ -36,7 +36,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 驼峰字符串
      */
     public static String underlineToCamel(String underlineStr, boolean capitalizeFirstLetter) {
-        if (isEmpty(underlineStr)) {
+        if (isBlank(underlineStr)) {
             return underlineStr;
         }
         return CaseUtils.toCamelCase(underlineStr, capitalizeFirstLetter, '_');
@@ -49,7 +49,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 整数
      */
     public static int parseInt(String src) {
-        if (StringUtils.isEmpty(src)) {
+        if (isBlank(src)) {
             return 0;
         }
         try {

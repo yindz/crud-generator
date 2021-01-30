@@ -298,7 +298,7 @@ public class TableCodeGenerator {
             Set<String> inColumns = StringUtils.splitToSet(table.getInColumns(), ",");
             Set<String> notInColumns = StringUtils.splitToSet(table.getNotInColumns(), ",");
             boolean hasPrimaryKey = resultList.stream().anyMatch(r -> GeneratorConst.YES == r.getIsPrimaryKey());
-            if (!hasPrimaryKey && StringUtils.isEmpty(table.getPrimaryKeyColumn())) {
+            if (!hasPrimaryKey && StringUtils.isBlank(table.getPrimaryKeyColumn())) {
                 throw new IllegalArgumentException("数据表 " + table.getTableName() + " 无主键及唯一索引字段，请手动指定primaryKeyColumn参数值");
             }
             resultList.forEach(c -> {
@@ -308,14 +308,14 @@ public class TableCodeGenerator {
                 c.setColumnCamelNameLower(StringUtils.underlineToCamel(c.getColumnName(), false));
                 c.setColumnCamelNameUpper(StringUtils.underlineToCamel(c.getColumnName(), true));
                 c.setColumnJavaType(GeneratorConst.javaBoxTypeMap.get(c.getColumnType().toLowerCase()));
-                if (StringUtils.isEmpty(c.getColumnJavaType())) {
+                if (StringUtils.isBlank(c.getColumnJavaType())) {
                     throw new RuntimeException("数据库字段类型 " + c.getColumnType() + " 无法映射到Java类型");
                 }
                 if ("Date".equalsIgnoreCase(c.getColumnJavaType())) {
                     c.setIsDateTime(GeneratorConst.YES);
                 }
                 c.setColumnMyBatisType(GeneratorConst.mybatisTypeMap.get(c.getColumnType().toLowerCase()));
-                if (StringUtils.isEmpty(c.getColumnMyBatisType())) {
+                if (StringUtils.isBlank(c.getColumnMyBatisType())) {
                     throw new RuntimeException("数据库字段类型 " + c.getColumnType() + " 无法映射到MyBatis JdbcType");
                 }
                 if (c.getIsNumber() == GeneratorConst.YES) {
@@ -325,7 +325,7 @@ public class TableCodeGenerator {
                         c.setColumnMyBatisType("DECIMAL");
                     }
                 }
-                if (StringUtils.isEmpty(c.getColumnComment())) {
+                if (StringUtils.isBlank(c.getColumnComment())) {
                     c.setColumnComment(c.getColumnName());
                 }
                 if (!hasPrimaryKey) {
@@ -391,7 +391,7 @@ public class TableCodeGenerator {
      * @param ti 模板
      */
     private void checkSubDir(TemplateInfo ti) {
-        if (ti == null || StringUtils.isEmpty(ti.getTargetBaseDirName())) {
+        if (ti == null || StringUtils.isBlank(ti.getTargetBaseDirName())) {
             return;
         }
         String realPath = ti.toRealPath(this.baseOutputPath);
@@ -417,7 +417,7 @@ public class TableCodeGenerator {
             //空则返回全部
             List<TableContext> allTableContextList = new ArrayList<>();
             allTableNamesList.forEach(a -> {
-                if (StringUtils.isEmpty(a)) {
+                if (StringUtils.isBlank(a)) {
                     return;
                 }
                 TableContext tc = new TableContext();
@@ -465,7 +465,7 @@ public class TableCodeGenerator {
      * @param table 表
      */
     private void generateTableCodeFiles(TableContext table) {
-        if (table == null || StringUtils.isEmpty(table.getTableName())) {
+        if (table == null || StringUtils.isBlank(table.getTableName())) {
             return;
         }
         List<ColumnInfo> columnInfoList = columnsMap.get(table.getTableName());
@@ -476,7 +476,7 @@ public class TableCodeGenerator {
         String simpleTableName = table.getTableName();
         //优先使用该表的前缀
         String prefixToRemove = StringUtils.trim(table.getTableNamePrefixToRemove());
-        if (StringUtils.isEmpty(prefixToRemove) && StringUtils.isNotEmpty(globalTableNamePrefixToRemove)) {
+        if (StringUtils.isBlank(prefixToRemove) && StringUtils.isNotEmpty(globalTableNamePrefixToRemove)) {
             //再使用全局的表前缀
             prefixToRemove = globalTableNamePrefixToRemove;
         }
@@ -620,7 +620,7 @@ public class TableCodeGenerator {
      * @throws Exception
      */
     private void renderFile(Template tpl, RenderData data, String outPath) {
-        if (tpl == null || data == null || StringUtils.isEmpty(outPath)) {
+        if (tpl == null || data == null || StringUtils.isBlank(outPath)) {
             return;
         }
         Writer out;

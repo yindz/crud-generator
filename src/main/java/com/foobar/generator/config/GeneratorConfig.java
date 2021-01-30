@@ -49,7 +49,7 @@ public class GeneratorConfig {
             throw new RuntimeException("数据库类映射配置文件为空!");
         }
         dbUtilInfoList.forEach(d -> {
-            if (d == null || StringUtils.isEmpty(d.getType()) || StringUtils.isEmpty(d.getClassName())) {
+            if (d == null || StringUtils.isBlank(d.getType()) || StringUtils.isBlank(d.getClassName())) {
                 return;
             }
             dbUtilMap.put(d.getType(), d);

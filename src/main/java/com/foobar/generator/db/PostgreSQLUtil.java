@@ -149,7 +149,7 @@ public class PostgreSQLUtil extends AbstractDbUtil {
      */
     @Override
     public String setTableNameCase(String t) {
-        if (StringUtils.isEmpty(t)) {
+        if (StringUtils.isBlank(t)) {
             return t;
         }
         return t.toLowerCase();

@@ -135,7 +135,7 @@ public class MySQLUtil extends AbstractDbUtil {
         }
         if (!hasPrimaryKey && StringUtils.isNotEmpty(uniqueIndexColumn)) {
             for (ColumnInfo ci : resultList) {
-                if (ci == null || StringUtils.isEmpty(ci.getColumnName())) {
+                if (ci == null || StringUtils.isBlank(ci.getColumnName())) {
                     continue;
                 }
                 //若无主键字段，则将最后1个唯一索引字段作为主键使用
@@ -156,7 +156,7 @@ public class MySQLUtil extends AbstractDbUtil {
      */
     @Override
     public String setTableNameCase(String t) {
-        if (StringUtils.isEmpty(t)) {
+        if (StringUtils.isBlank(t)) {
             return t;
         }
         return t.toLowerCase();

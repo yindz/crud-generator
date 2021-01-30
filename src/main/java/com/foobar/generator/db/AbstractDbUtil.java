@@ -85,7 +85,7 @@ public abstract class AbstractDbUtil {
      * @return
      */
     protected String selectLastOne(String sql) {
-        if (StringUtils.isEmpty(sql)) {
+        if (StringUtils.isBlank(sql)) {
             return null;
         }
         String result = "";
@@ -111,7 +111,7 @@ public abstract class AbstractDbUtil {
      * @return
      */
     protected List<String> selectList(String sql) {
-        if (StringUtils.isEmpty(sql)) {
+        if (StringUtils.isBlank(sql)) {
             return null;
         }
         List<String> resultList = new ArrayList<>();

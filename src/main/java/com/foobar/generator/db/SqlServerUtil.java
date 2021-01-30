@@ -70,7 +70,7 @@ public class SqlServerUtil extends AbstractDbUtil {
     public List<ColumnInfo> getColumnInfo(String tableName) {
         List<ColumnInfo> resultList = new ArrayList<>();
         String uniqueColumnName = findPrimaryKeyColumnName(tableName);
-        if (StringUtils.isEmpty(uniqueColumnName)) {
+        if (StringUtils.isBlank(uniqueColumnName)) {
             uniqueColumnName = findUniqueIndexColumnName(tableName);
         }
         String sql = String.format(SQL_MAP.get(GeneratorConst.QUERY_TABLE_COLUMNS), tableName);
@@ -141,7 +141,7 @@ public class SqlServerUtil extends AbstractDbUtil {
      */
     @Override
     public String setTableNameCase(String t) {
-        if (StringUtils.isEmpty(t)) {
+        if (StringUtils.isBlank(t)) {
             return t;
         }
         return t.toLowerCase();

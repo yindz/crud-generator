@@ -116,7 +116,7 @@ public class OracleUtil extends AbstractDbUtil {
         }
         if (!resultList.isEmpty() && StringUtils.isNotEmpty(uniqueColumnName)) {
             for (ColumnInfo ci : resultList) {
-                if (ci == null || StringUtils.isEmpty(ci.getColumnName())) {
+                if (ci == null || StringUtils.isBlank(ci.getColumnName())) {
                     continue;
                 }
                 if (uniqueColumnName.equalsIgnoreCase(ci.getColumnName())) {
@@ -136,7 +136,7 @@ public class OracleUtil extends AbstractDbUtil {
      */
     @Override
     public String setTableNameCase(String t) {
-        if (StringUtils.isEmpty(t)) {
+        if (StringUtils.isBlank(t)) {
             return t;
         }
         return t.toUpperCase();
