@@ -17,12 +17,12 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
     /**
      * 页码
      */
-    private Integer pageNo = 1;
+    private Integer pageNo;
 
     /**
      * 分页大小
      */
-    private Integer pageSize = ${table.pageSize};
+    private Integer pageSize;
 
     /**
      * 排序属性名称
@@ -68,7 +68,21 @@ public class ${table.javaClassName}QueryDTO extends ${table.javaClassName}DTO {
 </#if>
 </#list>
 
-<#include "./public/pageParams.ftl"/>
+    public Integer getPageNo() {
+        return pageNo != null && pageNo > 0 ? pageNo : 1;
+    }
+
+    public void setPageNo(Integer pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public Integer getPageSize() {
+        return pageSize != null && pageSize > 0 ? pageSize : ${table.pageSize};
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
 <#include "./public/orderParams.ftl"/>
 
