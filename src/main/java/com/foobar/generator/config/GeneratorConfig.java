@@ -60,7 +60,7 @@ public class GeneratorConfig {
             throw new RuntimeException("模板配置文件为空!");
         }
         templateInfoList.forEach(t -> {
-            if (t == null) {
+            if (t == null || StringUtils.isBlank(t.getTemplateName())) {
                 return;
             }
             if (GeneratorConst.YES == t.getIsCore()) {
