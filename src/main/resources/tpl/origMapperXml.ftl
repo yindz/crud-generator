@@ -16,7 +16,7 @@
     <!--所有字段-->
     <sql id="ALL_COLUMNS">
         <#list table.columns as column>
-            a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if><#if column?has_next>,</#if>
+            ${r"${"}alias}.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if><#if column?has_next>,</#if>
         </#list>
     </sql>
 
@@ -24,27 +24,27 @@
     <sql id="QUERY_CONDITIONS">
         <#list table.columns as column>
         <if test="${column.columnCamelNameLower} != null<#if column.isChar == 1> and ${column.columnCamelNameLower} != ''</#if>">
-            and a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> = ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}
+            and ${r"${"}alias}.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> = ${r"#{"}${column.columnCamelNameLower}, jdbcType=${column.columnMyBatisType}}
         </if>
         <#if column.enableLike == 1>
         <if test="${column.columnCamelNameLower}Like != null<#if column.isChar == 1> and ${column.columnCamelNameLower}Like != ''</#if>">
-            and a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> like <#if table.dbType == 'oracle'>'%'||${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}||'%'</#if><#if table.dbType == 'mysql'>concat('%', ${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}, '%')</#if><#if table.dbType == 'sqlserver'>'%'+${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}+'%'</#if><#if table.dbType == 'postgresql'>concat('%',${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}},'%')</#if>
+            and ${r"${"}alias}.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> like <#if table.dbType == 'oracle'>'%'||${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}||'%'</#if><#if table.dbType == 'mysql'>concat('%', ${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}, '%')</#if><#if table.dbType == 'sqlserver'>'%'+${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}}+'%'</#if><#if table.dbType == 'postgresql'>concat('%',${r"#{"}${column.columnCamelNameLower}Like, jdbcType=${column.columnMyBatisType}},'%')</#if>
         </if></#if>
         <#if column.enableRange == 1>
         <if test="${column.columnCamelNameLower}Min != null">
             <![CDATA[
-            and a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> >= ${r"#{"}${column.columnCamelNameLower}Min, jdbcType=${column.columnMyBatisType}}
+            and ${r"${"}alias}.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> >= ${r"#{"}${column.columnCamelNameLower}Min, jdbcType=${column.columnMyBatisType}}
             ]]>
         </if>
         <if test="${column.columnCamelNameLower}Max != null">
             <![CDATA[
-            and a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> <= ${r"#{"}${column.columnCamelNameLower}Max, jdbcType=${column.columnMyBatisType}}
+            and ${r"${"}alias}.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> <= ${r"#{"}${column.columnCamelNameLower}Max, jdbcType=${column.columnMyBatisType}}
             ]]>
         </if>
         </#if>
         <#if column.enableIn == 1>
         <if test="${column.columnCamelNameLower}In != null and ${column.columnCamelNameLower}In.size() &gt; 0">
-           and a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> in
+           and ${r"${"}alias}.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> in
            <foreach collection="${column.columnCamelNameLower}In" item="${column.columnCamelNameLower}Eq" open="(" close=")" separator=",">
                ${r"#{"}${column.columnCamelNameLower}Eq, jdbcType=${column.columnMyBatisType}}
            </foreach>
@@ -52,7 +52,7 @@
         </#if>
         <#if column.enableNotIn == 1>
         <if test="${column.columnCamelNameLower}NotIn != null and ${column.columnCamelNameLower}NotIn.size() &gt; 0">
-           and a.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> not in
+           and ${r"${"}alias}.<#if isMySql??>`</#if>${column.columnName}<#if isMySql??>`</#if> not in
            <foreach collection="${column.columnCamelNameLower}NotIn" item="${column.columnCamelNameLower}Neq" open="(" close=")" separator=",">
                 ${r"#{"}${column.columnCamelNameLower}Neq, jdbcType=${column.columnMyBatisType}}
            </foreach>
@@ -67,9 +67,10 @@
 
     <!--查询-->
     <select id="getRecordList" parameterType="map" resultMap="queryResultMap">
-        select <include refid="ALL_COLUMNS"/> from <include refid="TABLE_NAME"/> a
+        select <include refid="ALL_COLUMNS"><property name="alias" value="a"/></include>
+        from <include refid="TABLE_NAME"/> a
         <where>
-            <include refid="QUERY_CONDITIONS"/>
+            <include refid="QUERY_CONDITIONS"><property name="alias" value="a"/></include>
         </where>
         order by a.<choose><when test="orderBy != null and orderBy != ''"><#if isMySql??>`</#if>${r"${"}orderBy}<#if isMySql??>`</#if></when><otherwise><#if isMySql??>`</#if>${pk.columnName}<#if isMySql??>`</#if></otherwise></choose> <choose><when test="orderDirection != null and orderDirection != ''">${r"${"}orderDirection}</when><otherwise>desc</otherwise></choose>
     </select>
@@ -77,7 +78,8 @@
     <#if pk??>
     <!--根据主键查询-->
     <select id="getRecordBy${pk.columnCamelNameUpper}" resultMap="queryResultMap">
-        select <include refid="ALL_COLUMNS"/> from <include refid="TABLE_NAME"/>
+        select <include refid="ALL_COLUMNS"><property name="alias" value="a"/></include>
+        from <include refid="TABLE_NAME"/> a
         <include refid="PK_CONDITION"/><#if logicDeleteColumn??> and <#if isMySql??>`</#if>${logicDeleteColumn.columnName}<#if isMySql??>`</#if> = <#if logicDeleteColumn.isNumber == 1>0<#else>'0'</#if></#if>
     </select>
     </#if>
@@ -86,7 +88,7 @@
     <select id="getRecordCount" parameterType="map" resultType="java.lang.Long">
         select count(*) from <include refid="TABLE_NAME"/> a
         <where>
-            <include refid="QUERY_CONDITIONS"/>
+            <include refid="QUERY_CONDITIONS"><property name="alias" value="a"/></include>
         </where>
     </select>
 
