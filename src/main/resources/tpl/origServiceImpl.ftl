@@ -149,10 +149,10 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
         cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
         int rowCount = ${table.javaClassNameLower}Mapper.update(cond);<#else>        int rowCount = ${table.javaClassNameLower}Mapper.delete(${pk.columnCamelNameLower});</#if>
         if (rowCount != 0) {
-            logger.info("${table.name}数据删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
+            logger.info("${table.name}数据<#if logicDeleteColumn??>逻辑</#if>删除成功! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return <#if resultClassName??>new ${resultClassName}(</#if>true<#if resultClassName??>)</#if>;
         } else {
-            logger.error("${table.name}数据删除失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
+            logger.error("${table.name}数据<#if logicDeleteColumn??>逻辑</#if>删除失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
             return <#if resultClassName??>new ${resultClassName}(</#if>false<#if resultClassName??>)</#if>;
         }
     }
@@ -178,12 +178,12 @@ public class ${table.javaClassName}ServiceImpl implements I${table.javaClassName
             cond.set${logicDeleteColumn.columnCamelNameUpper}(<#if logicDeleteColumn.isNumber == 1>1<#else>"1"</#if>);
             int rowCount = ${table.javaClassNameLower}Mapper.update(cond);<#else>            int rowCount = ${table.javaClassNameLower}Mapper.delete(${pk.columnCamelNameLower});</#if>
             if (rowCount == 0) {
-                logger.error("删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
+                logger.error("<#if logicDeleteColumn??>逻辑</#if>删除${table.name}数据失败! ${pk.columnCamelNameLower}={}", ${pk.columnCamelNameLower});
                 throw new RuntimeException("删除${table.comments}数据失败!");
             }
             success++;
         }
-        logger.info("本次总共删除{}条${table.name}表数据! ${pk.columnCamelNameLower}List={}", success, ${pk.columnCamelNameLower}List);
+        logger.info("本次总共<#if logicDeleteColumn??>逻辑</#if>删除{}条${table.name}表数据! ${pk.columnCamelNameLower}List={}", success, ${pk.columnCamelNameLower}List);
         return <#if resultClassName??>new ${resultClassName}(</#if>success > 0<#if resultClassName??>)</#if>;
     }</#if>
 
