@@ -82,7 +82,7 @@ public class OracleUtil extends AbstractDbUtil {
                 col.setTableComment(rs.getString(2));
                 col.setColumnName(rs.getString(3));
                 col.setColumnType(rs.getString(4));
-                if (StringUtils.isNotEmpty(col.getColumnType())) {
+                if (StringUtils.isNotBlank(col.getColumnType())) {
                     col.setColumnType(col.getColumnType().toUpperCase());
                 }
                 col.setColumnLength(StringUtils.parseInt(rs.getString(5)));
@@ -90,7 +90,7 @@ public class OracleUtil extends AbstractDbUtil {
                 col.setColumnScale(StringUtils.parseInt(rs.getString(7)));
                 col.setNullable("N".equalsIgnoreCase(rs.getString(8)) ? 0 : 1);
                 String charLength = rs.getString(9);
-                col.setCharLength(StringUtils.isNotEmpty(charLength) ? Integer.parseInt(charLength) : 0);
+                col.setCharLength(StringUtils.isNotBlank(charLength) ? Integer.parseInt(charLength) : 0);
                 col.setDefaultValue(rs.getString(10));
                 if (col.getDefaultValue() != null) {
                     col.setDefaultValue(col.getDefaultValue().trim());
@@ -99,7 +99,7 @@ public class OracleUtil extends AbstractDbUtil {
                     }
                 }
                 col.setColumnComment(rs.getString(11));
-                if (StringUtils.isNotEmpty(col.getColumnType()) && col.getColumnType().contains("CHAR")) {
+                if (StringUtils.isNotBlank(col.getColumnType()) && col.getColumnType().contains("CHAR")) {
                     if (col.getDefaultValue() != null) {
                         col.setDefaultValue("'" + col.getDefaultValue().trim() + "'");
                     }
@@ -114,7 +114,7 @@ public class OracleUtil extends AbstractDbUtil {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (!resultList.isEmpty() && StringUtils.isNotEmpty(uniqueColumnName)) {
+        if (!resultList.isEmpty() && StringUtils.isNotBlank(uniqueColumnName)) {
             for (ColumnInfo ci : resultList) {
                 if (ci == null || StringUtils.isBlank(ci.getColumnName())) {
                     continue;
@@ -171,7 +171,7 @@ public class OracleUtil extends AbstractDbUtil {
     private String findUniqueColumnName(String tableName) {
         //优先找主键字段
         String columnName = findPrimaryKeyColumnName(tableName);
-        if (StringUtils.isNotEmpty(columnName)) {
+        if (StringUtils.isNotBlank(columnName)) {
             return columnName;
         } else {
             //无主键，则找唯一索引字段

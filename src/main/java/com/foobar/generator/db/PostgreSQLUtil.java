@@ -87,7 +87,7 @@ public class PostgreSQLUtil extends AbstractDbUtil {
                 col.setColumnName(rs.getString(3));
                 col.setColumnComment(rs.getString(4));
                 col.setColumnType(rs.getString(5));
-                if (StringUtils.isNotEmpty(col.getColumnType())) {
+                if (StringUtils.isNotBlank(col.getColumnType())) {
                     col.setColumnType(col.getColumnType().toLowerCase());
                 }
                 String columnTypeStr = rs.getString(6);
@@ -120,14 +120,14 @@ public class PostgreSQLUtil extends AbstractDbUtil {
                             col.setColumnScale(StringUtils.parseInt(matcher.group(2)));
                         }
                     }
-                } else if (StringUtils.isNotEmpty(col.getColumnType()) && (col.getColumnType().contains("char")
+                } else if (StringUtils.isNotBlank(col.getColumnType()) && (col.getColumnType().contains("char")
                         || col.getColumnType().contains("text"))) {
                     //字符型
                     col.setCharLength(col.getColumnLength());
                     col.setIsChar(GeneratorConst.YES);
                 }
                 col.setNullable("f".equalsIgnoreCase(rs.getString(9)) ? GeneratorConst.YES : GeneratorConst.NO);
-                if (StringUtils.isNotEmpty(uniqueColumnName) && uniqueColumnName.equalsIgnoreCase(col.getColumnName())) {
+                if (StringUtils.isNotBlank(uniqueColumnName) && uniqueColumnName.equalsIgnoreCase(col.getColumnName())) {
                     col.setIsPrimaryKey(GeneratorConst.YES);
                 } else {
                     col.setIsPrimaryKey(GeneratorConst.NO);

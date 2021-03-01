@@ -476,11 +476,11 @@ public class TableCodeGenerator {
         String simpleTableName = table.getTableName();
         //优先使用该表的前缀
         String prefixToRemove = StringUtils.trim(table.getTableNamePrefixToRemove());
-        if (StringUtils.isBlank(prefixToRemove) && StringUtils.isNotEmpty(globalTableNamePrefixToRemove)) {
+        if (StringUtils.isBlank(prefixToRemove) && StringUtils.isNotBlank(globalTableNamePrefixToRemove)) {
             //再使用全局的表前缀
             prefixToRemove = globalTableNamePrefixToRemove;
         }
-        if (StringUtils.isNotEmpty(prefixToRemove) && table.getTableName().startsWith(prefixToRemove)) {
+        if (StringUtils.isNotBlank(prefixToRemove) && table.getTableName().startsWith(prefixToRemove)) {
             //去掉前缀后的表名
             simpleTableName = StringUtils.removeStart(table.getTableName(), prefixToRemove);
         }
@@ -649,7 +649,7 @@ public class TableCodeGenerator {
                 return;
             }
             String importStr = GeneratorConst.importsTypeMap.get(c.getColumnJavaType());
-            if (StringUtils.isNotEmpty(importStr)) {
+            if (StringUtils.isNotBlank(importStr)) {
                 imports.add(importStr);
             }
         });

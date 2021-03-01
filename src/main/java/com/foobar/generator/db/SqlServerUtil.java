@@ -86,7 +86,7 @@ public class SqlServerUtil extends AbstractDbUtil {
                 col.setColumnName(rs.getString(3));
                 col.setColumnComment(rs.getString(4));
                 col.setColumnType(rs.getString(5));
-                if (StringUtils.isNotEmpty(col.getColumnType())) {
+                if (StringUtils.isNotBlank(col.getColumnType())) {
                     col.setColumnType(col.getColumnType().toLowerCase());
                 }
                 col.setDefaultValue(rs.getString(10));
@@ -109,7 +109,7 @@ public class SqlServerUtil extends AbstractDbUtil {
                     col.setColumnPrecision(StringUtils.parseInt(rs.getString(6)));
                     col.setColumnScale(StringUtils.parseInt(rs.getString(7)));
                     col.setColumnLength(col.getColumnPrecision());
-                } else if (StringUtils.isNotEmpty(col.getColumnType()) && (col.getColumnType().contains("char")
+                } else if (StringUtils.isNotBlank(col.getColumnType()) && (col.getColumnType().contains("char")
                         || col.getColumnType().contains("text"))) {
                     //字符型
                     col.setCharLength(StringUtils.parseInt(rs.getString(8)));
@@ -119,7 +119,7 @@ public class SqlServerUtil extends AbstractDbUtil {
                     col.setColumnLength(StringUtils.parseInt(rs.getString(9)));
                 }
                 col.setNullable("YES".equalsIgnoreCase(rs.getString(11)) ? GeneratorConst.YES : GeneratorConst.NO);
-                if (StringUtils.isNotEmpty(uniqueColumnName) && uniqueColumnName.equalsIgnoreCase(col.getColumnName())) {
+                if (StringUtils.isNotBlank(uniqueColumnName) && uniqueColumnName.equalsIgnoreCase(col.getColumnName())) {
                     col.setIsPrimaryKey(GeneratorConst.YES);
                 } else {
                     col.setIsPrimaryKey(GeneratorConst.NO);

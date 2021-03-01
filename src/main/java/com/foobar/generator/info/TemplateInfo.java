@@ -106,7 +106,7 @@ public class TemplateInfo {
     public String toRealPath(String basePath) {
         StringBuilder sb = new StringBuilder(basePath);
         sb.append(this.targetBaseDirName);
-        if (StringUtils.isNotEmpty(this.targetPkgName)) {
+        if (StringUtils.isNotBlank(this.targetPkgName)) {
             sb.append(File.separator).append(this.targetPkgName);
         }
         return sb.toString();

@@ -84,7 +84,7 @@ public class MySQLUtil extends AbstractDbUtil {
                 col.setColumnName(rs.getString(3));
                 col.setColumnComment(rs.getString(4));
                 col.setColumnType(rs.getString(5));
-                if (StringUtils.isNotEmpty(col.getColumnType())) {
+                if (StringUtils.isNotBlank(col.getColumnType())) {
                     col.setColumnType(col.getColumnType().toLowerCase());
                 }
                 col.setDefaultValue(rs.getString(10));
@@ -107,7 +107,7 @@ public class MySQLUtil extends AbstractDbUtil {
                     col.setColumnPrecision(StringUtils.parseInt(rs.getString(6)));
                     col.setColumnScale(StringUtils.parseInt(rs.getString(7)));
                     col.setColumnLength(col.getColumnPrecision());
-                } else if (StringUtils.isNotEmpty(col.getColumnType()) && (col.getColumnType().contains("char")
+                } else if (StringUtils.isNotBlank(col.getColumnType()) && (col.getColumnType().contains("char")
                         || col.getColumnType().contains("text"))) {
                     //字符型
                     col.setCharLength(StringUtils.parseInt(rs.getString(8)));
@@ -133,7 +133,7 @@ public class MySQLUtil extends AbstractDbUtil {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (!hasPrimaryKey && StringUtils.isNotEmpty(uniqueIndexColumn)) {
+        if (!hasPrimaryKey && StringUtils.isNotBlank(uniqueIndexColumn)) {
             for (ColumnInfo ci : resultList) {
                 if (ci == null || StringUtils.isBlank(ci.getColumnName())) {
                     continue;
