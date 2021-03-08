@@ -199,6 +199,7 @@ TableCodeGenerator 的可选参数设置：
 | number | BigDecimal | 有小数时 |
 | numeric | BigDecimal |  |
 | nvarchar | String |  |
+| nvarchar2 | String |  |
 | real | Float |  |
 | smalldatetime | Date |  |
 | smallint | Integer |  |
