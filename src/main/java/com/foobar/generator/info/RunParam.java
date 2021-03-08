@@ -64,7 +64,7 @@ public class RunParam {
     }
 
     public void setAuthor(String author) {
-        this.author = author;
+        this.author = StringUtils.deleteWhitespace(author);
     }
 
     public Set<TableContext> getTableContexts() {
