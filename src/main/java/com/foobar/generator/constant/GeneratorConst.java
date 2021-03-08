@@ -47,6 +47,7 @@ public final class GeneratorConst {
         javaBoxTypeMap.put("ntext", "String");
         javaBoxTypeMap.put("numeric", "BigDecimal");
         javaBoxTypeMap.put("nvarchar", "String");
+        javaBoxTypeMap.put("nvarchar2", "String");
         javaBoxTypeMap.put("real", "Float");
         javaBoxTypeMap.put("smalldatetime", "Date");
         javaBoxTypeMap.put("smallint", "Integer");
@@ -83,6 +84,7 @@ public final class GeneratorConst {
         mybatisTypeMap.put("ntext", "VARCHAR");
         mybatisTypeMap.put("numeric", "DECIMAL");
         mybatisTypeMap.put("nvarchar", "NVARCHAR");
+        mybatisTypeMap.put("nvarchar2", "NVARCHAR");
         mybatisTypeMap.put("real", "FLOAT");
         mybatisTypeMap.put("smalldatetime", "TIMESTAMP");
         mybatisTypeMap.put("smallint", "INTEGER");
