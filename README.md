@@ -82,7 +82,7 @@ public class App {
         JdbcInfo param = new JdbcInfo();
         
         //指定数据库类型
-        param.setDbType(DatabaseType.ORACLE.getCode());
+        param.setDbType(DatabaseType.ORACLE);
         
         //数据库主机名或IP
         param.setHost("192.168.2.102");
@@ -119,7 +119,7 @@ public class App {
         generator.setDaoType(DaoType.TkMyBatis);
 
         //将表名从下划线转驼峰后再加上Entity后缀作为类名
-        generator.setClassNameGenerator(t -> CaseUtils.toCamelCase(t, true, '_') + "Entity");
+        generator.setClassNameGenerator(t -> org.apache.commons.text.CaseUtils.toCamelCase(t, true, '_') + "Entity");
         
         //生成
         generator.run(rp);
@@ -130,11 +130,11 @@ RunParam 的可选参数设置：
 
 | 方法名 | 含义 | 备注 | 
 |  ----  | ---- |---- |
-| setAuthor() | 指定生成的javadoc注释中author的名称 | 留空，则默认使用当前操作系统用户名 |
-| setBasePkgName() | 指定java基础包名 | 留空，则默认使用com.example.myapp |
-| setOutputPath() | 指定输出目录的绝对路径 | 留空，则默认输出到当前用户主目录 |
-| setBaseEntityClass() | 如果VO/DO/DTO等实体类需要继承某个基础类，可以在此指定基础类的完整路径 | 留空，则默认无 |
-| setResultClass() | 如果service层及接口层返回值需要使用某个基础类进行包装，可以在此指定该类的完整路径 | 留空，则默认无 |
+| setAuthor() | 指定生成的javadoc注释中author的名称 | 留空则默认使用当前操作系统用户名 |
+| setBasePkgName() | 指定java基础包名 | 留空则默认使用com.example.myapp |
+| setOutputPath() | 指定输出目录的绝对路径 | 留空则默认输出到当前用户主目录 |
+| setBaseEntityClass() | 如果VO/DO/DTO等实体类需要继承某个基础类，可以在此指定基础类的完整路径 | 留空则默认无 |
+| setResultClass() | 如果service层及接口层返回值需要使用某个基础类进行包装，可以在此指定该类的完整路径 | 留空则默认无 |
 
 
 
@@ -142,16 +142,16 @@ TableContext 的可选参数设置：
 
 | 方法名 | 含义 | 备注 | 
 |  ----  | ---- |---- |
-| setTableNamePrefixToRemove() | 指定需去掉的表名前缀 | 留空，则不去掉任何前缀 |
+| setTableNamePrefixToRemove() | 指定需去掉的表名前缀 | 留空则不去掉任何前缀 |
 | setLikeColumns() | 指定启用模糊查询的字段名(用于字符类型字段，多个以逗号隔开) | 如果字段为字符类型则在相应QueryDTO类中增加 xxxLike 属性 |
 | setRangeColumns() | 指定启用取值范围查询的字段名(用于时间或数字类型字段，多个以逗号隔开) | 如果字段为时间或数字类型则在相应QueryDTO类中增加 xxxMin/xxxMax 属性 |
 | setInColumns() | 指定启用 IN 查询的字段名(多个以逗号隔开) | 在相应QueryDTO类中增加 xxxIn 属性 |
 | setNotInColumns() | 指定启用 NOT IN 查询的字段名(多个以逗号隔开) | 在相应QueryDTO类中增加 xxxNotIn 属性 |
 | setPrimaryKeyColumn() | 手动指定主键字段名(不区分大小写) | 如果程序无法自动检测到主键字段，则在此参数指定(适用于无主键且无唯一索引的表) |
-| setVersionColumn() | 如果该表有乐观锁，可在此指定其字段名(不区分大小写) | 留空，则默认无 |
-| setPageSize() | 指定默认分页大小(一个大于0的整数) | 留空，则默认为10 |
-| setSequenceName() | 针对Oracle数据库，可以指定序列名称 | 留空，则默认使用 SEQ_表名 作为序列名称 |
-| setLogicDeleteColumn() | 如果该表需要实现逻辑删除功能，指定相应字段名，所有删除操作不再是物理删除而是逻辑删除 | 留空，则无逻辑删除功能 |
+| setVersionColumn() | 如果该表有乐观锁，可在此指定其字段名(不区分大小写) | 留空则默认无 |
+| setPageSize() | 指定默认分页大小(一个大于0的整数) | 留空则默认为10 |
+| setSequenceName() | 针对Oracle数据库，可以指定序列名称 | 留空则默认使用 SEQ_表名 作为序列名称 |
+| setLogicDeleteColumn() | 如果该表需要实现逻辑删除功能，指定相应字段名，所有删除操作不再是物理删除而是逻辑删除 | 留空则无逻辑删除功能 |
 
 
 TableCodeGenerator 的可选参数设置：
@@ -159,10 +159,10 @@ TableCodeGenerator 的可选参数设置：
 | 方法名 | 含义 | 备注 | 
 |  ----  | ---- |---- |
 | setGlobalTableNamePrefixToRemove() | 需去掉的表名前缀(全局) | 如果需要去掉的表名前缀均相同，则可以全局配置它，不再需要在TableContext中逐个配置前缀; 如果二者同时有值，则使用TableContext中的值 |
-| setUseDubboService() | 是否使用 Dubbo 的@Service注解 | 留空，则默认使用 Spring 的@Service注解 |
-| setUseSwagger() | 是否生成swagger相关注解 | 留空，则默认true |
-| setDaoType() | 指定dao层中间件的类型(三选一：原版MyBatis/Mybatis通用Mapper/MyBatisPlus) | 留空，则默认使用原版MyBatis |
-| setClassNameGenerator() | 指定类名的自定义生成规则 | 留空，则默认将表名从下划线形式转成驼峰形式作为类名 |
+| setUseDubboService() | 是否使用 Dubbo 的@Service注解 | 留空则默认使用 Spring 的@Service注解 |
+| setUseSwagger() | 是否生成swagger相关注解 | 留空则默认true |
+| setDaoType() | 指定dao层中间件的类型(三选一：原版MyBatis/Mybatis通用Mapper/MyBatisPlus) | 留空则默认使用原版MyBatis |
+| setClassNameGenerator() | 指定类名的自定义生成规则 | 留空则默认将表名从下划线形式转成驼峰形式作为类名 |
 
 ## 最佳实践
 

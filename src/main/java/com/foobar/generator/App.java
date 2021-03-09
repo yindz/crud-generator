@@ -1,7 +1,6 @@
 package com.foobar.generator;
 
 import com.foobar.generator.constant.DatabaseType;
-import com.foobar.generator.constant.GeneratorConst;
 import com.foobar.generator.generator.TableCodeGenerator;
 import com.foobar.generator.info.JdbcInfo;
 import com.foobar.generator.info.RunParam;
@@ -16,25 +15,25 @@ public class App {
         JdbcInfo param = new JdbcInfo();
 
         //指定数据库类型
-        param.setDbType(DatabaseType.ORACLE.getCode());
+        param.setDbType(DatabaseType.ORACLE);
 
         //数据库主机名或IP
-        param.setHost("192.168.75.132");
+        param.setHost("192.168.2.2");
 
         //数据库端口号
         param.setPort("1521");
 
         //schema名称(oracle填写Schema名称，mysql或sqlserver则填写数据库名称)
-        param.setSchema("newdb");
+        param.setSchema("BIZ");
 
         //数据库用户名
-        param.setUsername("test");
+        param.setUsername("biz_op");
 
         //数据库用户密码
         param.setPassword("123456");
 
         //数据库实例名(oracle填写实例名，mysql或sqlserver留空)
-        param.setServiceName("");
+        param.setServiceName("bizdb");
         TableCodeGenerator generator = new TableCodeGenerator(param);
 
         RunParam rp = new RunParam();
@@ -45,7 +44,7 @@ public class App {
         rp.setOutputPath("E:\\tmp\\generated");
 
         //表名
-        TableContext table = TableContext.withName("T_PRODUCT");
+        TableContext table = TableContext.withName("T_SYS_ORG");
 
         //需去掉的表名前缀(留空不去掉任何前缀)
         table.setTableNamePrefixToRemove("T_");
@@ -55,6 +54,7 @@ public class App {
 
         //如果该表有乐观锁，可在此设置其字段名，默认值为 version (不区分大小写)
         //table.setVersionColumn("total");
+        table.setLogicDeleteColumn("DEL_FLAG");
 
         rp.addTable(table);
 
@@ -66,6 +66,8 @@ public class App {
 
         //是否生成所有代码(默认true; 当数据表字段发生变化后需要重新生成代码时，可设置为false，只生成实体类、XML等核心代码)
         //generator.setGenerateAll(false);
+
+        //generator.setClassNameGenerator(t -> org.apache.commons.text.CaseUtils.toCamelCase(t, true, '_') + "Entity");
 
         //生成
         generator.run(rp);
