@@ -37,6 +37,12 @@ public class PostgreSQLUtil extends AbstractDbUtil {
      */
     @Override
     public void prepareConnection(JdbcInfo jdbcInfo) throws Exception {
+        if (StringUtils.isBlank(jdbcInfo.getServiceName())) {
+            throw new Exception("必须指定serviceName");
+        }
+        if (StringUtils.isBlank(jdbcInfo.getSchema())) {
+            throw new Exception("必须指定schema");
+        }
         this.dbType = DatabaseType.POSTGRESQL.getCode();
         this.schemaName = jdbcInfo.getSchema();
         DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(this.dbType);

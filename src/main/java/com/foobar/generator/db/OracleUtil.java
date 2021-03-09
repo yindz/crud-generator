@@ -33,6 +33,12 @@ public class OracleUtil extends AbstractDbUtil {
      */
     @Override
     public void prepareConnection(JdbcInfo jdbcInfo) throws Exception {
+        if (StringUtils.isBlank(jdbcInfo.getServiceName())) {
+            throw new Exception("必须指定serviceName");
+        }
+        if (StringUtils.isBlank(jdbcInfo.getSchema())) {
+            throw new Exception("必须指定schema");
+        }
         this.dbType = DatabaseType.ORACLE.getCode();
         this.schemaName = jdbcInfo.getSchema().toUpperCase();
         DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(this.dbType);
