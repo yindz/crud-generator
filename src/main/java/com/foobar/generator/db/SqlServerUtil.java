@@ -33,6 +33,9 @@ public class SqlServerUtil extends AbstractDbUtil {
      */
     @Override
     public void prepareConnection(JdbcInfo jdbcInfo) throws Exception {
+        if (StringUtils.isBlank(jdbcInfo.getSchema())) {
+            throw new Exception("必须指定schema");
+        }
         this.dbType = DatabaseType.SQLSERVER.getCode();
         this.schemaName = jdbcInfo.getSchema();
         DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(this.dbType);
