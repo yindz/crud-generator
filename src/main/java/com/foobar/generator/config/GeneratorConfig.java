@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 配置
@@ -69,6 +70,20 @@ public class GeneratorConfig {
                 otherTemplateList.add(t);
             }
         });
+    }
+
+    /**
+     * 根据模板前缀查找模板
+     *
+     * @param list
+     * @param prefix
+     * @return
+     */
+    public static List<TemplateInfo> findTemplateByPrefix(List<TemplateInfo> list, String prefix) {
+        if (list == null || list.isEmpty() || StringUtils.isBlank(prefix)) {
+            return list;
+        }
+        return list.stream().filter(x -> x.getTemplateName().startsWith(prefix)).collect(Collectors.toList());
     }
 
 }

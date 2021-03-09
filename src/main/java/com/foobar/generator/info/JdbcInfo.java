@@ -1,5 +1,6 @@
 package com.foobar.generator.info;
 
+import com.foobar.generator.constant.DatabaseType;
 import com.foobar.generator.util.StringUtils;
 
 /**
@@ -10,9 +11,9 @@ import com.foobar.generator.util.StringUtils;
 public class JdbcInfo {
 
     /**
-     * 数据库类型:mysql/oracle/sqlserver/postgresql，不区分大小写
+     * 数据库类型 {@link com.foobar.generator.constant.DatabaseType}
      */
-    private String dbType;
+    private DatabaseType dbType;
 
     /**
      * 主机名或IP
@@ -44,11 +45,11 @@ public class JdbcInfo {
      */
     private String password;
 
-    public String getDbType() {
+    public DatabaseType getDbType() {
         return dbType;
     }
 
-    public void setDbType(String dbType) {
+    public void setDbType(DatabaseType dbType) {
         this.dbType = dbType;
     }
 

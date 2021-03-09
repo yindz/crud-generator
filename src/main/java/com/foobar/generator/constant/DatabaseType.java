@@ -12,7 +12,7 @@ public enum DatabaseType {
     SQLSERVER("sqlserver"),
     POSTGRESQL("postgresql");
 
-    private String code;
+    private final String code;
 
     private DatabaseType(String code) {
         this.code = code;
