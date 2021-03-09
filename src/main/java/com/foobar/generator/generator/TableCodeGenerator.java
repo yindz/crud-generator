@@ -200,11 +200,22 @@ public class TableCodeGenerator {
         if (jdbcInfo.getDbType() == null) {
             throw new Exception("数据库类型为空");
         }
-        dbType = jdbcInfo.getDbType().toLowerCase();
+        dbType = jdbcInfo.getDbType().getCode();
         DbUtilInfo dbUtilInfo = GeneratorConfig.dbUtilMap.get(dbType);
         if (dbUtilInfo == null) {
             throw new Exception("暂不支持该数据库类型");
         }
+        //参数校验
+        if (StringUtils.isBlank(jdbcInfo.getHost())) {
+            throw new Exception("必须指定数据库的主机名或IP");
+        }
+        if (StringUtils.isBlank(jdbcInfo.getPort())) {
+            throw new Exception("必须指定数据库的端口号");
+        }
+        if (StringUtils.isBlank(jdbcInfo.getUsername())) {
+            throw new Exception("必须指定数据库的用户名");
+        }
+
         dbUtil = (AbstractDbUtil) Class.forName(dbUtilInfo.getClassName()).newInstance();
         try {
             dbUtil.init(jdbcInfo);
@@ -250,10 +261,10 @@ public class TableCodeGenerator {
             this.currentUser = runParam.getAuthor();
         }
         if (StringUtils.isNotBlank(runParam.getBaseEntityClass())) {
-            this.baseEntityClass = StringUtils.trim(runParam.getBaseEntityClass());
+            this.baseEntityClass = runParam.getBaseEntityClass();
         }
         if (StringUtils.isNotBlank(runParam.getResultClass())) {
-            this.resultClass = StringUtils.trim(runParam.getResultClass());
+            this.resultClass = runParam.getResultClass();
         }
         List<TableContext> tablesToSubmit = findTablesToSubmit(runParam.getTableContexts());
         logger.info("本次将生成 {} 张表的代码", tablesToSubmit.size());
@@ -309,14 +320,14 @@ public class TableCodeGenerator {
                 c.setColumnCamelNameUpper(StringUtils.underlineToCamel(c.getColumnName(), true));
                 c.setColumnJavaType(GeneratorConst.javaBoxTypeMap.get(c.getColumnType().toLowerCase()));
                 if (StringUtils.isBlank(c.getColumnJavaType())) {
-                    throw new RuntimeException("数据库字段类型 " + c.getColumnType() + " 无法映射到Java类型");
+                    throw new IllegalArgumentException("数据库字段类型 " + c.getColumnType() + " 无法映射到Java类型");
                 }
                 if ("Date".equalsIgnoreCase(c.getColumnJavaType())) {
                     c.setIsDateTime(GeneratorConst.YES);
                 }
                 c.setColumnMyBatisType(GeneratorConst.mybatisTypeMap.get(c.getColumnType().toLowerCase()));
                 if (StringUtils.isBlank(c.getColumnMyBatisType())) {
-                    throw new RuntimeException("数据库字段类型 " + c.getColumnType() + " 无法映射到MyBatis JdbcType");
+                    throw new IllegalArgumentException("数据库字段类型 " + c.getColumnType() + " 无法映射到MyBatis JdbcType");
                 }
                 if (c.getIsNumber() == GeneratorConst.YES) {
                     if (c.getColumnScale() > 0) {
@@ -484,14 +495,16 @@ public class TableCodeGenerator {
             //去掉前缀后的表名
             simpleTableName = StringUtils.removeStart(table.getTableName(), prefixToRemove);
         }
-        String javaClassName;
+        String javaClassName = null;
         if (this.classNameGenerator != null) {
             //使用自定义的类名生成函数
             javaClassName = this.classNameGenerator.apply(simpleTableName);
-        } else {
+        }
+        if (StringUtils.isBlank(javaClassName)) {
             //默认:下划线转驼峰且首字母大写
             javaClassName = StringUtils.underlineToCamel(simpleTableName, true);
         }
+        logger.info("表名 {} 对应的Java类名: {}", table.getTableName(), javaClassName);
 
         //表基本信息
         TableInfo tableInfo = new TableInfo();
@@ -557,13 +570,13 @@ public class TableCodeGenerator {
         List<TemplateInfo> daoTemplateList;
         if (DaoType.TkMyBatis.equals(daoType)) {
             //MyBatis通用Mapper
-            daoTemplateList = GeneratorConfig.coreTemplateList.stream().filter(x -> x.getTemplateName().startsWith(GeneratorConst.TK)).collect(Collectors.toList());
+            daoTemplateList = GeneratorConfig.findTemplateByPrefix(GeneratorConfig.coreTemplateList, GeneratorConst.TK);
         } else if (DaoType.MyBatisPlus.equals(daoType)) {
             //MyBatisPlus
-            daoTemplateList = GeneratorConfig.coreTemplateList.stream().filter(x -> x.getTemplateName().startsWith(GeneratorConst.MP)).collect(Collectors.toList());
+            daoTemplateList = GeneratorConfig.findTemplateByPrefix(GeneratorConfig.coreTemplateList, GeneratorConst.MP);
         } else {
             //原版MyBatis
-            daoTemplateList = GeneratorConfig.coreTemplateList.stream().filter(x -> x.getTemplateName().startsWith(GeneratorConst.ORIG)).collect(Collectors.toList());
+            daoTemplateList = GeneratorConfig.findTemplateByPrefix(GeneratorConfig.coreTemplateList, GeneratorConst.ORIG);
         }
 
         //除dao以外的其它核心模板

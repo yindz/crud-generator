@@ -65,6 +65,9 @@ public class TableContext {
     private String notInColumns;
 
     public static TableContext withName(String name) {
+        if (!StringUtils.isValidIdentifier(name)) {
+            throw new IllegalArgumentException("表名" + name + "格式不正确！");
+        }
         TableContext tc = new TableContext();
         tc.setTableName(name);
         return tc;
@@ -83,7 +86,10 @@ public class TableContext {
     }
 
     public void setTableName(String tableName) {
-        this.tableName = StringUtils.deleteWhitespace(tableName);
+        if (!StringUtils.isValidIdentifier(tableName)) {
+            throw new IllegalArgumentException("表名" + tableName + "格式不正确！");
+        }
+        this.tableName = tableName;
     }
 
     public String getTableNamePrefixToRemove() {
@@ -99,7 +105,10 @@ public class TableContext {
     }
 
     public void setPrimaryKeyColumn(String primaryKeyColumn) {
-        this.primaryKeyColumn = StringUtils.deleteWhitespace(primaryKeyColumn);
+        if (!StringUtils.isValidIdentifier(primaryKeyColumn)) {
+            throw new IllegalArgumentException("主键字段名" + primaryKeyColumn + "格式不正确！");
+        }
+        this.primaryKeyColumn = primaryKeyColumn;
     }
 
     public String getVersionColumn() {
@@ -107,7 +116,10 @@ public class TableContext {
     }
 
     public void setVersionColumn(String versionColumn) {
-        this.versionColumn = StringUtils.deleteWhitespace(versionColumn);
+        if (!StringUtils.isValidIdentifier(versionColumn)) {
+            throw new IllegalArgumentException("版本号字段名" + versionColumn + "格式不正确！");
+        }
+        this.versionColumn = versionColumn;
     }
 
     public String getLogicDeleteColumn() {
@@ -115,7 +127,10 @@ public class TableContext {
     }
 
     public void setLogicDeleteColumn(String logicDeleteColumn) {
-        this.logicDeleteColumn = StringUtils.deleteWhitespace(logicDeleteColumn);
+        if (!StringUtils.isValidIdentifier(logicDeleteColumn)) {
+            throw new IllegalArgumentException("逻辑删除标识字段名" + logicDeleteColumn + "格式不正确！");
+        }
+        this.logicDeleteColumn = logicDeleteColumn;
     }
 
     public String getSequenceName() {
@@ -123,7 +138,10 @@ public class TableContext {
     }
 
     public void setSequenceName(String sequenceName) {
-        this.sequenceName = StringUtils.deleteWhitespace(sequenceName);
+        if (!StringUtils.isValidIdentifier(sequenceName)) {
+            throw new IllegalArgumentException("序列名称" + sequenceName + "格式不正确！");
+        }
+        this.sequenceName = sequenceName;
     }
 
     public Integer getPageSize() {
@@ -139,7 +157,7 @@ public class TableContext {
     }
 
     public void setLikeColumns(String likeColumns) {
-        this.likeColumns = likeColumns;
+        this.likeColumns = StringUtils.deleteWhitespace(likeColumns);
     }
 
     public String getRangeColumns() {
@@ -147,7 +165,7 @@ public class TableContext {
     }
 
     public void setRangeColumns(String rangeColumns) {
-        this.rangeColumns = rangeColumns;
+        this.rangeColumns = StringUtils.deleteWhitespace(rangeColumns);
     }
 
     public String getInColumns() {
@@ -155,7 +173,7 @@ public class TableContext {
     }
 
     public void setInColumns(String inColumns) {
-        this.inColumns = inColumns;
+        this.inColumns = StringUtils.deleteWhitespace(inColumns);
     }
 
     public String getNotInColumns() {
@@ -163,6 +181,6 @@ public class TableContext {
     }
 
     public void setNotInColumns(String notInColumns) {
-        this.notInColumns = notInColumns;
+        this.notInColumns = StringUtils.deleteWhitespace(notInColumns);
     }
 }

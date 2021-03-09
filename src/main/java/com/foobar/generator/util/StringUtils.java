@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +28,11 @@ import java.util.stream.Collectors;
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
     private static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
+
+    /**
+     * 数据库标识符格式：以字母开头，可以包含字母、数字、下划线，长度2~30个字符
+     */
+    private static final Pattern IDENTIFIER = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]{1,29}$");
 
     /**
      * 下划线转驼峰
@@ -118,5 +124,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             return resultSet;
         }
         return Arrays.stream(tmp).filter(StringUtils::isNotBlank).collect(Collectors.toSet());
+    }
+
+    /**
+     * 校验是否为有效的数据库标识符
+     *
+     * @param identifier 数据库标识符
+     * @return 是否为有效的数据库标识符
+     */
+    public static boolean isValidIdentifier(String identifier) {
+        if (isBlank(identifier)) {
+            return false;
+        }
+        return IDENTIFIER.matcher(identifier).matches();
     }
 }
