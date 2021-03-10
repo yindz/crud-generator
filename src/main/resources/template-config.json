@@ -250,5 +250,12 @@
     "targetFileName": "#-curl-delete.sh",
     "isCore": 1,
     "remark": "CURL删除记录"
+  },
+  {
+    "templateName": "html-form.ftl",
+    "targetBaseDirName": "other",
+    "targetPkgName": "",
+    "targetFileName": "#-form.html",
+    "remark": "标准HTML表单"
   }
 ]

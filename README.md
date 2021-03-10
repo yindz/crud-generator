@@ -68,6 +68,7 @@
 | curl-add.ftl | CURL新增记录命令及参数 | other/ | 使用方法：直接命令行调用 | 是 |
 | curl-update.ftl | CURL更新记录命令及参数 | other/ | 使用方法：直接命令行调用 | 是 |
 | curl-delete.ftl | CURL删除记录命令及参数 | other/ | 使用方法：直接命令行调用 | 是 |
+| html-form.ftl | 标准HTML表单 | other/ | 包含各个字段的标准HTML表单 | 是 |
 
 ## 主键字段检测规则
 1. 数据表有主键字段时，程序将直接使用该字段
